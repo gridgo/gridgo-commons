@@ -1,6 +1,5 @@
 package io.gridgo.utils.helper;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.gridgo.utils.ThreadUtils;
@@ -19,19 +18,11 @@ public abstract class AbstractStartable implements Startable {
 	}
 
 	@Override
-	public final CompletableFuture<Void> start() {
+	public final void start() {
 		if (!this.isStarted() && started.compareAndSet(false, true)) {
-			CompletableFuture<Void> future = new CompletableFuture<>();
-			try {
-				this.onStart(future);
-				this.running = true;
-			} catch (Exception e) {
-				this.started.set(false);
-				future.completeExceptionally(e);
-			}
-			return future;
+			this.onStart();
+			this.running = true;
 		}
-		return null;
 	}
 
 	@Override
@@ -47,7 +38,7 @@ public abstract class AbstractStartable implements Startable {
 		}
 	}
 
-	protected abstract void onStart(CompletableFuture<Void> future);
+	protected abstract void onStart();
 
 	protected abstract void onStop();
 }

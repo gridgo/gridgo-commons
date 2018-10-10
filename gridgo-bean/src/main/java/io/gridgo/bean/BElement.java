@@ -41,7 +41,7 @@ public interface BElement extends BSerializerAware {
 	}
 
 	default void writeBytes(ByteBuffer buffer) {
-		this.getSerializer().deserialize(buffer);
+		this.getSerializer().serialize(this, buffer);
 	}
 
 	default void writeBytes(OutputStream out) {

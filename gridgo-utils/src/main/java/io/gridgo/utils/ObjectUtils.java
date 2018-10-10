@@ -126,7 +126,11 @@ public final class ObjectUtils {
 			this.usingMethod = true;
 		}
 
-		public void set(Object obj, Object value) {
+		public void applyAsPrimitive(Object obj, Object value) {
+			this.apply(obj, PrimitiveUtils.getValueFrom(this.getParamType(), value));
+		}
+
+		public void apply(Object obj, Object value) {
 			try {
 				if (this.usingMethod) {
 					this.method.invoke(obj, value);
@@ -164,11 +168,11 @@ public final class ObjectUtils {
 				Object value = entry.getValue();
 				final Setter setter = classSetter.get(entry.getKey());
 				if (value == null) {
-					setter.set(result, null);
+					setter.apply(result, null);
 				} else if (PrimitiveUtils.isPrimitive(value.getClass())) {
-					setter.set(result, PrimitiveUtils.getValueFrom(setter.getParamType(), value));
+					setter.apply(result, PrimitiveUtils.getValueFrom(setter.getParamType(), value));
 				} else if (value instanceof Map) {
-					setter.set(result, fromMap(setter.getParamType(), (Map) value));
+					setter.apply(result, fromMap(setter.getParamType(), (Map) value));
 				} else if (ArrayUtils.isArrayOrCollection(setter.getParamType())
 						&& ArrayUtils.isArrayOrCollection(value.getClass())) {
 					final List list = new ArrayList<>();
@@ -188,12 +192,12 @@ public final class ObjectUtils {
 						}
 					});
 					if (Collection.class.isAssignableFrom(setter.getParamType())) {
-						setter.set(result, list);
+						setter.apply(result, list);
 					} else if (setter.getParamType().isArray()) {
 						if (setter.getComponentType().isPrimitive()) {
-							setter.set(result, ArrayUtils.toPrimitiveTypeArray(setter.getComponentType(), list));
+							setter.apply(result, ArrayUtils.toPrimitiveTypeArray(setter.getComponentType(), list));
 						} else {
-							setter.set(result, ArrayUtils.toArray(setter.getComponentType(), list));
+							setter.apply(result, ArrayUtils.toArray(setter.getComponentType(), list));
 						}
 					}
 				} else {

@@ -35,7 +35,7 @@ public class PrimitiveUtils {
 		if (resultType != null) {
 			if (obj == null) {
 				return null;
-			} else if (obj.getClass() == resultType) {
+			} else if (resultType.isAssignableFrom(obj.getClass())) {
 				return (T) obj;
 			} else if (resultType == String.class) {
 				return (T) getStringValueFrom(obj);
