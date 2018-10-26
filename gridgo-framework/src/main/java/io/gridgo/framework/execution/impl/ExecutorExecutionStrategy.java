@@ -3,7 +3,6 @@ package io.gridgo.framework.execution.impl;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import io.gridgo.framework.execution.ExecutionContext;
 import io.gridgo.framework.execution.ExecutionStrategy;
 import lombok.NonNull;
 
@@ -23,8 +22,8 @@ public class ExecutorExecutionStrategy implements ExecutionStrategy {
 	}
 
 	@Override
-	public void handle(final @NonNull ExecutionContext<?, ?> executionContext) {
-		executor.submit(executionContext::execute);
+	public void handle(final @NonNull Runnable runnable) {
+		executor.submit(runnable);
 	}
 
 	@Override
