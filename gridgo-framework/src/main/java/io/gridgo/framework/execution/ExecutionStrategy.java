@@ -5,5 +5,5 @@ import lombok.NonNull;
 
 public interface ExecutionStrategy extends ComponentLifecycle {
 
-	public void handle(final @NonNull Runnable runnable);
+	public void execute(final @NonNull Runnable runnable);
 }
