@@ -5,7 +5,7 @@ import lombok.NonNull;
 
 public class DefaultExecutionStrategy implements ExecutionStrategy {
 
-	public void handle(final @NonNull Runnable runnable) {
+	public void execute(final @NonNull Runnable runnable) {
 		runnable.run();
 	}
 }

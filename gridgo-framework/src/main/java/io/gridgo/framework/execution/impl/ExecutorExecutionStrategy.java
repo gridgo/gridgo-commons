@@ -22,7 +22,7 @@ public class ExecutorExecutionStrategy implements ExecutionStrategy {
 	}
 
 	@Override
-	public void handle(final @NonNull Runnable runnable) {
+	public void execute(final @NonNull Runnable runnable) {
 		executor.submit(runnable);
 	}
 
