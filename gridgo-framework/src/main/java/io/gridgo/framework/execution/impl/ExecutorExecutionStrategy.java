@@ -8,17 +8,18 @@ import lombok.NonNull;
 
 public class ExecutorExecutionStrategy implements ExecutionStrategy {
 
-	private boolean ownedExecutor;
+	private final boolean ownedExecutor;
 
-	private ExecutorService executor;
+	private final ExecutorService executor;
 
 	public ExecutorExecutionStrategy(final int noThreads) {
 		this.executor = Executors.newFixedThreadPool(noThreads);
 		this.ownedExecutor = true;
 	}
 
-	public ExecutorExecutionStrategy(final ExecutorService executor) {
+	public ExecutorExecutionStrategy(final @NonNull ExecutorService executor) {
 		this.executor = executor;
+		this.ownedExecutor = false;
 	}
 
 	@Override
