@@ -20,6 +20,8 @@ public interface BElement extends BSerializerAware {
 
 	String toXml(String name);
 
+	<T> T deepClone();
+
 	static <T extends BElement> T fromXml(String xml) {
 		return BFactory.DEFAULT.fromXml(xml);
 	}
@@ -55,7 +57,7 @@ public interface BElement extends BSerializerAware {
 	}
 
 	default byte[] toBytes() {
-		return this.toBytes(this.getSerializer().getDefaultOutputCapactity());
+		return this.toBytes(this.getSerializer().getMinimumOutputCapactity());
 	}
 
 	default String toXml() {

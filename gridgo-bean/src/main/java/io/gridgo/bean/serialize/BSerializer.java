@@ -27,7 +27,7 @@ public interface BSerializer {
 		return this.deserialize(new ByteArrayInputStream(bytes));
 	}
 
-	default int getDefaultOutputCapactity() {
+	default int getMinimumOutputCapactity() {
 		return 1024;
 	}
 }

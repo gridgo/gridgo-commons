@@ -358,4 +358,14 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		StringUtils.tabs(numTab, writer);
 		writer.append("}");
 	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	default <T> T deepClone() {
+		BObject result = newDefault();
+		for (Entry<String, BElement> entry : this.entrySet()) {
+			result.put(entry.getKey(), entry.getValue().deepClone());
+		}
+		return (T) result;
+	}
 }

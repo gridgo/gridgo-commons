@@ -216,4 +216,14 @@ public interface BArray extends BContainer, List<BElement> {
 		StringUtils.tabs(numTab, writer);
 		writer.append("]");
 	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	default <T> T deepClone() {
+		BArray result = newDefault();
+		for (BElement entry : this) {
+			result.addAny(entry);
+		}
+		return (T) result;
+	}
 }

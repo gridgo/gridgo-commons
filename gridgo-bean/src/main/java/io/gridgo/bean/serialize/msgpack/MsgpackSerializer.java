@@ -84,19 +84,20 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
 		throw new InvalidTypeException("Cannot writeValue object type: " + type);
 	}
 
-	private void packObject(BObject value, MessagePacker packer) throws IOException {
-		packer.packMapHeader(value.size());
-		for (Entry<String, BElement> entry : value.entrySet()) {
+	private void packObject(BObject object, MessagePacker packer) throws IOException {
+		packer.packMapHeader(object.size());
+		for (Entry<String, BElement> entry : object.entrySet()) {
 			packer.packString(entry.getKey());
 			packAny(entry.getValue(), packer);
 		}
 	}
 
-	private void packArray(BArray value, MessagePacker packer) throws IOException {
-		packer.packArrayHeader(value.size());
-		for (BElement entry : value) {
+	private void packArray(BArray array, MessagePacker packer) throws IOException {
+		packer.packArrayHeader(array.size());
+		for (BElement entry : array) {
 			packAny(entry, packer);
 		}
+		System.out.println("pack arr done");
 	}
 
 	@Override

@@ -14,6 +14,12 @@ public interface BValue extends BElement {
 		return BFactory.DEFAULT.newValue();
 	}
 
+	static BValue newDefault(Object data) {
+		BValue result = BFactory.DEFAULT.newValue();
+		result.setData(data);
+		return result;
+	}
+
 	@Override
 	default BType getType() {
 		if (!this.isNull()) {
@@ -261,5 +267,11 @@ public interface BValue extends BElement {
 		if (!this.isNull()) {
 			writer.append(" = ").append(content);
 		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	default <T> T deepClone() {
+		return (T) newDefault(this.getData());
 	}
 }

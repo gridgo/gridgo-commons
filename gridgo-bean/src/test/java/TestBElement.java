@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -25,7 +24,9 @@ public class TestBElement {
 
 			byte[] bytes = obj.toBytes();
 			System.out.println("Serialized: " + Arrays.toString(bytes));
-			System.out.println("Deserialized: " + BElement.fromRaw(ByteBuffer.wrap(bytes)));
+			System.out.println("Serialized as string: " + new String(bytes));
+			BElement fromRaw = BElement.fromRaw(bytes);
+			System.out.println("Deserialized from raw: " + fromRaw);
 		}
 	}
 }

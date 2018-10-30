@@ -128,7 +128,7 @@ public interface BFactory {
 
 	default <T extends BElement> T fromAny(Object obj) {
 		if (obj instanceof BElement) {
-			return (T) obj;
+			return (T) ((BElement) obj).deepClone();
 		} else if (obj == null || (obj instanceof byte[]) || PrimitiveUtils.isPrimitive(obj.getClass())) {
 			return (T) newValue(obj);
 		} else if (ArrayUtils.isArrayOrCollection(obj.getClass())) {
