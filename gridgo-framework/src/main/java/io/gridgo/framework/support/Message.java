@@ -1,4 +1,4 @@
-package io.gridgo.framework;
+package io.gridgo.framework.support;
 
 import java.io.Serializable;
 
