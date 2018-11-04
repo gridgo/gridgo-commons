@@ -30,4 +30,16 @@ class DefaultBValue implements BValue {
 	public String toString() {
 		return this.getString();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof BValue) {
+			return this.getData() == null //
+					? (((BValue) obj).getData() == null) //
+					: this.getData().equals(((BValue) obj).getData());
+		}
+		return this.getData() == null //
+				? obj == null //
+				: this.getData().equals(obj);
+	}
 }
