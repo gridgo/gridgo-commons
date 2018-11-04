@@ -13,6 +13,7 @@
 
 	<properties>
 		<gridgo.utils.version>1.0.0</gridgo.utils.version>
+		<gridgo.bean.version>0.1.0-SNAPSHOT</gridgo.bean.version>
 	</properties>
 
 	<dependencies>
@@ -20,6 +21,11 @@
 			<groupId>org.dungba</groupId>
 			<artifactId>joo-promise4j</artifactId>
 			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>io.gridgo</groupId>
+			<artifactId>gridgo-bean</artifactId>
+			<version>${gridgo.bean.version}</version>
 		</dependency>
 	</dependencies>
 </project>
