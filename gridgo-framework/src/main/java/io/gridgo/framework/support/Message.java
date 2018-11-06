@@ -17,4 +17,14 @@ public interface Message {
 	public Map<String, Object> getMisc();
 
 	public Payload getPayload();
+
+	static Message newDefault() {
+		return new DefaultMessage();
+	}
+
+	static Message newDefault(Payload payload) {
+		DefaultMessage msg = (DefaultMessage) newDefault();
+		msg.setPayload(payload);
+		return msg;
+	}
 }

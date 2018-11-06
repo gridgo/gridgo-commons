@@ -11,4 +11,14 @@ public interface Payload {
 	public BObject getHeaders();
 
 	public BElement getBody();
+
+	static Payload newDefault() {
+		return new DefaultPayload();
+	}
+
+	static Payload newDefault(BElement body) {
+		DefaultPayload payload = (DefaultPayload) newDefault();
+		payload.setBody(body);
+		return payload;
+	}
 }
