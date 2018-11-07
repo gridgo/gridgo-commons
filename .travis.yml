@@ -4,3 +4,5 @@ jdk:
 
 notifications:
   slack: gridgo:dSkxVIs1DZFv6k6UtTIPoDJr
+after_success:
+- mvn clean test jacoco:report coveralls:report -DrepoToken=$CoverallsRepoToken
