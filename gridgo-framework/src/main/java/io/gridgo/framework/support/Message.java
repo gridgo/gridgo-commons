@@ -18,13 +18,7 @@ public interface Message {
 
 	public Payload getPayload();
 
-	static Message newDefault() {
-		return new DefaultMessage();
-	}
-
 	static Message newDefault(Payload payload) {
-		DefaultMessage msg = (DefaultMessage) newDefault();
-		msg.setPayload(payload);
-		return msg;
+		return new DefaultMessage(payload);
 	}
 }

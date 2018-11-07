@@ -12,13 +12,11 @@ public interface Payload {
 
 	public BElement getBody();
 
-	static Payload newDefault() {
-		return new DefaultPayload();
+	public static Payload newDefault(BValue id, BElement body) {
+		return new DefaultPayload(id, body);
 	}
 
-	static Payload newDefault(BElement body) {
-		DefaultPayload payload = (DefaultPayload) newDefault();
-		payload.setBody(body);
-		return payload;
+	public static Payload newDefault(BValue id, BObject headers, BElement body) {
+		return new DefaultPayload(id, headers, body);
 	}
 }
