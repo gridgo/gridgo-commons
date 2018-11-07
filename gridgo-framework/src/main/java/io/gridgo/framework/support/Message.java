@@ -1,6 +1,7 @@
 package io.gridgo.framework.support;
 
 import java.util.Map;
+import java.util.Optional;
 
 import io.gridgo.bean.BValue;
 import io.gridgo.framework.support.impl.DefaultMessage;
@@ -13,7 +14,7 @@ public interface Message {
 	 * 
 	 * @return the routing id
 	 */
-	public BValue getRoutingId();
+	public Optional<BValue> getRoutingId();
 
 	public Map<String, Object> getMisc();
 
