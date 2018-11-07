@@ -1,6 +1,6 @@
 package io.gridgo.framework.support.generators;
 
-public interface IdGeneratorAware<T> {
+public interface IdGeneratorAware {
 
-	public T setIdGenerator(IdGenerator generator);
+	public void setIdGenerator(IdGenerator generator);
 }
