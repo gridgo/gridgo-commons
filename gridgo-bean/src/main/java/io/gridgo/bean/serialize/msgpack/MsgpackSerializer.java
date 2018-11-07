@@ -97,7 +97,6 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
 		for (BElement entry : array) {
 			packAny(entry, packer);
 		}
-		System.out.println("pack arr done");
 	}
 
 	@Override
