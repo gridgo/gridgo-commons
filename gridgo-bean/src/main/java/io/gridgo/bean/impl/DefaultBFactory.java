@@ -11,7 +11,7 @@ import io.gridgo.bean.xml.BXmlParser;
 import lombok.Getter;
 import lombok.Setter;
 
-class DefaultBElementFactory implements BFactory, BFactoryConfigurable {
+class DefaultBFactory implements BFactory, BFactoryConfigurable {
 
 	@Setter
 	@Getter
@@ -31,7 +31,7 @@ class DefaultBElementFactory implements BFactory, BFactoryConfigurable {
 	@Getter
 	private BSerializer serializer;
 
-	public DefaultBElementFactory() {
+	public DefaultBFactory() {
 		this.setSerializer(new MsgpackSerializer());
 		this.setXmlParser(new BXmlParser());
 	}
