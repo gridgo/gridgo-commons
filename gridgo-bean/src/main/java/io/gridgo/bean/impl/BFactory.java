@@ -21,10 +21,10 @@ import net.minidev.json.parser.ParseException;
 @SuppressWarnings("unchecked")
 public interface BFactory {
 
-	static final BFactory DEFAULT = new DefaultBElementFactory();
+	static final BFactory DEFAULT = new DefaultBFactory();
 
 	static BFactory newInstance() {
-		return new DefaultBElementFactory();
+		return new DefaultBFactory();
 	}
 
 	static BObject newDefaultObject() {
