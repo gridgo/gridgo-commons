@@ -3,6 +3,7 @@ package io.gridgo.framework.support;
 import java.util.Map;
 
 import io.gridgo.bean.BValue;
+import io.gridgo.framework.support.impl.DefaultMessage;
 
 public interface Message {
 

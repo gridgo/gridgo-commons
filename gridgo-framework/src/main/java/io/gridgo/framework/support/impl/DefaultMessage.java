@@ -1,9 +1,11 @@
-package io.gridgo.framework.support;
+package io.gridgo.framework.support.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import io.gridgo.bean.BValue;
+import io.gridgo.framework.support.Message;
+import io.gridgo.framework.support.Payload;
 import lombok.Getter;
 import lombok.NonNull;
 

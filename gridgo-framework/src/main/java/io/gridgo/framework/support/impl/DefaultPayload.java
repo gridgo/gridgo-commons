@@ -1,8 +1,9 @@
-package io.gridgo.framework.support;
+package io.gridgo.framework.support.impl;
 
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
+import io.gridgo.framework.support.Payload;
 import lombok.Getter;
 
 @Getter
