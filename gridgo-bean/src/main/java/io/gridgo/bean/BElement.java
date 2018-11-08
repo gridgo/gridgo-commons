@@ -64,6 +64,18 @@ public interface BElement extends BSerializerAware {
 		return this.toXml(null);
 	}
 
+	default boolean isArray() {
+		return this instanceof BArray;
+	}
+
+	default boolean isObject() {
+		return this instanceof BObject;
+	}
+
+	default boolean isValue() {
+		return this instanceof BValue;
+	}
+
 	default BObject asObject() {
 		return (BObject) this;
 	}
