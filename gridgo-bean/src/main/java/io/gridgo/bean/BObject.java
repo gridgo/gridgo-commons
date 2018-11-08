@@ -338,20 +338,6 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		return this.get(field).asValue();
 	}
 
-	default BValue getValue(String field, BValue defaultValue) {
-		if (this.containsKey(field)) {
-			return this.get(field).asValue();
-		}
-		return defaultValue;
-	}
-
-	default BElement get(String field, BElement defaultValue) {
-		if (this.containsKey(field)) {
-			return this.get(field);
-		}
-		return defaultValue;
-	}
-
 	@Override
 	default void writeString(String name, int numTab, StringBuilder writer) {
 		StringUtils.tabs(numTab, writer);
@@ -371,6 +357,11 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		}
 		StringUtils.tabs(numTab, writer);
 		writer.append("}");
+	}
+	
+	default BObject set(String attr, BElement value) {
+		put(attr, value);
+		return this;
 	}
 
 	@Override
