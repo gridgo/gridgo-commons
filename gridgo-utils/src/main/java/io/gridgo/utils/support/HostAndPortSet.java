@@ -1,6 +1,11 @@
 package io.gridgo.utils.support;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Function;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class HostAndPortSet extends HashSet<HostAndPort> {
 
@@ -24,6 +29,19 @@ public class HostAndPortSet extends HashSet<HostAndPort> {
 
 	public HostAndPort getFirst() {
 		return this.iterator().next();
+	}
+
+	@Override
+	public String toString() {
+		return StringUtils.join(this.toArray(new HostAndPort[0]), ",");
+	}
+
+	public <T> List<T> convert(Function<HostAndPort, T> processor) {
+		List<T> list = new LinkedList<>();
+		for (HostAndPort entry : this) {
+			list.add(processor.apply(entry));
+		}
+		return list;
 	}
 
 	@Override
