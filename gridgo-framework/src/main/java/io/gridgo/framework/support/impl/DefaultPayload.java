@@ -7,6 +7,7 @@ import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 import io.gridgo.framework.support.Payload;
 import lombok.Getter;
+import lombok.NonNull;
 
 @Getter
 public class DefaultPayload implements Payload {
@@ -17,13 +18,13 @@ public class DefaultPayload implements Payload {
 	
 	private BElement body;
 
-	public DefaultPayload(Optional<BValue> id, BObject headers, BElement body) {
+	public DefaultPayload(Optional<BValue> id, final @NonNull BObject headers, BElement body) {
 		this.id = id;
 		this.headers = headers;
 		this.body = body;
 	}
 
-	public DefaultPayload(BObject headers, BElement body) {
+	public DefaultPayload(final @NonNull BObject headers, BElement body) {
 		this.headers = headers;
 		this.body = body;
 	}
