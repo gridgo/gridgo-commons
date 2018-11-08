@@ -19,6 +19,7 @@ import io.gridgo.bean.BObject;
 import io.gridgo.bean.BType;
 import io.gridgo.bean.BValue;
 import io.gridgo.bean.exceptions.InvalidTypeException;
+import io.gridgo.bean.exceptions.NameAttributeNotFoundException;
 import io.gridgo.bean.impl.BFactory;
 import io.gridgo.bean.impl.BFactoryAware;
 import io.gridgo.bean.xml.RefItem.RefItemBuilder;
@@ -179,7 +180,7 @@ public class BXmlParser implements BFactoryAware {
 			if (child.getNodeType() == Element.ELEMENT_NODE) {
 				Node nameAttr = child.getAttributes().getNamedItem("name");
 				if (nameAttr == null) {
-					throw new NullPointerException(
+					throw new NameAttributeNotFoundException(
 							"Name attribute (which is required for any item in BObject's xml) cannot be found");
 				}
 				result.put(nameAttr.getNodeValue(), parse(child, refManager));
