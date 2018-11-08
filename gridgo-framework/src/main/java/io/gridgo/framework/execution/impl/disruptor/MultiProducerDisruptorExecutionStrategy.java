@@ -5,7 +5,6 @@ import java.util.concurrent.ThreadFactory;
 import com.lmax.disruptor.BlockingWaitStrategy;
 import com.lmax.disruptor.WaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
-import com.lmax.disruptor.dsl.ProducerType;
 
 import io.gridgo.framework.execution.ExecutionStrategy;
 import io.gridgo.framework.execution.impl.ExecutionContextEvent;
@@ -34,8 +33,7 @@ public class MultiProducerDisruptorExecutionStrategy<T, H> implements ExecutionS
 
 	public MultiProducerDisruptorExecutionStrategy(final int bufferSize, final WaitStrategy waitStrategy,
 			final ThreadFactory threadFactory) {
-		this.disruptor = new Disruptor<>(ExecutionContextEvent::new, bufferSize, threadFactory, ProducerType.MULTI,
-				waitStrategy);
+		this.disruptor = new Disruptor<>(ExecutionContextEvent::new, bufferSize, threadFactory);
 		this.disruptor.handleEventsWith(this::onEvent);
 	}
 
@@ -56,5 +54,15 @@ public class MultiProducerDisruptorExecutionStrategy<T, H> implements ExecutionS
 			event.clear();
 			event.setContext(context);
 		});
+	}
+
+	@Override
+	public void start() {
+		disruptor.start();
+	}
+
+	@Override
+	public void stop() {
+		disruptor.shutdown();
 	}
 }
