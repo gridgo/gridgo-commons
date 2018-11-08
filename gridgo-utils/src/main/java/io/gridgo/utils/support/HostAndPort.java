@@ -44,6 +44,20 @@ public class HostAndPort {
 		// do nothing
 	}
 
+	public int getPortOrDefault(int defaultPort) {
+		if (this.getPort() <= 0) {
+			return defaultPort;
+		}
+		return this.getPort();
+	}
+
+	public String getHostOrDefault(String defaultHost) {
+		if (this.getHost() == null) {
+			return defaultHost;
+		}
+		return this.getHost();
+	}
+
 	public String getResolvedIp() {
 		if (!isHostResolved) {
 			if (this.getHost().equalsIgnoreCase("*")) {
