@@ -358,6 +358,11 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		StringUtils.tabs(numTab, writer);
 		writer.append("}");
 	}
+	
+	default BObject set(String attr, BElement value) {
+		put(attr, value);
+		return this;
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
