@@ -358,9 +358,14 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		StringUtils.tabs(numTab, writer);
 		writer.append("}");
 	}
+
+	default BObject setAny(String attr, Object value) {
+		this.putAny(attr, value);
+		return this;
+	}
 	
 	default BObject set(String attr, BElement value) {
-		put(attr, value);
+		this.put(attr, value);
 		return this;
 	}
 
