@@ -1,4 +1,4 @@
-package io.gridgo.framework.execution.impl.disruptor;
+package io.gridgo.framework.execution.impl;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
