@@ -31,10 +31,12 @@ public interface MessageParser {
 		if (data instanceof BArray && data.asArray().size() == 3) {
 			BArray arr = data.asArray();
 			BElement id = arr.get(0);
+			
 			BElement headers = arr.get(1);
 			if (headers.isValue() && headers.asValue().isNull()) {
 				headers = null;
 			}
+			
 			BElement body = arr.get(2);
 			if (body.isValue() && body.asValue().isNull()) {
 				body = null;
