@@ -26,6 +26,10 @@ public interface BElement extends BSerializerAware {
 		return BFactory.DEFAULT.fromXml(xml);
 	}
 
+	static <T extends BElement> T fromAny(Object data) {
+		return BFactory.DEFAULT.fromAny(data);
+	}
+
 	static <T extends BElement> T fromJson(String json) {
 		return BFactory.DEFAULT.fromJson(json);
 	}
