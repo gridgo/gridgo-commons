@@ -2,7 +2,9 @@ package io.gridgo.bean.impl;
 
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.function.Supplier;
 
 import io.gridgo.bean.BArray;
@@ -68,6 +70,13 @@ public interface BFactory {
 		Map<?, ?> map;
 		if (Map.class.isAssignableFrom(obj.getClass())) {
 			map = (Map<?, ?>) obj;
+		} else if (obj instanceof Properties) {
+			Map<Object, Object> map1 = new HashMap<>();
+			Properties props = (Properties) obj;
+			for (Object key : props.keySet()) {
+				map1.put(key, props.get(key));
+			}
+			map = map1;
 		} else {
 			map = ObjectUtils.toMap(obj);
 		}
