@@ -22,6 +22,10 @@ public interface BElement extends BSerializerAware {
 
 	<T> T deepClone();
 
+	static <T extends BElement> T fromAny(Object data) {
+		return BFactory.DEFAULT.fromAny(data);
+	}
+
 	static <T extends BElement> T fromXml(String xml) {
 		return BFactory.DEFAULT.fromXml(xml);
 	}
