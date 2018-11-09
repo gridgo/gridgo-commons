@@ -363,7 +363,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		this.putAny(attr, value);
 		return this;
 	}
-	
+
 	default BObject set(String attr, BElement value) {
 		this.put(attr, value);
 		return this;
