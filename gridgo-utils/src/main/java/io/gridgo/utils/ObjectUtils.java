@@ -1,5 +1,6 @@
 package io.gridgo.utils;
 
+import java.beans.Statement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -7,6 +8,7 @@ import java.lang.reflect.ParameterizedType;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.Set;
 
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
@@ -493,5 +496,36 @@ public final class ObjectUtils {
 			}
 		}
 		return map;
+	}
+	
+	public static void assembleFromMap(Class<?> clazz, Object kafkaConfig, Map<String, Object> parameters) {
+		var fieldMap = Arrays.stream(clazz.getDeclaredFields())
+				.collect(Collectors.toMap(field -> field.getName(), field -> field.getType()));
+		for (String attr : parameters.keySet()) {
+			if (!fieldMap.containsKey(attr))
+				continue;
+			Object value = convertValue(parameters.get(attr), fieldMap.get(attr));
+			String setter = "set" + attr.substring(0, 1).toUpperCase() + attr.substring(1);
+			var stmt = new Statement(kafkaConfig, setter, new Object[] { value });
+			try {
+				stmt.execute();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
+	private static Object convertValue(Object value, Class<?> type) {
+		if (value == null)
+			return null;
+		if (type == String.class)
+			return value.toString();
+		if (type == int.class || type == Integer.class)
+			return Integer.parseInt(value.toString());
+		if (type == long.class || type == Long.class)
+			return Long.parseLong(value.toString());
+		if (type == boolean.class || type == Boolean.class)
+			return Boolean.valueOf(value.toString());
+		return value;
 	}
 }
