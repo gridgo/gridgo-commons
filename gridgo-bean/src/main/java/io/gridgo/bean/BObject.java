@@ -335,7 +335,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
 	}
 
 	default BValue getValue(String field) {
-		return this.get(field).asValue();
+		BElement element = this.get(field);
+		return element != null ? element.asValue() : null;
 	}
 
 	@Override
