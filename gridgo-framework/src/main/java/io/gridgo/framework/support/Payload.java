@@ -15,6 +15,21 @@ public interface Payload {
 
 	public BElement getBody();
 
+	/**
+	 * add a header record
+	 * 
+	 * @param key   header record's key
+	 * @param value header record's value
+	 * @return headers object
+	 */
+	public Payload addHeader(String key, Object value);
+
+	public Payload addHeaderIfAbsent(String key, Object value);
+
+	public Payload setBody(BElement body);
+
+	public Payload setId(Object id);
+
 	public static Payload newDefault(BValue id, BElement body) {
 		return new DefaultPayload(Optional.of(id), body);
 	}

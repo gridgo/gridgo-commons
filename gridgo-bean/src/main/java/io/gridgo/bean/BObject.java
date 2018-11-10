@@ -364,6 +364,11 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		return this;
 	}
 
+	default BObject setAnyIfAbsent(String attr, Object value) {
+		this.putAnyIfAbsent(attr, value);
+		return this;
+	}
+
 	default BObject set(String attr, BElement value) {
 		this.put(attr, value);
 		return this;

@@ -15,7 +15,7 @@ public class DefaultPayload implements Payload {
 	private Optional<BValue> id = Optional.empty();
 
 	private BObject headers;
-	
+
 	private BElement body;
 
 	public DefaultPayload(Optional<BValue> id, final @NonNull BObject headers, BElement body) {
@@ -34,9 +34,47 @@ public class DefaultPayload implements Payload {
 		this.body = body;
 		this.headers = BObject.newDefault();
 	}
-	
+
 	public DefaultPayload(BElement body) {
 		this.body = body;
 		this.headers = BObject.newDefault();
+	}
+
+	@Override
+	public Payload setBody(BElement body) {
+		this.body = body;
+		return this;
+	}
+
+	@Override
+	public Payload setId(Object id) {
+		this.id = Optional.of(BValue.newDefault(id));
+		return this;
+	}
+
+	@Override
+	public Payload addHeader(String key, Object value) {
+		if (this.headers == null) {
+			synchronized (this) {
+				if (this.headers == null) {
+					this.headers = BObject.newDefault();
+				}
+			}
+		}
+		this.headers.setAny(key, value);
+		return this;
+	}
+
+	@Override
+	public Payload addHeaderIfAbsent(String key, Object value) {
+		if (this.headers == null) {
+			synchronized (this) {
+				if (this.headers == null) {
+					this.headers = BObject.newDefault();
+				}
+			}
+		}
+		this.headers.setAnyIfAbsent(key, value);
+		return this;
 	}
 }
