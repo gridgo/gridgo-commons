@@ -26,7 +26,7 @@ public interface Payload {
 	public static Payload newDefault(BObject headers, BElement body) {
 		return new DefaultPayload(headers, body);
 	}
-	
+
 	public static Payload newDefault(BElement body) {
 		return new DefaultPayload(body);
 	}
