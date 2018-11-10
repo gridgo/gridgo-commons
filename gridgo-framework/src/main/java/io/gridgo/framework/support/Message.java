@@ -23,4 +23,12 @@ public interface Message {
 	static Message newDefault(Payload payload) {
 		return new DefaultMessage(payload);
 	}
+
+	static Message newDefault(BValue routingId, Payload payload) {
+		return new DefaultMessage(routingId, payload);
+	}
+
+	static Message newDefault(BValue routingId, Map<String, Object> misc, Payload payload) {
+		return new DefaultMessage(routingId, misc, payload);
+	}
 }

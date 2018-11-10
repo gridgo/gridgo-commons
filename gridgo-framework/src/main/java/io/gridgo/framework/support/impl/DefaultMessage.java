@@ -21,6 +21,26 @@ public class DefaultMessage implements Message {
 		this.payload = payload;
 	}
 
+	public DefaultMessage(BValue routingId, Payload payload) {
+		this.routingId = Optional.of(routingId);
+		this.payload = payload;
+	}
+
+	public DefaultMessage(BValue routingId, Map<String, Object> misc, Payload payload) {
+		this.routingId = Optional.of(routingId);
+		this.payload = payload;
+		if (misc != null) {
+			this.misc.putAll(misc);
+		}
+	}
+
+	public DefaultMessage(Map<String, Object> misc, Payload payload) {
+		this.payload = payload;
+		if (misc != null) {
+			this.misc.putAll(misc);
+		}
+	}
+
 	public void setRoutingId(@NonNull Object routingId) {
 		if (routingId instanceof BValue) {
 			this.routingId = Optional.of((BValue) routingId);
