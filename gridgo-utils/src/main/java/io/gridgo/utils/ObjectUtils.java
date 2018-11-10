@@ -498,7 +498,7 @@ public final class ObjectUtils {
 		return map;
 	}
 	
-	public static void assembleFromMap(Class<?> clazz, Object kafkaConfig, Map<String, Object> parameters) {
+	public static void assembleFromMap(Class<?> clazz, Object config, Map<String, Object> parameters) {
 		var fieldMap = Arrays.stream(clazz.getDeclaredFields())
 				.collect(Collectors.toMap(field -> field.getName(), field -> field.getType()));
 		for (String attr : parameters.keySet()) {
@@ -506,7 +506,7 @@ public final class ObjectUtils {
 				continue;
 			Object value = convertValue(parameters.get(attr), fieldMap.get(attr));
 			String setter = "set" + attr.substring(0, 1).toUpperCase() + attr.substring(1);
-			var stmt = new Statement(kafkaConfig, setter, new Object[] { value });
+			var stmt = new Statement(config, setter, new Object[] { value });
 			try {
 				stmt.execute();
 			} catch (Exception e) {
