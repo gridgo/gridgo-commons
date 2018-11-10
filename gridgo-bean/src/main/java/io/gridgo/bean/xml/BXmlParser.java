@@ -15,13 +15,13 @@ import org.xml.sax.SAXException;
 
 import io.gridgo.bean.BArray;
 import io.gridgo.bean.BElement;
+import io.gridgo.bean.BFactory;
+import io.gridgo.bean.BFactoryAware;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BType;
 import io.gridgo.bean.BValue;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.exceptions.NameAttributeNotFoundException;
-import io.gridgo.bean.impl.BFactory;
-import io.gridgo.bean.impl.BFactoryAware;
 import io.gridgo.bean.xml.RefItem.RefItemBuilder;
 import io.gridgo.utils.ByteArrayUtils;
 import io.gridgo.utils.PrimitiveUtils;

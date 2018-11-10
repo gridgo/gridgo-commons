@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
-import io.gridgo.bean.impl.BFactory;
 import io.gridgo.bean.serialize.BSerializerAware;
 
 public interface BElement extends BSerializerAware {

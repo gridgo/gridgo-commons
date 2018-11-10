@@ -3,7 +3,6 @@ package io.gridgo.bean;
 import java.util.Base64;
 
 import io.gridgo.bean.exceptions.InvalidTypeException;
-import io.gridgo.bean.impl.BFactory;
 import io.gridgo.utils.ByteArrayUtils;
 import io.gridgo.utils.PrimitiveUtils;
 import io.gridgo.utils.StringUtils;

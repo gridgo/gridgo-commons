@@ -3,6 +3,9 @@ package io.gridgo.bean.impl;
 import java.util.function.Supplier;
 
 import io.gridgo.bean.BArray;
+import io.gridgo.bean.BFactory;
+import io.gridgo.bean.BFactoryAware;
+import io.gridgo.bean.BFactoryConfigurable;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 import io.gridgo.bean.serialize.BSerializer;
@@ -11,7 +14,7 @@ import io.gridgo.bean.xml.BXmlParser;
 import lombok.Getter;
 import lombok.Setter;
 
-class DefaultBFactory implements BFactory, BFactoryConfigurable {
+public class DefaultBFactory implements BFactory, BFactoryConfigurable {
 
 	@Setter
 	@Getter

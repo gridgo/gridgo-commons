@@ -1,4 +1,4 @@
-package io.gridgo.bean.impl;
+package io.gridgo.bean;
 
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -7,10 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
 
-import io.gridgo.bean.BArray;
-import io.gridgo.bean.BElement;
-import io.gridgo.bean.BObject;
-import io.gridgo.bean.BValue;
+import io.gridgo.bean.impl.DefaultBFactory;
 import io.gridgo.bean.serialize.BSerializer;
 import io.gridgo.bean.serialize.BSerializerAware;
 import io.gridgo.bean.xml.BXmlParser;

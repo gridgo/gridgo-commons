@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import io.gridgo.bean.exceptions.InvalidTypeException;
-import io.gridgo.bean.impl.BFactory;
 import io.gridgo.utils.StringUtils;
 import net.minidev.json.JSONObject;
 

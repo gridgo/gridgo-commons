@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.gridgo.bean.exceptions.InvalidTypeException;
-import io.gridgo.bean.impl.BFactory;
 import io.gridgo.utils.StringUtils;
 import net.minidev.json.JSONArray;
 

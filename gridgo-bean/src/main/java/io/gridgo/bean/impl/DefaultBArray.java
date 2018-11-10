@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import io.gridgo.bean.BArray;
 import io.gridgo.bean.BElement;
+import io.gridgo.bean.BFactory;
 import io.gridgo.bean.serialize.BSerializer;
 import lombok.Getter;
 import lombok.Setter;

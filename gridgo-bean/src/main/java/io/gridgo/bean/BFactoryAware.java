@@ -1,4 +1,4 @@
-package io.gridgo.bean.impl;
+package io.gridgo.bean;
 
 public interface BFactoryAware {
 

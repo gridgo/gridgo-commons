@@ -3,6 +3,7 @@ package io.gridgo.bean.impl;
 import java.util.HashMap;
 
 import io.gridgo.bean.BElement;
+import io.gridgo.bean.BFactory;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.serialize.BSerializer;
 import lombok.Getter;

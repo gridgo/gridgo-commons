@@ -1,10 +1,7 @@
-package io.gridgo.bean.impl;
+package io.gridgo.bean;
 
 import java.util.function.Supplier;
 
-import io.gridgo.bean.BArray;
-import io.gridgo.bean.BObject;
-import io.gridgo.bean.BValue;
 import io.gridgo.bean.serialize.BSerializer;
 import io.gridgo.bean.xml.BXmlParser;
 

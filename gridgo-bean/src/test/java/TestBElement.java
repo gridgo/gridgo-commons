@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import io.gridgo.bean.BElement;
+import io.gridgo.bean.BFactory;
 import io.gridgo.bean.BObject;
-import io.gridgo.bean.impl.BFactory;
 
 public class TestBElement {
 
