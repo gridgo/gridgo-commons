@@ -78,6 +78,10 @@ public interface BElement extends BSerializerAware {
 	default boolean isValue() {
 		return this instanceof BValue;
 	}
+	
+	default boolean isReference() {
+		return this instanceof BReference;
+	}
 
 	default BObject asObject() {
 		return (BObject) this;
@@ -89,5 +93,9 @@ public interface BElement extends BSerializerAware {
 
 	default BValue asValue() {
 		return (BValue) this;
+	}
+	
+	default BReference asReference() {
+		return (BReference) this;
 	}
 }
