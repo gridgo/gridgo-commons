@@ -31,7 +31,8 @@ public interface BReference extends BElement {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public default <T> T deepClone() {
-		return null;
+		return (T) newDefault(this.getReference());
 	}
 }
