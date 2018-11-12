@@ -2,6 +2,7 @@ package io.gridgo.framework.support;
 
 import java.util.Optional;
 
+import io.gridgo.bean.BArray;
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
@@ -29,6 +30,10 @@ public interface Payload {
 	public Payload setBody(BElement body);
 
 	public Payload setId(Object id);
+
+	public default BArray toBArray() {
+		return BArray.newFromSequence(this.getId().orElse(null), this.getHeaders(), this.getBody());
+	}
 
 	public static Payload newDefault(BValue id, BElement body) {
 		return new DefaultPayload(Optional.of(id), body);
