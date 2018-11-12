@@ -7,6 +7,7 @@ import io.gridgo.bean.BFactory;
 import io.gridgo.bean.BFactoryAware;
 import io.gridgo.bean.BFactoryConfigurable;
 import io.gridgo.bean.BObject;
+import io.gridgo.bean.BReference;
 import io.gridgo.bean.BValue;
 import io.gridgo.bean.serialize.BSerializer;
 import io.gridgo.bean.serialize.msgpack.MsgpackSerializer;
@@ -27,6 +28,10 @@ public class DefaultBFactory implements BFactory, BFactoryConfigurable {
 	@Getter
 	@Setter
 	private Supplier<BValue> valueSupplier = DefaultBValue::new;
+	
+	@Getter
+	@Setter
+	private Supplier<BReference> referenceSupplier = DefaultBReference::new;
 
 	@Getter
 	private BXmlParser xmlParser;

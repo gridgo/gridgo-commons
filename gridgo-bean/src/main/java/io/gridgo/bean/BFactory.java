@@ -42,6 +42,8 @@ public interface BFactory {
 
 	BSerializer getSerializer();
 
+	Supplier<BReference> getReferenceSupplier();
+
 	Supplier<BObject> getObjectSupplier();
 
 	Supplier<BArray> getArraySupplier();
@@ -55,6 +57,12 @@ public interface BFactory {
 			((BSerializerAware) result).setSerializer(this.getSerializer());
 		}
 		return result;
+	}
+	
+	default BReference newReference(Object reference) {
+		BReference bReference = this.getReferenceSupplier().get();
+		bReference.setReference(reference);
+		return bReference;
 	}
 
 	default BObject newObject(Object obj) {
