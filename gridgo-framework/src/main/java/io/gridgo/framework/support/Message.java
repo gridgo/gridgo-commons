@@ -20,6 +20,17 @@ public interface Message {
 
 	public Payload getPayload();
 
+	public Message addMisc(String key, Object value);
+
+	public Message setRoutingId(BValue routingId);
+
+	default public Message setRoutingIdFromAny(Object routingId) {
+		this.setRoutingId(BValue.newDefault(routingId));
+		return this;
+	}
+
+	public Message setPayload(Payload payload);
+
 	static Message newDefault(Payload payload) {
 		return new DefaultMessage(payload);
 	}

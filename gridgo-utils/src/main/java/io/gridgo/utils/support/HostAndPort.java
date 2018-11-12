@@ -58,6 +58,11 @@ public class HostAndPort {
 		return this.getHost();
 	}
 
+	public String getResolvedIpOrDefault(String defaultIP) {
+		String resolvedIP = this.getResolvedIp();
+		return resolvedIP == null ? defaultIP : resolvedIP;
+	}
+
 	public String getResolvedIp() {
 		if (!isHostResolved) {
 			if (this.getHost().equalsIgnoreCase("*")) {

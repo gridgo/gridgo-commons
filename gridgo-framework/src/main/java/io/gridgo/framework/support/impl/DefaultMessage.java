@@ -13,7 +13,7 @@ import lombok.NonNull;
 @Getter
 public class DefaultMessage implements Message {
 
-	private Map<String, Object> misc = new HashMap<>();
+	private final Map<String, Object> misc = new HashMap<>();
 	private Optional<BValue> routingId = Optional.empty();
 	private Payload payload;
 
@@ -47,5 +47,23 @@ public class DefaultMessage implements Message {
 		} else {
 			this.routingId = Optional.of(BValue.newDefault(routingId));
 		}
+	}
+
+	@Override
+	public Message addMisc(String key, Object value) {
+		this.misc.put(key, value);
+		return this;
+	}
+
+	@Override
+	public Message setRoutingId(BValue routingId) {
+		this.routingId = Optional.ofNullable(routingId);
+		return this;
+	}
+
+	@Override
+	public Message setPayload(Payload payload) {
+		this.payload = payload;
+		return this;
 	}
 }
