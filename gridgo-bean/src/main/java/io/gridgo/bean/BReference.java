@@ -20,6 +20,9 @@ public interface BReference extends BElement {
 	}
 
 	public default String toJson() {
+		var ref = getReference();
+		if (ref != null && ref instanceof SerializableReference)
+			return ((BReference) ref).toJson();
 		return null;
 	}
 
@@ -28,6 +31,9 @@ public interface BReference extends BElement {
 	}
 
 	public default String toXml(String name) {
+		var ref = getReference();
+		if (ref != null && ref instanceof SerializableReference)
+			return ((BReference) ref).toXml();
 		return null;
 	}
 
