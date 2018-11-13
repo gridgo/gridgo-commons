@@ -16,6 +16,10 @@ public class DefaultMessage implements Message {
 	private final Map<String, Object> misc = new HashMap<>();
 	private Optional<BValue> routingId = Optional.empty();
 	private Payload payload;
+	
+	public DefaultMessage() {
+		
+	}
 
 	public DefaultMessage(Payload payload) {
 		this.payload = payload;
