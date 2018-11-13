@@ -342,10 +342,11 @@ public interface BObject extends BContainer, Map<String, BElement> {
 	default void writeString(String name, int numTab, StringBuilder writer) {
 		StringUtils.tabs(numTab, writer);
 		if (name != null) {
-			writer.append(name).append(": OBJECT = {\n");
+			writer.append(name).append(": OBJECT = {");
 		} else {
-			writer.append("{\n");
+			writer.append("{");
 		}
+		writer.append(this.size() > 0 ? "\n" : "");
 		int count = 0;
 		for (Entry<String, BElement> entry : this.entrySet()) {
 			entry.getValue().writeString(entry.getKey(), numTab + 1, writer);
@@ -355,7 +356,9 @@ public interface BObject extends BContainer, Map<String, BElement> {
 				writer.append("\n");
 			}
 		}
-		StringUtils.tabs(numTab, writer);
+		if (this.size() > 0) {
+			StringUtils.tabs(numTab, writer);
+		}
 		writer.append("}");
 	}
 
