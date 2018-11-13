@@ -9,7 +9,10 @@ import io.gridgo.utils.helper.Startable;
 public abstract class AbstractComponentLifecycle implements ComponentLifecycle, Loggable, Startable {
 
 	private final AtomicBoolean started = new AtomicBoolean(false);
+
 	private volatile boolean running = false;
+
+	private String name;
 
 	@Override
 	public final boolean isStarted() {
@@ -39,6 +42,15 @@ public abstract class AbstractComponentLifecycle implements ComponentLifecycle, 
 			}
 		}
 	}
+
+	@Override
+	public String getName() {
+		if (name == null)
+			name = generateName();
+		return name;
+	}
+
+	protected abstract String generateName();
 
 	protected abstract void onStart();
 

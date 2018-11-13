@@ -13,4 +13,8 @@ public interface ExecutionStrategy extends ComponentLifecycle {
 	public void execute(final @NonNull Runnable runnable);
 	
 	public void execute(final @NonNull ExecutionContext<?, ?> context);
+	
+	public default String getName() {
+		return null;
+	}
 }

@@ -19,4 +19,6 @@ public interface ComponentLifecycle {
 	public default void stop() {
 
 	}
+	
+	public String getName();
 }
