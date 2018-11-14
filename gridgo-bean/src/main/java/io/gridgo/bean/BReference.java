@@ -22,18 +22,22 @@ public interface BReference extends BElement {
 	public default String toJson() {
 		var ref = getReference();
 		if (ref != null && ref instanceof SerializableReference)
-			return ((BReference) ref).toJson();
+			return ((SerializableReference) ref).toJson();
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public default <T> T toJsonElement() {
+		var ref = getReference();
+		if (ref != null && ref instanceof SerializableReference)
+			return (T) ((SerializableReference) ref).toJsonElement();
 		return null;
 	}
 
 	public default String toXml(String name) {
 		var ref = getReference();
 		if (ref != null && ref instanceof SerializableReference)
-			return ((BReference) ref).toXml();
+			return ((SerializableReference) ref).toXml();
 		return null;
 	}
 
