@@ -213,6 +213,10 @@ public interface BValue extends BElement {
 		this.setData(Base64.getDecoder().decode(base64));
 	}
 
+	default <T> T getDataAs(Class<T> targetType) {
+		return PrimitiveUtils.getValueFrom(targetType, this.getData());
+	}
+
 	default void convertToBoolean() {
 		this.setData(this.getBoolean());
 	}
