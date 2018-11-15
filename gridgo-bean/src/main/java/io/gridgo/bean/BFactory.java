@@ -113,10 +113,19 @@ public interface BFactory {
 	}
 
 	default BArray newArray(Object src) {
+		if (src instanceof BArray) {
+			return ((BArray) src).deepClone();
+		}
+
 		BArray array = newArray();
-		ArrayUtils.foreach(src, (entry) -> {
-			array.addAny(entry);
-		});
+		if (src != null && !ArrayUtils.isArrayOrCollection(src.getClass())) {
+			array.addAny(src);
+		} else {
+			ArrayUtils.foreach(src, (entry) -> {
+				array.addAny(entry);
+			});
+		}
+
 		return array;
 	}
 
@@ -135,9 +144,14 @@ public interface BFactory {
 	}
 
 	default BValue newValue(Object data) {
+		if (data instanceof BValue) {
+			return ((BValue) data).deepClone();
+		}
+
 		if (data != null && !(data instanceof byte[]) && !PrimitiveUtils.isPrimitive(data.getClass())) {
 			throw new IllegalArgumentException("Cannot create new BValue from non-primitive data");
 		}
+
 		BValue result = newValue();
 		result.setData(data);
 		return result;
