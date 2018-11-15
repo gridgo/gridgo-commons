@@ -58,7 +58,7 @@ public interface BFactory {
 		}
 		return result;
 	}
-	
+
 	default BReference newReference(Object reference) {
 		BReference bReference = this.getReferenceSupplier().get();
 		bReference.setReference(reference);
@@ -135,6 +135,9 @@ public interface BFactory {
 	}
 
 	default BValue newValue(Object data) {
+		if (data != null && !(data instanceof byte[]) && !PrimitiveUtils.isPrimitive(data.getClass())) {
+			throw new IllegalArgumentException("Cannot create new BValue from non-primitive data");
+		}
 		BValue result = newValue();
 		result.setData(data);
 		return result;

@@ -14,9 +14,7 @@ public interface BValue extends BElement {
 	}
 
 	static BValue newDefault(Object data) {
-		BValue result = BFactory.DEFAULT.newValue();
-		result.setData(data);
-		return result;
+		return BFactory.DEFAULT.newValue(data);
 	}
 
 	@Override
