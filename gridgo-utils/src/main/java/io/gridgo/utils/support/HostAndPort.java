@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import io.gridgo.utils.InetAddressUtils;
+import io.gridgo.utils.exception.MalformedHostAndPortException;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -182,9 +183,18 @@ public class HostAndPort {
 		return null;
 	}
 
-	public static List<HostAndPort> parse(String multiValueCommaSeparated) {
-		if (multiValueCommaSeparated != null) {
-			String[] arr = multiValueCommaSeparated.trim().split(",");
+	public static List<HostAndPort> parse(String value) {
+		if (value != null) {
+			value = value.trim();
+			if (value.startsWith("[")) {
+				if (value.endsWith("]")) {
+					value = value.substring(1, value.length() - 1);
+				} else {
+					throw new MalformedHostAndPortException(
+							"Multi host and port string if start with [ must end with ]");
+				}
+			}
+			String[] arr = value.trim().split(",");
 			List<HostAndPort> results = new LinkedList<>();
 			for (String str : arr) {
 				results.add(fromString(str));

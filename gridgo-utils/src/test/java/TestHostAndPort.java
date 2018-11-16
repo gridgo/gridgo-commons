@@ -65,6 +65,14 @@ public class TestHostAndPort {
 		assertEquals(list.get(0), list.get(1));
 		assertEquals(list.get(3), list.get(4));
 		assertNotEquals(list.get(0), list.get(2));
+		
+		list = HostAndPort.parse("[localhost:8080, 127.0.0.1:8080,localhost,* :9999,0.0.0.0:9999]");
+		assertNotNull(list);
+		assertEquals(list.size(), 5);
+		assertEquals(list.get(0), list.get(1));
+		assertEquals(list.get(3), list.get(4));
+		assertNotEquals(list.get(0), list.get(2));
+		System.out.println("list: " + list);
 	}
 
 	@Test
