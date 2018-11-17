@@ -13,4 +13,6 @@ public class MessageConstants {
 	public static final String IS_MULTIPART = "isMultipart";
 
 	public static final String SIZE = "size";
+
+	public static final String SOURCE = "source";
 }
