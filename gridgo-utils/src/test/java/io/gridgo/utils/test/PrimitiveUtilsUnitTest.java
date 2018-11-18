@@ -69,4 +69,15 @@ public class PrimitiveUtilsUnitTest {
 		Assert.assertEquals(0, PrimitiveUtils.getShortValueFrom(false));
 		Assert.assertEquals(257, PrimitiveUtils.getShortValueFrom(new byte[] { 1, 1 }));
 	}
+
+	@Test
+	public void testGetChar() {
+		Assert.assertEquals('a', PrimitiveUtils.getCharValueFrom(97));
+		Assert.assertEquals('a', PrimitiveUtils.getCharValueFrom('a'));
+		Assert.assertEquals('a', PrimitiveUtils.getCharValueFrom("abc"));
+		Assert.assertEquals('\0', PrimitiveUtils.getCharValueFrom(""));
+		Assert.assertEquals('1', PrimitiveUtils.getCharValueFrom(true));
+		Assert.assertEquals('0', PrimitiveUtils.getCharValueFrom(false));
+		Assert.assertEquals('a', PrimitiveUtils.getCharValueFrom(new byte[] { 0, 97 }));
+	}
 }
