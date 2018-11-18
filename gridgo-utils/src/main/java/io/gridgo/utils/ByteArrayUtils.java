@@ -59,15 +59,14 @@ public final class ByteArrayUtils {
 	}
 
 	public static final byte[] concat(byte[]... bytesArray) {
-		if (bytesArray != null) {
-			int length = 0;
-			for (byte[] bytes : bytesArray) {
-				if (bytes == null) {
-					throw new NullPointerException("Byte array to be concated cannot be null");
-				}
-				length += bytes.length;
+		int length = 0;
+		for (byte[] bytes : bytesArray) {
+			if (bytes == null) {
+				throw new NullPointerException("Byte array to be concated cannot be null");
 			}
-			ByteArrayOutputStream os = new ByteArrayOutputStream(length);
+			length += bytes.length;
+		}
+		try (var os = new ByteArrayOutputStream(length)) {
 			for (byte[] bytes : bytesArray) {
 				try {
 					os.write(bytes);
@@ -76,8 +75,9 @@ public final class ByteArrayUtils {
 				}
 			}
 			return os.toByteArray();
+		} catch (IOException e) {
+			return null;
 		}
-		return null;
 	}
 
 	public static byte[] fromHex(String hex) {
