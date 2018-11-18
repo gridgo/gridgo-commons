@@ -32,7 +32,6 @@
 	</scm>
 
 	<properties>
-		<gridgo.utils.version>${project.version}</gridgo.utils.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<gridgo.base.version>${project.version}</gridgo.base.version>
 		<additionalparam>-Xdoclint:none</additionalparam>
