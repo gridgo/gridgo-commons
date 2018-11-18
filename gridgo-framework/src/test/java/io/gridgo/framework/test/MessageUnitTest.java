@@ -1,5 +1,6 @@
 package io.gridgo.framework.test;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Assert;
@@ -44,7 +45,13 @@ public class MessageUnitTest {
 	public void testMultipart() {
 		var msg1 = Message.newDefault(Payload.newDefault(BObject.newDefault().setAny("key", 1), BValue.newDefault(1)));
 		var msg2 = Message.newDefault(Payload.newDefault(BObject.newDefault().setAny("key", 2), BValue.newDefault(2)));
-		var msg = new MultipartMessage(new Message[] { msg1, msg2 });
+		var multipart1 = new MultipartMessage(new Message[] { msg1, msg2 });
+		assertMessage(multipart1);
+		var multipart2 = new MultipartMessage((Iterable<Message>) Arrays.asList(new Message[] { msg1, msg2 }));
+		assertMessage(multipart2);
+	}
+
+	private void assertMessage(MultipartMessage msg) {
 		Assert.assertEquals(true, msg.getPayload().getHeaders().getBoolean(MessageConstants.IS_MULTIPART));
 		Assert.assertEquals(2, msg.getPayload().getHeaders().getInteger(MessageConstants.SIZE));
 		Assert.assertTrue(msg.getPayload().getBody().isArray());
