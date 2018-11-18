@@ -13,15 +13,24 @@ import io.gridgo.framework.support.impl.MultipartMessage;
 public class MessageUnitTest {
 
 	@Test
-	public void testMultipart() {
+	public void testMessage() {
 		var msg1 = Message.newDefault(Payload.newDefault(BObject.newDefault().setAny("key", 1), BValue.newDefault(1)));
-		var msg2 = Message.newDefault(Payload.newDefault(BObject.newDefault().setAny("key", 2), BValue.newDefault(2)));
 		msg1.getPayload().addHeaderIfAbsent("key", 2);
 		Assert.assertEquals(1, msg1.getPayload().getHeaders().getInteger("key"));
 		msg1.getPayload().addHeaderIfAbsent("test", 2);
 		Assert.assertEquals(2, msg1.getPayload().getHeaders().getInteger("test"));
 		msg1.getPayload().addHeader("test", 1);
 		Assert.assertEquals(1, msg1.getPayload().getHeaders().getInteger("test"));
+		msg1.attachSource("test");
+		Assert.assertEquals("test", msg1.getMisc().get(MessageConstants.SOURCE));
+		msg1.setRoutingIdFromAny(1);
+		Assert.assertEquals(1, msg1.getRoutingId().get().getInteger());
+	}
+
+	@Test
+	public void testMultipart() {
+		var msg1 = Message.newDefault(Payload.newDefault(BObject.newDefault().setAny("key", 1), BValue.newDefault(1)));
+		var msg2 = Message.newDefault(Payload.newDefault(BObject.newDefault().setAny("key", 2), BValue.newDefault(2)));
 		var msg = new MultipartMessage(new Message[] { msg1, msg2 });
 		Assert.assertEquals(true, msg.getPayload().getHeaders().getBoolean(MessageConstants.IS_MULTIPART));
 		Assert.assertEquals(2, msg.getPayload().getHeaders().getInteger(MessageConstants.SIZE));
