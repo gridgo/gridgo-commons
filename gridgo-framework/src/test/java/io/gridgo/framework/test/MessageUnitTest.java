@@ -63,4 +63,15 @@ public class MessageUnitTest {
 		Assert.assertEquals(1, msg.getPayload().getBody().asArray().getObject(0).getInteger(MessageConstants.BODY));
 		Assert.assertEquals(2, msg.getPayload().getBody().asArray().getObject(1).getInteger(MessageConstants.BODY));
 	}
+
+	@Test
+	public void testPayload() {
+		var payload = Payload.newDefault(BValue.newDefault(1), BValue.newDefault(2));
+		Assert.assertEquals(1, payload.getId().get().getInteger());
+		Assert.assertEquals(2, payload.getBody().asValue().getInteger());
+		payload.setId("test");
+		Assert.assertEquals("test", payload.getId().get().getString());
+		payload.setBody(BObject.newDefault().setAny("test", 1));
+		Assert.assertEquals(1, payload.getBody().asObject().getInteger("test"));
+	}
 }
