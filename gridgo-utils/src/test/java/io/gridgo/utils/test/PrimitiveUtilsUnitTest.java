@@ -80,4 +80,14 @@ public class PrimitiveUtilsUnitTest {
 		Assert.assertEquals('0', PrimitiveUtils.getCharValueFrom(false));
 		Assert.assertEquals('a', PrimitiveUtils.getCharValueFrom(new byte[] { 0, 97 }));
 	}
+
+	@Test
+	public void testGetDouble() {
+		Assert.assertEquals(97.0, PrimitiveUtils.getDoubleValueFrom(97), 0);
+		Assert.assertEquals(97.0, PrimitiveUtils.getDoubleValueFrom('a'), 0);
+		Assert.assertEquals(97.0, PrimitiveUtils.getDoubleValueFrom("97.0"), 0);
+		Assert.assertEquals(1.0, PrimitiveUtils.getDoubleValueFrom(true), 0);
+		Assert.assertEquals(0.0, PrimitiveUtils.getDoubleValueFrom(false), 0);
+		Assert.assertEquals(97.0, PrimitiveUtils.getDoubleValueFrom(new byte[] { 64, 88, 64, 0, 0, 0, 0, 0 }), 0);
+	}
 }
