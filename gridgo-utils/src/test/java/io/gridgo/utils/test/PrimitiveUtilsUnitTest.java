@@ -100,7 +100,7 @@ public class PrimitiveUtilsUnitTest {
 		Assert.assertEquals(0.0, PrimitiveUtils.getFloatValueFrom(false), 0);
 		Assert.assertEquals(97.0, PrimitiveUtils.getFloatValueFrom(new byte[] { 66, -62, 0, 0, 0, 0, 0, 0 }), 0);
 	}
-	
+
 	@Test
 	public void testGetLong() {
 		Assert.assertEquals(127, PrimitiveUtils.getLongValueFrom(127));
@@ -111,7 +111,7 @@ public class PrimitiveUtilsUnitTest {
 		Assert.assertEquals(0, PrimitiveUtils.getLongValueFrom(false));
 		Assert.assertEquals(127, PrimitiveUtils.getLongValueFrom(new byte[] { 0, 0, 0, 0, 0, 0, 0, 127 }));
 	}
-	
+
 	@Test
 	public void testGetInteger() {
 		Assert.assertEquals(127, PrimitiveUtils.getIntegerValueFrom(127));
@@ -121,5 +121,14 @@ public class PrimitiveUtilsUnitTest {
 		Assert.assertEquals(1, PrimitiveUtils.getIntegerValueFrom(true));
 		Assert.assertEquals(0, PrimitiveUtils.getIntegerValueFrom(false));
 		Assert.assertEquals(127, PrimitiveUtils.getIntegerValueFrom(new byte[] { 0, 0, 0, 127 }));
+	}
+
+	@Test
+	public void testGetString() {
+		Assert.assertEquals(null, PrimitiveUtils.getStringValueFrom(null));
+		Assert.assertEquals("abc", PrimitiveUtils.getStringValueFrom("abc"));
+		Assert.assertEquals("0x6432194b5a", PrimitiveUtils.getStringValueFrom(new byte[] { 100, 50, 25, 75, 90 }));
+		Assert.assertEquals("127", PrimitiveUtils.getStringValueFrom(127));
+		Assert.assertEquals("class io.gridgo.utils.PrimitiveUtils", PrimitiveUtils.class.toString());
 	}
 }
