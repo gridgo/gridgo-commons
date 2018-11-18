@@ -26,5 +26,7 @@ public class RegistryUnitTest {
 		} catch (ClassCastException ex) {
 
 		}
+		int i = reg.lookupMandatory("age", Integer.class);
+		Assert.assertEquals(10, i);
 	}
 }
