@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.gridgo.utils.ThreadUtils;
 
-public class TestCompleteableFuture {
+public class CompleteableFutureUnitTest {
 
 	public static void main(String[] args) {
 		for (int i = 0; i < 10; i++) {

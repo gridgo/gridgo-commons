@@ -12,7 +12,7 @@ import io.gridgo.utils.support.HostAndFixedPort;
 import io.gridgo.utils.support.HostAndPort;
 import io.gridgo.utils.support.HostAndPortSet;
 
-public class TestHostAndPort {
+public class HostAndPortUnitTest {
 
 	@Test
 	public void testHostAndPort() {

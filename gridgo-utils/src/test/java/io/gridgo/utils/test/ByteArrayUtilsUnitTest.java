@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import io.gridgo.utils.ByteArrayUtils;
 
-public class TestByteArrayUtils {
+public class ByteArrayUtilsUnitTest {
 
 	@Test
 	public void testHex() {

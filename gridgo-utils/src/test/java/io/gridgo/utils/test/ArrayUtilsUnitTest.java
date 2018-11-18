@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import io.gridgo.utils.ArrayUtils;
 
-public class TestArrayUtils {
+public class ArrayUtilsUnitTest {
 
 	@Test
 	public void testIsArray() {
