@@ -1,4 +1,4 @@
-package io.gridgo.utils;
+package io.gridgo.utils.test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import io.gridgo.utils.ArrayUtils;
 
 public class TestArrayUtils {
 

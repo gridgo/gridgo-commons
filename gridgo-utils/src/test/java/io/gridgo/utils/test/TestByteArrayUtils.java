@@ -1,9 +1,11 @@
-package io.gridgo.utils;
+package io.gridgo.utils.test;
 
 import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import io.gridgo.utils.ByteArrayUtils;
 
 public class TestByteArrayUtils {
 
