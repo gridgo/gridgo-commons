@@ -13,7 +13,7 @@ import io.gridgo.framework.execution.impl.disruptor.MultiProducerDisruptorExecut
 public class ExecutionStrategyUnitTest {
 
 	@Test
-	public void testGenerator() throws InterruptedException {
+	public void testStrategy() throws InterruptedException {
 		var atomic = new AtomicInteger(0);
 		var s1 = new DefaultExecutionStrategy();
 		s1.execute(atomic::incrementAndGet);
