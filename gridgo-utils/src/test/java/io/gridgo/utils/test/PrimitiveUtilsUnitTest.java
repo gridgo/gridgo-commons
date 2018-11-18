@@ -100,4 +100,15 @@ public class PrimitiveUtilsUnitTest {
 		Assert.assertEquals(0.0, PrimitiveUtils.getFloatValueFrom(false), 0);
 		Assert.assertEquals(97.0, PrimitiveUtils.getFloatValueFrom(new byte[] { 66, -62, 0, 0, 0, 0, 0, 0 }), 0);
 	}
+	
+	@Test
+	public void testGetLong() {
+		Assert.assertEquals(127, PrimitiveUtils.getLongValueFrom(127));
+		Assert.assertEquals(-128, PrimitiveUtils.getLongValueFrom(-128));
+		Assert.assertEquals(97, PrimitiveUtils.getLongValueFrom('a'));
+		Assert.assertEquals(127, PrimitiveUtils.getLongValueFrom("127"));
+		Assert.assertEquals(1, PrimitiveUtils.getLongValueFrom(true));
+		Assert.assertEquals(0, PrimitiveUtils.getLongValueFrom(false));
+		Assert.assertEquals(127, PrimitiveUtils.getLongValueFrom(new byte[] { 0, 0, 0, 0, 0, 0, 0, 127 }));
+	}
 }
