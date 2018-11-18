@@ -16,6 +16,12 @@ public class MessageUnitTest {
 	public void testMultipart() {
 		var msg1 = Message.newDefault(Payload.newDefault(BObject.newDefault().setAny("key", 1), BValue.newDefault(1)));
 		var msg2 = Message.newDefault(Payload.newDefault(BObject.newDefault().setAny("key", 2), BValue.newDefault(2)));
+		msg1.getPayload().addHeaderIfAbsent("key", 2);
+		Assert.assertEquals(1, msg1.getPayload().getHeaders().getInteger("key"));
+		msg1.getPayload().addHeaderIfAbsent("test", 2);
+		Assert.assertEquals(2, msg1.getPayload().getHeaders().getInteger("test"));
+		msg1.getPayload().addHeader("test", 1);
+		Assert.assertEquals(1, msg1.getPayload().getHeaders().getInteger("test"));
 		var msg = new MultipartMessage(new Message[] { msg1, msg2 });
 		Assert.assertEquals(true, msg.getPayload().getHeaders().getBoolean(MessageConstants.IS_MULTIPART));
 		Assert.assertEquals(2, msg.getPayload().getHeaders().getInteger(MessageConstants.SIZE));
