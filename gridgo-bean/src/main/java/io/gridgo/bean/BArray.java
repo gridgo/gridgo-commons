@@ -31,20 +31,23 @@ public interface BArray extends BContainer, List<BElement> {
 		return this.get(index).getType();
 	}
 
-	default void addAny(Object obj) {
+	default BArray addAny(Object obj) {
 		this.add(this.getFactory().fromAny(obj));
+		return this;
 	}
 
-	default void addAnySequence(Object... elements) {
+	default BArray addAnySequence(Object... elements) {
 		for (Object object : elements) {
 			this.addAny(object);
 		}
+		return this;
 	}
 
-	default void addAnyAll(Collection<?> collection) {
+	default BArray addAnyAll(Collection<?> collection) {
 		for (Object object : collection) {
 			this.addAny(object);
 		}
+		return this;
 	}
 
 	@Override

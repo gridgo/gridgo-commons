@@ -1,8 +1,11 @@
 package io.gridgo.framework.test;
 
+import java.util.Collections;
+
 import org.junit.Assert;
 import org.junit.Test;
 
+import io.gridgo.bean.BArray;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 import io.gridgo.framework.support.Message;
@@ -25,6 +28,16 @@ public class MessageUnitTest {
 		Assert.assertEquals("test", msg1.getMisc().get(MessageConstants.SOURCE));
 		msg1.setRoutingIdFromAny(1);
 		Assert.assertEquals(1, msg1.getRoutingId().get().getInteger());
+		var msg2 = Message.newDefault(BValue.newDefault(1), Payload.newDefault(null));
+		Assert.assertEquals(1, msg2.getRoutingId().get().getInteger());
+		var msg3 = Message.newDefault(BValue.newDefault(1), Collections.singletonMap("test", 1),
+				Payload.newDefault(null));
+		Assert.assertEquals(1, msg3.getMisc().get("test"));
+		var msg4 = Message
+				.parse(BArray.newDefault().addAny(1).addAny(BObject.newDefault().setAny("test", 1)).addAny(1));
+		Assert.assertEquals(1, msg4.getPayload().getId().get().getInteger());
+		Assert.assertEquals(1, msg4.getPayload().getHeaders().getInteger("test"));
+		Assert.assertEquals(1, msg4.getPayload().getBody().asValue().getInteger());
 	}
 
 	@Test
