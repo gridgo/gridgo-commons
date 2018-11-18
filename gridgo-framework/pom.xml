@@ -12,7 +12,6 @@
 	</parent>
 
 	<properties>
-		<gridgo.utils.version>1.0.0</gridgo.utils.version>
 		<gridgo.bean.version>0.1.2-SNAPSHOT</gridgo.bean.version>
 		<joo.promise4j.version>1.2.0</joo.promise4j.version>
 		<disruptor.version>3.4.2</disruptor.version>

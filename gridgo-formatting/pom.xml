@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>io.gridgo</groupId>
 			<artifactId>gridgo-utils</artifactId>
-			<version>${gridgo.utils.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
