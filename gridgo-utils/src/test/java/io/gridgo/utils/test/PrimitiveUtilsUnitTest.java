@@ -16,4 +16,19 @@ public class PrimitiveUtilsUnitTest {
 		Assert.assertFalse(PrimitiveUtils.isNumber(null));
 		Assert.assertFalse(PrimitiveUtils.isNumber("abc"));
 	}
+
+	@Test
+	public void testIsPrimitive() {
+		Assert.assertTrue(PrimitiveUtils.isPrimitive(Byte.class));
+		Assert.assertTrue(PrimitiveUtils.isPrimitive(String.class));
+		Assert.assertTrue(PrimitiveUtils.isPrimitive(Boolean.class));
+		Assert.assertTrue(PrimitiveUtils.isPrimitive(Character.class));
+		Assert.assertTrue(PrimitiveUtils.isPrimitive(Integer.class));
+		Assert.assertTrue(PrimitiveUtils.isPrimitive(Long.class));
+		Assert.assertTrue(PrimitiveUtils.isPrimitive(Double.class));
+		Assert.assertFalse(PrimitiveUtils.isPrimitive(Byte[].class));
+		Assert.assertFalse(PrimitiveUtils.isPrimitive(String[].class));
+		Assert.assertFalse(PrimitiveUtils.isPrimitive(Object[].class));
+		Assert.assertFalse(PrimitiveUtils.isPrimitive(PrimitiveUtils.class));
+	}
 }
