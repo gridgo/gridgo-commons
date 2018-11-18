@@ -90,4 +90,14 @@ public class PrimitiveUtilsUnitTest {
 		Assert.assertEquals(0.0, PrimitiveUtils.getDoubleValueFrom(false), 0);
 		Assert.assertEquals(97.0, PrimitiveUtils.getDoubleValueFrom(new byte[] { 64, 88, 64, 0, 0, 0, 0, 0 }), 0);
 	}
+
+	@Test
+	public void testGetFloat() {
+		Assert.assertEquals(97.0, PrimitiveUtils.getFloatValueFrom(97), 0);
+		Assert.assertEquals(97.0, PrimitiveUtils.getFloatValueFrom('a'), 0);
+		Assert.assertEquals(97.0, PrimitiveUtils.getFloatValueFrom("97.0"), 0);
+		Assert.assertEquals(1.0, PrimitiveUtils.getFloatValueFrom(true), 0);
+		Assert.assertEquals(0.0, PrimitiveUtils.getFloatValueFrom(false), 0);
+		Assert.assertEquals(97.0, PrimitiveUtils.getFloatValueFrom(new byte[] { 66, -62, 0, 0, 0, 0, 0, 0 }), 0);
+	}
 }
