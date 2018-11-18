@@ -31,4 +31,20 @@ public class PrimitiveUtilsUnitTest {
 		Assert.assertFalse(PrimitiveUtils.isPrimitive(Object[].class));
 		Assert.assertFalse(PrimitiveUtils.isPrimitive(PrimitiveUtils.class));
 	}
+
+	@Test
+	public void testGetBoolean() {
+		Assert.assertTrue(PrimitiveUtils.getBooleanValueFrom(1));
+		Assert.assertFalse(PrimitiveUtils.getBooleanValueFrom(0));
+		Assert.assertTrue(PrimitiveUtils.getBooleanValueFrom("true"));
+		Assert.assertFalse(PrimitiveUtils.getBooleanValueFrom("false"));
+		Assert.assertTrue(PrimitiveUtils.getBooleanValueFrom('a'));
+		Assert.assertFalse(PrimitiveUtils.getBooleanValueFrom('\0'));
+		Assert.assertTrue(PrimitiveUtils.getBooleanValueFrom(Boolean.TRUE));
+		Assert.assertFalse(PrimitiveUtils.getBooleanValueFrom(Boolean.FALSE));
+		Assert.assertTrue(PrimitiveUtils.getBooleanValueFrom(new Object()));
+		Assert.assertFalse(PrimitiveUtils.getBooleanValueFrom(null));
+		Assert.assertTrue(PrimitiveUtils.getBooleanValueFrom(new byte[] {0, 0, 0, 0, 0, 0, 0, 1}));
+		Assert.assertFalse(PrimitiveUtils.getBooleanValueFrom(new byte[] {0, 0, 0, 0, 0, 0, 0, 0}));
+	}
 }
