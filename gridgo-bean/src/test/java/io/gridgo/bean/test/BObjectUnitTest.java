@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.gridgo.bean.BArray;
+import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 
@@ -25,10 +26,11 @@ public class BObjectUnitTest {
 		Assert.assertTrue(obj.getBoolean("bool", true));
 		obj.setAny("bool", true);
 		Assert.assertTrue(obj.getBoolean("bool", false));
-		Assert.assertEquals(1L, obj.getLong("long", -1));
-		Assert.assertEquals('a', obj.getChar("char", '\0'));
-		Assert.assertEquals(1.11, obj.getDouble("double", -1), 0);
-		Assert.assertEquals(1.11, obj.getFloat("double", -1), 0.001);
+
+		var json = "{\"arr\":[1,2,3],\"bool\":true,\"char\":\"a\",\"double\":1.11,\"int\":1,\"long\":1,\"str\":\"hello\"}";
+		Assert.assertEquals(json, obj.toJson());
+		obj = BElement.fromJson(json);
+		assertObject(obj);
 	}
 
 	private void assertObject(BObject obj) {
@@ -38,5 +40,9 @@ public class BObjectUnitTest {
 				obj.getArray("arr", BArray.newDefault()).stream() //
 						.map(e -> e.asValue().getData()) //
 						.toArray(size -> new Integer[size]));
+		Assert.assertEquals(1L, obj.getLong("long", -1));
+		Assert.assertEquals('a', obj.getChar("char", '\0'));
+		Assert.assertEquals(1.11, obj.getDouble("double", -1), 0);
+		Assert.assertEquals(1.11, obj.getFloat("double", -1), 0.001);
 	}
 }
