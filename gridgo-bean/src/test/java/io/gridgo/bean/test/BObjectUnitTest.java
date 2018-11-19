@@ -1,5 +1,6 @@
 package io.gridgo.bean.test;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -59,6 +60,10 @@ public class BObjectUnitTest {
 
 		obj.setAny("short", (short) 1);
 		Assert.assertEquals((short) 1, obj.getShort("short", (short) -1));
+
+		obj = BObject.newFromSequence("int", 1, "str", "hello", "long", 1, "char", 'a', "double", 1.11, "arr",
+				new int[] { 1, 2, 3 }, "byte", 1, "short", 1, "obj", Collections.singletonMap("int", 2));
+		assertObject(obj);
 	}
 
 	private void assertObject(BObject obj) {
