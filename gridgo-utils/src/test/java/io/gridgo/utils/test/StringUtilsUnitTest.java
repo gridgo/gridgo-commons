@@ -55,4 +55,18 @@ public class StringUtilsUnitTest {
 	public void testTab() {
 		Assert.assertEquals("\t\t\t\t", StringUtils.tabs(4));
 	}
+
+	@Test
+	public void testIsNumber() {
+		Assert.assertTrue(StringUtils.isRepresentNumber("5"));
+		Assert.assertTrue(StringUtils.isRepresentNumber("5.0"));
+		Assert.assertTrue(StringUtils.isRepresentNumber("-5"));
+		Assert.assertTrue(StringUtils.isRepresentNumber("-5.0"));
+		Assert.assertFalse(StringUtils.isRepresentNumber("-5.0."));
+		Assert.assertFalse(StringUtils.isRepresentNumber("-5.."));
+		Assert.assertFalse(StringUtils.isRepresentNumber("-5.0.0"));
+		Assert.assertFalse(StringUtils.isRepresentNumber("5-0"));
+		Assert.assertFalse(StringUtils.isRepresentNumber("-5a"));
+		Assert.assertFalse(StringUtils.isRepresentNumber("a"));
+	}
 }
