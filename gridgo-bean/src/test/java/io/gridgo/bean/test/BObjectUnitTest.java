@@ -52,6 +52,7 @@ public class BObjectUnitTest {
 
 		obj = BElement.fromRaw(obj.toBytes());
 		assertObject(obj);
+		System.out.println(obj.toString());
 	}
 
 	private void assertObject(BObject obj) {
@@ -66,6 +67,6 @@ public class BObjectUnitTest {
 		Assert.assertEquals(1.11, obj.getDouble("double", -1), 0);
 		Assert.assertEquals(1.11, obj.getFloat("double", -1), 0.001);
 		Assert.assertEquals(1, obj.getByte("byte", (byte) -1));
-		Assert.assertEquals(2, obj.getObject("obj").getInteger("int"));
+		Assert.assertEquals(2, obj.getObject("obj", null).getInteger("int"));
 	}
 }
