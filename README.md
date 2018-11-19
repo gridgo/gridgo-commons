@@ -2,7 +2,7 @@
 
 ### release
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.gridgo/gridgo-base.svg?maxAge=604800)](http://mvnrepository.com/artifact/io.gridgo/gridgo-base)
+[![Maven Central](https://img.shields.io/maven-central/v/io.gridgo/gridgo-base.svg?maxAge=86400)](http://mvnrepository.com/artifact/io.gridgo/gridgo-base)
 [![Javadocs](http://javadoc.io/badge/io.gridgo/gridgo-base.svg)](http://javadoc.io/doc/io.gridgo/gridgo-base)
 
 ### master
