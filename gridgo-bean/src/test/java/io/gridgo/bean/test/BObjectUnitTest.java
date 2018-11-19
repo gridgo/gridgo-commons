@@ -49,6 +49,9 @@ public class BObjectUnitTest {
 		Assert.assertEquals(1.11, map.get("double"));
 		var list = (List<?>) map.get("arr");
 		Assert.assertArrayEquals(new Integer[] { 1, 2, 3 }, list.toArray());
+
+		obj = BElement.fromRaw(obj.toBytes());
+		assertObject(obj);
 	}
 
 	private void assertObject(BObject obj) {
