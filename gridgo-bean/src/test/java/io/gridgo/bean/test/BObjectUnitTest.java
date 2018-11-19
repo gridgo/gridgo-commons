@@ -53,6 +53,12 @@ public class BObjectUnitTest {
 		obj = BElement.fromRaw(obj.toBytes());
 		assertObject(obj);
 		System.out.println(obj.toString());
+
+		byte[] raw = obj.getRaw("str", new byte[0]);
+		Assert.assertEquals("hello", new String(raw));
+
+		obj.setAny("short", (short) 1);
+		Assert.assertEquals((short) 1, obj.getShort("short", (short) -1));
 	}
 
 	private void assertObject(BObject obj) {
