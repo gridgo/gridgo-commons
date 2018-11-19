@@ -18,6 +18,7 @@ public class BObjectUnitTest {
 				.setAny("char", 'a') //
 				.setAny("str", "hello") //
 				.setAny("double", 1.11) //
+				.setAny("byte", (byte) 1) //
 				.setAny("arr", new int[] { 1, 2, 3 });
 		assertObject(obj);
 		assertObject(obj.deepClone());
@@ -27,9 +28,15 @@ public class BObjectUnitTest {
 		obj.setAny("bool", true);
 		Assert.assertTrue(obj.getBoolean("bool", false));
 
-		var json = "{\"arr\":[1,2,3],\"bool\":true,\"char\":\"a\",\"double\":1.11,\"int\":1,\"long\":1,\"str\":\"hello\"}";
+		var json = "{\"arr\":[1,2,3],\"bool\":true,\"byte\":1,\"char\":\"a\",\"double\":1.11,\"int\":1,\"long\":1,\"str\":\"hello\"}";
 		Assert.assertEquals(json, obj.toJson());
 		obj = BElement.fromJson(json);
+		assertObject(obj);
+
+		var xml = "<object><array name=\"arr\"><integer value=\"1\"/><integer value=\"2\"/><integer value=\"3\"/></array><string name=\"str\" value=\"hello\"/><boolean name=\"bool\" value=\"true\"/><integer name=\"byte\" value=\"1\"/><double name=\"double\" value=\"1.11\"/><string name=\"char\" value=\"a\"/><integer name=\"int\" value=\"1\"/><integer name=\"long\" value=\"1\"/></object>";
+
+		Assert.assertEquals(xml, obj.toXml());
+		obj = BElement.fromXml(xml);
 		assertObject(obj);
 	}
 
@@ -44,5 +51,6 @@ public class BObjectUnitTest {
 		Assert.assertEquals('a', obj.getChar("char", '\0'));
 		Assert.assertEquals(1.11, obj.getDouble("double", -1), 0);
 		Assert.assertEquals(1.11, obj.getFloat("double", -1), 0.001);
+		Assert.assertEquals(1, obj.getByte("byte", (byte) -1));
 	}
 }
