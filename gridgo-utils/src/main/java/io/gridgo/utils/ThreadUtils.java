@@ -7,6 +7,8 @@ import java.util.concurrent.locks.LockSupport;
 import java.util.function.Supplier;
 
 import org.cliffc.high_scale_lib.NonBlockingHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.gridgo.utils.exception.ThreadingException;
 import io.gridgo.utils.helper.Assert;
@@ -17,29 +19,32 @@ public class ThreadUtils {
 
 	private final static AtomicInteger shutdownTaskIdSeed = new AtomicInteger(0);
 	private final static Map<Integer, Runnable> shutdownTasks = new NonBlockingHashMap<>();
+	private final static Logger logger = LoggerFactory.getLogger(ThreadUtils.class);
 
 	static {
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			SHUTTING_DOWN_SIGNAL.set(true);
-			// process shutdown tasks...
-			int maxId = Integer.MIN_VALUE;
-			for (Integer key : shutdownTasks.keySet()) {
-				if (key > maxId) {
-					maxId = key;
-				}
-			}
+		Runtime.getRuntime().addShutdownHook(new Thread(ThreadUtils::doShutdown));
+	}
 
-			for (int i = 0; i <= maxId; i++) {
-				Runnable task = shutdownTasks.get(i);
-				if (task != null) {
-					try {
-						task.run();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+	protected static void doShutdown() {
+		SHUTTING_DOWN_SIGNAL.set(true);
+		// process shutdown tasks...
+		int maxId = Integer.MIN_VALUE;
+		for (Integer key : shutdownTasks.keySet()) {
+			if (key > maxId) {
+				maxId = key;
+			}
+		}
+
+		for (int i = 0; i <= maxId; i++) {
+			Runnable task = shutdownTasks.get(i);
+			if (task != null) {
+				try {
+					task.run();
+				} catch (Exception e) {
+					logger.warn("Exception caught while shutting down", e);
 				}
 			}
-		}));
+		}
 	}
 
 	/**
