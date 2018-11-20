@@ -12,4 +12,6 @@ public class TestObject {
 	private String testStr;
 	
 	private TestObject testObj;
+	
+	private int[] testArr;
 }

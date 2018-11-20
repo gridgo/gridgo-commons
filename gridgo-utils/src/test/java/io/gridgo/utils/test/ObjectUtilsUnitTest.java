@@ -17,6 +17,7 @@ public class ObjectUtilsUnitTest {
 		map.put("testInt", 1);
 		map.put("testBool", true);
 		map.put("testStr", "hello");
+		map.put("testArr", new int[] { 1, 2, 3 });
 
 		var innerMap = new HashMap<>();
 		innerMap.put("testInt", 2);
@@ -26,11 +27,13 @@ public class ObjectUtilsUnitTest {
 		Assert.assertEquals(true, obj.isTestBool());
 		Assert.assertEquals("hello", obj.getTestStr());
 		Assert.assertEquals(2, obj.getTestObj().getTestInt());
+		Assert.assertArrayEquals(new int[] { 1, 2, 3 }, obj.getTestArr());
 
 		map = ObjectUtils.toMap(obj);
 		Assert.assertEquals(1, map.get("testInt"));
 		Assert.assertEquals("hello", map.get("testStr"));
 		Assert.assertEquals(true, map.get("testBool"));
 		Assert.assertEquals(2, ((TestObject) map.get("testObj")).getTestInt());
+		Assert.assertArrayEquals(new int[] { 1, 2, 3 }, (int[]) map.get("testArr"));
 	}
 }
