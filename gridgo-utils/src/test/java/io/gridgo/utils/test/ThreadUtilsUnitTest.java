@@ -19,5 +19,12 @@ public class ThreadUtilsUnitTest {
 		ThreadUtils.sleep(0);
 		var atomic = new AtomicInteger(0);
 		ThreadUtils.busySpin(0, () -> atomic.getAndDecrement() == 0);
+		new TestThreadUtils().testShutdown();
+	}
+
+	class TestThreadUtils extends ThreadUtils {
+		public void testShutdown() {
+			doShutdown();
+		}
 	}
 }
