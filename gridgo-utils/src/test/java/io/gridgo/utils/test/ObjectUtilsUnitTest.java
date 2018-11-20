@@ -21,9 +21,10 @@ public class ObjectUtilsUnitTest {
 		map.put("testStr", "hello");
 		map.put("testArr", new int[] { 1, 2, 3 });
 
-		var innerMap = new HashMap<>();
+		var innerMap = new HashMap<String, Object>();
 		innerMap.put("testInt", 2);
 		map.put("testObj", innerMap);
+
 		var obj = ObjectUtils.fromMap(TestObject.class, map);
 		Assert.assertEquals(1, obj.getTestInt());
 		Assert.assertEquals(true, obj.isTestBool());
@@ -37,7 +38,7 @@ public class ObjectUtilsUnitTest {
 		Assert.assertEquals(true, map.get("testBool"));
 		Assert.assertEquals(2, ((TestObject) map.get("testObj")).getTestInt());
 		Assert.assertArrayEquals(new int[] { 1, 2, 3 }, (int[]) map.get("testArr"));
-		
+
 		obj = new TestObject();
 		ObjectUtils.assembleFromMap(TestObject.class, obj, map);
 		Assert.assertEquals(1, obj.getTestInt());
@@ -45,12 +46,15 @@ public class ObjectUtilsUnitTest {
 		Assert.assertEquals("hello", obj.getTestStr());
 		Assert.assertEquals(2, obj.getTestObj().getTestInt());
 
+		obj.setTestMap(innerMap);
+
 		map = ObjectUtils.toMapRecursive(obj);
 		Assert.assertEquals(1, map.get("testInt"));
 		Assert.assertEquals("hello", map.get("testStr"));
 		Assert.assertEquals(true, map.get("testBool"));
 		Assert.assertEquals(2, ((Map) map.get("testObj")).get("testInt"));
 		Assert.assertArrayEquals(new Integer[] { 1, 2, 3 }, ((List) map.get("testArr")).toArray());
+		Assert.assertEquals(2, ((Map) map.get("testMap")).get("testInt"));
 
 		int x = ObjectUtils.<Integer>getValueByPath(obj, "testObj.testInt");
 		Assert.assertEquals(2, x);
