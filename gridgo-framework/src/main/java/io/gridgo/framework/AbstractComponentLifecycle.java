@@ -26,8 +26,14 @@ public abstract class AbstractComponentLifecycle implements ComponentLifecycle, 
 	public final void start() {
 		if (!this.isStarted() && started.compareAndSet(false, true)) {
 			getLogger().trace("Component starting %s", getName());
-			this.onStart();
-			this.running = true;
+			try {
+				this.onStart();
+				this.running = true;
+			} catch (Exception ex) {
+				this.started.set(false);
+				this.running = false;
+				throw ex;
+			}
 			getLogger().trace("Component started %s", getName());
 		}
 	}
@@ -41,7 +47,7 @@ public abstract class AbstractComponentLifecycle implements ComponentLifecycle, 
 				this.running = false;
 				getLogger().trace("Component stopped %s", getName());
 			} catch (Exception e) {
-				this.started.set(true);
+				this.running = false;
 				throw e;
 			}
 		}
