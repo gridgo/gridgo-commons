@@ -35,5 +35,8 @@ public class ObjectUtilsUnitTest {
 		Assert.assertEquals(true, map.get("testBool"));
 		Assert.assertEquals(2, ((TestObject) map.get("testObj")).getTestInt());
 		Assert.assertArrayEquals(new int[] { 1, 2, 3 }, (int[]) map.get("testArr"));
+
+		int x = ObjectUtils.<Integer>getValueByPath(obj, "testObj.testInt");
+		Assert.assertEquals(2, x);
 	}
 }
