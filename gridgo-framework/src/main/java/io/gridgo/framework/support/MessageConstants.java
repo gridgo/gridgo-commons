@@ -15,4 +15,6 @@ public class MessageConstants {
 	public static final String SIZE = "size";
 
 	public static final String SOURCE = "source";
+	
+	public static final String TRACE_ID = "Gridgo-Trace-ID";
 }
