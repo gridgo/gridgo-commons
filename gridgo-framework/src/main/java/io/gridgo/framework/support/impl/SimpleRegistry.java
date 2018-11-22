@@ -22,6 +22,7 @@ public class SimpleRegistry implements Registry {
 		return type.cast(answer);
 	}
 
+	@Override
 	public SimpleRegistry register(String name, Object answer) {
 		map.put(name, answer);
 		return this;

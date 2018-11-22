@@ -8,6 +8,8 @@ public interface Registry {
 
 	public <T> T lookup(String name, Class<T> type);
 
+	public Registry register(String name, Object answer);
+
 	public default Object lookupMandatory(String name) {
 		var answer = lookup(name);
 		if (answer == null)
