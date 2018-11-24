@@ -1,5 +1,7 @@
 package io.gridgo.bean;
 
+import java.io.IOException;
+
 public interface BReference extends BElement {
 
 	static BReference newDefault(Object reference) {
@@ -17,6 +19,15 @@ public interface BReference extends BElement {
 
 	public default void writeString(String name, int numTab, StringBuilder writer) {
 
+	}
+
+	@Override
+	default void writeJson(Appendable out) {
+		try {
+			out.append(this.toJson());
+		} catch (IOException e) {
+			throw new RuntimeException("Error while writing json", e);
+		}
 	}
 
 	public default String toJson() {

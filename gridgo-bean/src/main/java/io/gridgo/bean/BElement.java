@@ -15,6 +15,8 @@ public interface BElement extends BSerializerAware {
 
 	String toJson();
 
+	void writeJson(Appendable out);
+
 	<T> T toJsonElement();
 
 	String toXml(String name);
@@ -78,7 +80,7 @@ public interface BElement extends BSerializerAware {
 	default boolean isValue() {
 		return this instanceof BValue;
 	}
-	
+
 	default boolean isReference() {
 		return this instanceof BReference;
 	}
@@ -94,7 +96,7 @@ public interface BElement extends BSerializerAware {
 	default BValue asValue() {
 		return (BValue) this;
 	}
-	
+
 	default BReference asReference() {
 		return (BReference) this;
 	}

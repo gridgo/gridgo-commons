@@ -266,14 +266,19 @@ public interface BObject extends BContainer, Map<String, BElement> {
 	}
 
 	@Override
-	default String toJson() {
+	default void writeJson(Appendable out) {
 		try {
-			StringWriter out = new StringWriter();
 			JSONObject.writeJSON(this.toJsonElement(), out);
-			return out.toString();
 		} catch (IOException e) {
 			throw new RuntimeException("Writing json error", e);
 		}
+	}
+
+	@Override
+	default String toJson() {
+		StringWriter out = new StringWriter();
+		writeJson(out);
+		return out.toString();
 	}
 
 	@Override

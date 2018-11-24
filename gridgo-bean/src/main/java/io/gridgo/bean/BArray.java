@@ -1,5 +1,7 @@
 package io.gridgo.bean;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,8 +62,19 @@ public interface BArray extends BContainer, List<BElement> {
 		return list;
 	}
 
+	@Override
+	default void writeJson(Appendable out) {
+		try {
+			JSONArray.writeJSONString(this.toJsonElement(), out);
+		} catch (IOException e) {
+			throw new RuntimeException("Error while write json to output appendable", e);
+		}
+	}
+
 	default String toJson() {
-		return JSONArray.toJSONString(this.toJsonElement());
+		StringWriter sw = new StringWriter();
+		this.writeJson(sw);
+		return sw.toString();
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package io.gridgo.bean;
 
+import java.io.IOException;
 import java.util.Base64;
 
 import io.gridgo.bean.exceptions.InvalidTypeException;
@@ -151,6 +152,15 @@ public interface BValue extends BElement {
 			return this.getData();
 		}
 		return null;
+	}
+
+	@Override
+	default void writeJson(Appendable out) {
+		try {
+			out.append(this.toJsonElement().toString());
+		} catch (IOException e) {
+			throw new RuntimeException("write json error", e);
+		}
 	}
 
 	@Override
