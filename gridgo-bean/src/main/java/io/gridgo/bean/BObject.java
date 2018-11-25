@@ -225,6 +225,21 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		return defaultValue;
 	}
 
+	default BReference getReference(String field) {
+		BType type = this.typeOf(field);
+		if (type == BType.REFERENCE) {
+			return (BReference) this.get(field);
+		}
+		throw new InvalidTypeException("Cannot get reference from field '" + field + "' which has type: " + type);
+	}
+
+	default BReference getReference(String field, BReference defaultValue) {
+		if (this.containsKey(field)) {
+			return getReference(field);
+		}
+		return defaultValue;
+	}
+
 	default BObject getObject(String field) {
 		BType type = this.typeOf(field);
 		if (type == BType.OBJECT) {

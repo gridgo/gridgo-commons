@@ -1,6 +1,7 @@
 package io.gridgo.bean;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -166,6 +167,17 @@ public interface BFactory {
 			return (T) newArray(obj);
 		}
 		return (T) newObject(obj);
+	}
+
+	default <T extends BElement> T fromJson(InputStream inputStream) {
+		if (inputStream != null) {
+			try {
+				return (T) fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(inputStream));
+			} catch (UnsupportedEncodingException | ParseException e) {
+				throw new RuntimeException("Cannot parse json from input stream", e);
+			}
+		}
+		return null;
 	}
 
 	default <T extends BElement> T fromJson(String json) {

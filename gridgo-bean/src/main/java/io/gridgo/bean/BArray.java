@@ -120,6 +120,10 @@ public interface BArray extends BContainer, List<BElement> {
 		return this.get(index).asObject();
 	}
 
+	default BReference getReference(int index) {
+		return this.get(index).asReference();
+	}
+
 	default boolean getBoolean(int index) {
 		return this.getValue(index).getBoolean();
 	}

@@ -35,6 +35,10 @@ public interface BElement extends BSerializerAware {
 		return BFactory.DEFAULT.fromJson(json);
 	}
 
+	static <T extends BElement> T fromJson(InputStream inputStream) {
+		return BFactory.DEFAULT.fromJson(inputStream);
+	}
+
 	static <T extends BElement> T fromRaw(InputStream in) {
 		return BFactory.DEFAULT.fromRaw(in);
 	}
