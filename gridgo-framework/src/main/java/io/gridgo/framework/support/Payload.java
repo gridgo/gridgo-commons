@@ -29,7 +29,9 @@ public interface Payload {
 
 	public Payload setBody(BElement body);
 
-	public Payload setId(Object id);
+	public Payload setId(Optional<BValue> id);
+
+	public Payload setIdFromAny(Object id);
 
 	public default BArray toBArray() {
 		return BArray.newFromSequence(this.getId().orElse(null), this.getHeaders(), this.getBody());

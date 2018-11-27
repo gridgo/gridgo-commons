@@ -69,7 +69,7 @@ public class MessageUnitTest {
 		var payload = Payload.newDefault(BValue.newDefault(1), BValue.newDefault(2));
 		Assert.assertEquals(1, payload.getId().get().getInteger());
 		Assert.assertEquals(2, payload.getBody().asValue().getInteger());
-		payload.setId("test");
+		payload.setIdFromAny("test");
 		Assert.assertEquals("test", payload.getId().get().getString());
 		payload.setBody(BObject.newDefault().setAny("test", 1));
 		Assert.assertEquals(1, payload.getBody().asObject().getInteger("test"));

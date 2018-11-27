@@ -47,8 +47,14 @@ public class DefaultPayload implements Payload {
 	}
 
 	@Override
-	public Payload setId(Object id) {
+	public Payload setIdFromAny(Object id) {
 		this.id = Optional.of(BValue.newDefault(id));
+		return this;
+	}
+
+	@Override
+	public Payload setId(Optional<BValue> id) {
+		this.id = id;
 		return this;
 	}
 
