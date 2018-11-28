@@ -7,8 +7,10 @@ import java.util.Optional;
 
 import io.gridgo.bean.BArray;
 import io.gridgo.bean.BElement;
+import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 import io.gridgo.framework.support.impl.DefaultMessage;
+import io.gridgo.framework.support.impl.MultipartMessage;
 import io.gridgo.utils.wrapper.ByteBufferInputStream;
 
 public interface Message {
@@ -70,14 +72,17 @@ public interface Message {
 	static Message parse(BElement data) {
 		Payload payload = null;
 
+		var multipart = false;
+
 		if (data instanceof BArray && data.asArray().size() == 3) {
 			BArray arr = data.asArray();
 			BElement id = arr.get(0);
 
 			BElement headers = arr.get(1);
 			if (headers.isValue() && headers.asValue().isNull()) {
-				headers = null;
+				headers = BObject.newDefault();
 			}
+			multipart = headers.asObject().getBoolean(MessageConstants.IS_MULTIPART, false);
 
 			BElement body = arr.get(2);
 			if (body.isValue() && body.asValue().isNull()) {
@@ -85,13 +90,16 @@ public interface Message {
 			}
 
 			if (id.isValue() && (headers == null || headers.isObject())) {
-				payload = Payload.newDefault(id.asValue(), headers == null ? null : headers.asObject(), body);
+				payload = Payload.newDefault(id.asValue(), headers.asObject(), body);
 			}
 		}
 
 		if (payload == null) {
 			payload = Payload.newDefault(data);
 		}
+		
+		if (multipart)
+			return new MultipartMessage(payload);
 
 		return Message.newDefault(payload);
 	}

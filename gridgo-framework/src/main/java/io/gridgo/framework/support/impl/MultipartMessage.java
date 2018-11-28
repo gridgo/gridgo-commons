@@ -42,14 +42,23 @@ public class MultipartMessage extends DefaultMessage {
 		setPayload(Payload.newDefault(headers, array));
 	}
 
+	public MultipartMessage(Payload payload) {
+		setPayload(payload);
+	}
+
+	public Message[] buildOriginalMessages() {
+		var size = getPayload().getHeaders().getInteger(MessageConstants.SIZE);
+		var messages = new Message[size];
+		var body = getPayload().getBody().asArray();
+		for (int i = 0; i < body.size(); i++) {
+			messages[i] = Message.parse(body.get(i));
+		}
+		return messages;
+	}
+
 	private BElement createObjectFromMessage(Message message) {
-		var object = BObject.newDefault();
 		if (message.getPayload() == null)
-			return object;
-		var payload = message.getPayload();
-		payload.getId().ifPresent(id -> object.put(MessageConstants.ID, id));
-		object.put(MessageConstants.HEADERS, payload.getHeaders());
-		object.put(MessageConstants.BODY, payload.getBody());
-		return object;
+			return BObject.newDefault();
+		return message.getPayload().toBArray();
 	}
 }
