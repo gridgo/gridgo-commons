@@ -42,6 +42,20 @@ public class MultipartMessage extends DefaultMessage {
 		setPayload(Payload.newDefault(headers, array));
 	}
 
+	public MultipartMessage(Payload payload) {
+		setPayload(payload);
+	}
+
+	public Message[] buildOriginalMessages() {
+		var size = getPayload().getHeaders().getInteger(MessageConstants.SIZE);
+		var messages = new Message[size];
+		var body = getPayload().getBody().asArray();
+		for (int i = 0; i < body.size(); i++) {
+			messages[i] = Message.parse(body.get(i));
+		}
+		return messages;
+	}
+
 	private BElement createObjectFromMessage(Message message) {
 		if (message.getPayload() == null)
 			return BObject.newDefault();
