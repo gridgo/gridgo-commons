@@ -43,13 +43,8 @@ public class MultipartMessage extends DefaultMessage {
 	}
 
 	private BElement createObjectFromMessage(Message message) {
-		var object = BObject.newDefault();
 		if (message.getPayload() == null)
-			return object;
-		var payload = message.getPayload();
-		payload.getId().ifPresent(id -> object.put(MessageConstants.ID, id));
-		object.put(MessageConstants.HEADERS, payload.getHeaders());
-		object.put(MessageConstants.BODY, payload.getBody());
-		return object;
+			return BObject.newDefault();
+		return message.getPayload().toBArray();
 	}
 }
