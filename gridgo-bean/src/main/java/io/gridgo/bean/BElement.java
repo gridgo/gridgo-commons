@@ -3,6 +3,7 @@ package io.gridgo.bean;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.ByteBuffer;
 
 import io.gridgo.bean.serialize.BSerializerAware;
@@ -16,6 +17,10 @@ public interface BElement extends BSerializerAware {
 	String toJson();
 
 	void writeJson(Appendable out);
+
+	default void writeJson(OutputStream out) {
+		this.writeJson(new OutputStreamWriter(out));
+	}
 
 	<T> T toJsonElement();
 
