@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import io.gridgo.bean.exceptions.InvalidTypeException;
+import io.gridgo.utils.ObjectUtils;
 import io.gridgo.utils.StringUtils;
 import net.minidev.json.JSONObject;
 
@@ -17,6 +18,18 @@ public interface BObject extends BContainer, Map<String, BElement> {
 
 	static BObject newDefault(Object data) {
 		return BFactory.DEFAULT.newObject(data);
+	}
+
+	static BObject newFromPojo(Object pojo) {
+		BObject result = newDefault();
+		result.putAnyAllPojo(pojo);
+		return result;
+	}
+
+	static BObject newFromPojoRecursive(Object pojo) {
+		BObject result = newDefault();
+		result.putAnyAllPojoRecursive(pojo);
+		return result;
 	}
 
 	static BObject newFromSequence(Object... sequence) {
@@ -342,6 +355,30 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		}
 	}
 
+	default BElement putAnyPojo(String name, Object pojo) {
+		return this.putAny(name, ObjectUtils.toMap(pojo));
+	}
+
+	default BElement putAnyPojoRecursive(String name, Object pojo) {
+		return this.putAny(name, ObjectUtils.toMapRecursive(pojo));
+	}
+
+	default BElement putAnyPojoIfAbsent(String name, Object pojo) {
+		return this.putAnyIfAbsent(name, ObjectUtils.toMap(pojo));
+	}
+
+	default BElement putAnyPojoRecursiveIfAbsent(String name, Object pojo) {
+		return this.putAnyIfAbsent(name, ObjectUtils.toMapRecursive(pojo));
+	}
+
+	default void putAnyAllPojo(Object pojo) {
+		this.putAnyAll(ObjectUtils.toMap(pojo));
+	}
+
+	default void putAnyAllPojoRecursive(Object pojo) {
+		this.putAnyAll(ObjectUtils.toMapRecursive(pojo));
+	}
+
 	default void putAnySequence(Object... elements) {
 		if (elements != null) {
 			if (elements.length % 2 != 0) {
@@ -382,18 +419,38 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		writer.append("}");
 	}
 
-	default BObject setAny(String attr, Object value) {
-		this.putAny(attr, value);
+	default BObject setAny(String name, Object value) {
+		this.putAny(name, value);
 		return this;
 	}
 
-	default BObject setAnyIfAbsent(String attr, Object value) {
-		this.putAnyIfAbsent(attr, value);
+	default BObject setAnyIfAbsent(String name, Object value) {
+		this.putAnyIfAbsent(name, value);
 		return this;
 	}
 
-	default BObject set(String attr, BElement value) {
-		this.put(attr, value);
+	default BObject setAnyPojo(String name, Object pojo) {
+		this.putAnyPojo(name, pojo);
+		return this;
+	}
+
+	default BObject setAnyPojoRecursive(String name, Object pojo) {
+		this.putAnyPojoRecursive(name, pojo);
+		return this;
+	}
+
+	default BObject setAnyPojoIfAbsent(String name, Object pojo) {
+		this.putAnyPojoIfAbsent(name, pojo);
+		return this;
+	}
+
+	default BObject setAnyPojoRecursiveIfAbsent(String name, Object pojo) {
+		this.putAnyPojoRecursiveIfAbsent(name, pojo);
+		return this;
+	}
+
+	default BObject set(String name, BElement value) {
+		this.put(name, value);
 		return this;
 	}
 
