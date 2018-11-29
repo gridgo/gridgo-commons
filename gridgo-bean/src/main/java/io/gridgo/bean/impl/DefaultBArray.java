@@ -1,6 +1,6 @@
 package io.gridgo.bean.impl;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import io.gridgo.bean.BArray;
 import io.gridgo.bean.BElement;
@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @SuppressWarnings("unchecked")
-class DefaultBArray extends LinkedList<BElement> implements BArray {
+class DefaultBArray extends ArrayList<BElement> implements BArray {
 
 	private static final long serialVersionUID = 2037530547593981644L;
 
