@@ -6,7 +6,12 @@ public interface Registry {
 
 	public Object lookup(String name);
 
-	public <T> T lookup(String name, Class<T> type);
+	public default <T> T lookup(String name, Class<T> type) {
+		Object answer = lookup(name);
+		if (answer == null)
+			return null;
+		return type.cast(answer);
+	}
 
 	public Registry register(String name, Object answer);
 
