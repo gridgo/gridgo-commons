@@ -1,12 +1,25 @@
 package io.gridgo.framework.test;
 
+import java.io.File;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import io.gridgo.framework.support.exceptions.BeanNotFoundException;
+import io.gridgo.framework.support.impl.PropertiesFileRegistry;
 import io.gridgo.framework.support.impl.SimpleRegistry;
 
 public class RegistryUnitTest {
+
+	@Test
+	public void testPropertyRegistry() {
+		var classLoader = getClass().getClassLoader();
+		var file = new File(classLoader.getResource("test.properties").getFile());
+		var registry = new PropertiesFileRegistry(file);
+		Assert.assertEquals("hello", registry.lookup("msg"));
+		registry = new PropertiesFileRegistry(file.getAbsolutePath());
+		Assert.assertEquals("hello", registry.lookup("msg"));
+	}
 
 	@Test
 	public void testRegistry() throws InterruptedException {
