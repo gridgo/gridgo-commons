@@ -6,7 +6,7 @@ import io.gridgo.utils.StringUtils;
 
 public interface BReference extends BElement {
 
-	static BReference newDefault(Object reference) {
+	static BReference of(Object reference) {
 		return BFactory.DEFAULT.newReference(reference);
 	}
 
@@ -65,6 +65,6 @@ public interface BReference extends BElement {
 
 	@SuppressWarnings("unchecked")
 	public default <T> T deepClone() {
-		return (T) newDefault(this.getReference());
+		return (T) of(this.getReference());
 	}
 }

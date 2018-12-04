@@ -10,11 +10,11 @@ import io.gridgo.utils.StringUtils;
 
 public interface BValue extends BElement {
 
-	static BValue newDefault() {
+	static BValue ofEmpty() {
 		return BFactory.DEFAULT.newValue();
 	}
 
-	static BValue newDefault(Object data) {
+	static BValue of(Object data) {
 		return BFactory.DEFAULT.newValue(data);
 	}
 
@@ -283,6 +283,6 @@ public interface BValue extends BElement {
 	@Override
 	@SuppressWarnings("unchecked")
 	default <T> T deepClone() {
-		return (T) newDefault(this.getData());
+		return (T) of(this.getData());
 	}
 }

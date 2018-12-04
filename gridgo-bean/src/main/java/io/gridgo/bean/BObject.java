@@ -12,22 +12,22 @@ import net.minidev.json.JSONObject;
 
 public interface BObject extends BContainer, Map<String, BElement> {
 
-	static BObject newDefault() {
+	static BObject ofEmpty() {
 		return BFactory.DEFAULT.newObject();
 	}
 
-	static BObject newDefault(Object data) {
+	static BObject of(Object data) {
 		return BFactory.DEFAULT.newObject(data);
 	}
 
 	static BObject newFromPojo(Object pojo) {
-		BObject result = newDefault();
+		BObject result = ofEmpty();
 		result.putAnyAllPojo(pojo);
 		return result;
 	}
 
 	static BObject newFromPojoRecursive(Object pojo) {
-		BObject result = newDefault();
+		BObject result = ofEmpty();
 		result.putAnyAllPojoRecursive(pojo);
 		return result;
 	}
@@ -457,7 +457,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 	@Override
 	@SuppressWarnings("unchecked")
 	default <T> T deepClone() {
-		BObject result = newDefault();
+		BObject result = ofEmpty();
 		for (Entry<String, BElement> entry : this.entrySet()) {
 			result.put(entry.getKey(), entry.getValue().deepClone());
 		}

@@ -37,19 +37,19 @@ public interface Payload {
 		return BArray.newFromSequence(this.getId().orElse(null), this.getHeaders(), this.getBody());
 	}
 
-	public static Payload newDefault(BValue id, BElement body) {
+	public static Payload of(BValue id, BElement body) {
 		return new DefaultPayload(Optional.of(id), body);
 	}
 
-	public static Payload newDefault(BValue id, BObject headers, BElement body) {
+	public static Payload of(BValue id, BObject headers, BElement body) {
 		return new DefaultPayload(Optional.of(id), headers, body);
 	}
 
-	public static Payload newDefault(BObject headers, BElement body) {
+	public static Payload of(BObject headers, BElement body) {
 		return new DefaultPayload(headers, body);
 	}
 
-	public static Payload newDefault(BElement body) {
+	public static Payload of(BElement body) {
 		return new DefaultPayload(body);
 	}
 }

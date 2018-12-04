@@ -32,12 +32,12 @@ public class DefaultPayload implements Payload {
 	public DefaultPayload(Optional<BValue> id, BElement body) {
 		this.id = id;
 		this.body = body;
-		this.headers = BObject.newDefault();
+		this.headers = BObject.ofEmpty();
 	}
 
 	public DefaultPayload(BElement body) {
 		this.body = body;
-		this.headers = BObject.newDefault();
+		this.headers = BObject.ofEmpty();
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class DefaultPayload implements Payload {
 
 	@Override
 	public Payload setIdFromAny(Object id) {
-		this.id = Optional.of(BValue.newDefault(id));
+		this.id = Optional.of(BValue.of(id));
 		return this;
 	}
 

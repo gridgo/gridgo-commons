@@ -12,11 +12,11 @@ import net.minidev.json.JSONArray;
 
 public interface BArray extends BContainer, List<BElement> {
 
-	static BArray newDefault() {
+	static BArray ofEmpty() {
 		return BFactory.DEFAULT.newArray();
 	}
 
-	static BArray newDefault(Object data) {
+	static BArray of(Object data) {
 		return BFactory.DEFAULT.newArray(data);
 	}
 
@@ -239,7 +239,7 @@ public interface BArray extends BContainer, List<BElement> {
 	@Override
 	@SuppressWarnings("unchecked")
 	default <T> T deepClone() {
-		BArray result = newDefault();
+		BArray result = ofEmpty();
 		for (BElement entry : this) {
 			result.addAny(entry);
 		}

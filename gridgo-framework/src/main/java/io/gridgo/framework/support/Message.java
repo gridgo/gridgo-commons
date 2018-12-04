@@ -32,7 +32,7 @@ public interface Message {
 	public Message setRoutingId(BValue routingId);
 
 	public default Message setRoutingIdFromAny(Object routingId) {
-		this.setRoutingId(BValue.newDefault(routingId));
+		this.setRoutingId(BValue.of(routingId));
 		return this;
 	}
 
@@ -44,15 +44,15 @@ public interface Message {
 
 	public Message setPayload(Payload payload);
 
-	static Message newDefault(Payload payload) {
+	static Message of(Payload payload) {
 		return new DefaultMessage(payload);
 	}
 
-	static Message newDefault(BValue routingId, Payload payload) {
+	static Message of(BValue routingId, Payload payload) {
 		return new DefaultMessage(routingId, payload);
 	}
 
-	static Message newDefault(BValue routingId, Map<String, Object> misc, Payload payload) {
+	static Message of(BValue routingId, Map<String, Object> misc, Payload payload) {
 		return new DefaultMessage(routingId, misc, payload);
 	}
 
@@ -80,7 +80,7 @@ public interface Message {
 
 			BElement headers = arr.get(1);
 			if (headers.isValue() && headers.asValue().isNull()) {
-				headers = BObject.newDefault();
+				headers = BObject.ofEmpty();
 			}
 			multipart = headers.asObject().getBoolean(MessageConstants.IS_MULTIPART, false);
 
@@ -90,17 +90,17 @@ public interface Message {
 			}
 
 			if (id.isValue() && (headers == null || headers.isObject())) {
-				payload = Payload.newDefault(id.asValue(), headers.asObject(), body);
+				payload = Payload.of(id.asValue(), headers.asObject(), body);
 			}
 		}
 
 		if (payload == null) {
-			payload = Payload.newDefault(data);
+			payload = Payload.of(data);
 		}
 		
 		if (multipart)
 			return new MultipartMessage(payload);
 
-		return Message.newDefault(payload);
+		return Message.of(payload);
 	}
 }

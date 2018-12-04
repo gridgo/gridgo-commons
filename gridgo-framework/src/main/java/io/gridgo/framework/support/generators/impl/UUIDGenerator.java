@@ -10,6 +10,6 @@ public class UUIDGenerator implements IdGenerator {
 
 	@Override
 	public Optional<BValue> generateId() {
-		return Optional.of(BValue.newDefault(UUID.randomUUID().toString()));
+		return Optional.of(BValue.of(UUID.randomUUID().toString()));
 	}
 }

@@ -18,7 +18,7 @@ public class MessageUnitTest {
 
 	@Test
 	public void testMessage() {
-		var msg1 = Message.newDefault(Payload.newDefault(BObject.newDefault().setAny("key", 1), BValue.newDefault(1)));
+		var msg1 = Message.of(Payload.of(BObject.ofEmpty().setAny("key", 1), BValue.of(1)));
 		msg1.getPayload().addHeaderIfAbsent("key", 2);
 		Assert.assertEquals(1, msg1.getPayload().getHeaders().getInteger("key"));
 		msg1.getPayload().addHeaderIfAbsent("test", 2);
@@ -29,13 +29,13 @@ public class MessageUnitTest {
 		Assert.assertEquals("test", msg1.getMisc().get(MessageConstants.SOURCE));
 		msg1.setRoutingIdFromAny(1);
 		Assert.assertEquals(1, msg1.getRoutingId().get().getInteger());
-		var msg2 = Message.newDefault(BValue.newDefault(1), Payload.newDefault(null));
+		var msg2 = Message.of(BValue.of(1), Payload.of(null));
 		Assert.assertEquals(1, msg2.getRoutingId().get().getInteger());
-		var msg3 = Message.newDefault(BValue.newDefault(1), Collections.singletonMap("test", 1),
-				Payload.newDefault(null));
+		var msg3 = Message.of(BValue.of(1), Collections.singletonMap("test", 1),
+				Payload.of(null));
 		Assert.assertEquals(1, msg3.getMisc().get("test"));
 		var msg4 = Message
-				.parse(BArray.newDefault().addAny(1).addAny(BObject.newDefault().setAny("test", 1)).addAny(1));
+				.parse(BArray.ofEmpty().addAny(1).addAny(BObject.ofEmpty().setAny("test", 1)).addAny(1));
 		Assert.assertEquals(1, msg4.getPayload().getId().get().getInteger());
 		Assert.assertEquals(1, msg4.getPayload().getHeaders().getInteger("test"));
 		Assert.assertEquals(1, msg4.getPayload().getBody().asValue().getInteger());
@@ -43,8 +43,8 @@ public class MessageUnitTest {
 
 	@Test
 	public void testMultipart() {
-		var msg1 = Message.newDefault(Payload.newDefault(BObject.newDefault().setAny("key", 1), BValue.newDefault(1)));
-		var msg2 = Message.newDefault(Payload.newDefault(BObject.newDefault().setAny("key", 2), BValue.newDefault(2)));
+		var msg1 = Message.of(Payload.of(BObject.ofEmpty().setAny("key", 1), BValue.of(1)));
+		var msg2 = Message.of(Payload.of(BObject.ofEmpty().setAny("key", 2), BValue.of(2)));
 		var multipart1 = new MultipartMessage(new Message[] { msg1, msg2 });
 		assertMessage(multipart1);
 		var multipart2 = new MultipartMessage((Iterable<Message>) Arrays.asList(new Message[] { msg1, msg2 }));
@@ -64,12 +64,12 @@ public class MessageUnitTest {
 
 	@Test
 	public void testPayload() {
-		var payload = Payload.newDefault(BValue.newDefault(1), BValue.newDefault(2));
+		var payload = Payload.of(BValue.of(1), BValue.of(2));
 		Assert.assertEquals(1, payload.getId().get().getInteger());
 		Assert.assertEquals(2, payload.getBody().asValue().getInteger());
 		payload.setIdFromAny("test");
 		Assert.assertEquals("test", payload.getId().get().getString());
-		payload.setBody(BObject.newDefault().setAny("test", 1));
+		payload.setBody(BObject.ofEmpty().setAny("test", 1));
 		Assert.assertEquals(1, payload.getBody().asObject().getInteger("test"));
 	}
 }

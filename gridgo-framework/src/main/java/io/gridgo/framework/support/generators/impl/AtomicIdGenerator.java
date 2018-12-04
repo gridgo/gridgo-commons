@@ -12,6 +12,6 @@ public class AtomicIdGenerator implements IdGenerator {
 
 	@Override
 	public Optional<BValue> generateId() {
-		return Optional.of(BValue.newDefault(counter.incrementAndGet()));
+		return Optional.of(BValue.of(counter.incrementAndGet()));
 	}
 }

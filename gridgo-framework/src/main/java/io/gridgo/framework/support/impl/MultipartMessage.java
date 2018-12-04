@@ -20,26 +20,26 @@ public class MultipartMessage extends DefaultMessage {
 	}
 
 	public MultipartMessage(final @NonNull Iterable<Message> messages) {
-		var array = BArray.newDefault();
+		var array = BArray.ofEmpty();
 		var count = 0;
 		for (Message message : messages) {
 			array.add(createObjectFromMessage(message));
 			count++;
 		}
-		var headers = BObject.newDefault() //
+		var headers = BObject.ofEmpty() //
 				.setAny(MessageConstants.IS_MULTIPART, true) //
 				.setAny(MessageConstants.SIZE, count);
-		setPayload(Payload.newDefault(headers, array));
+		setPayload(Payload.of(headers, array));
 	}
 
 	public MultipartMessage(final @NonNull Collection<Message> messages) {
-		var headers = BObject.newDefault().setAny(MessageConstants.IS_MULTIPART, true).setAny(MessageConstants.SIZE,
+		var headers = BObject.ofEmpty().setAny(MessageConstants.IS_MULTIPART, true).setAny(MessageConstants.SIZE,
 				messages.size());
-		var array = BArray.newDefault();
+		var array = BArray.ofEmpty();
 		for (Message message : messages) {
 			array.add(createObjectFromMessage(message));
 		}
-		setPayload(Payload.newDefault(headers, array));
+		setPayload(Payload.of(headers, array));
 	}
 
 	public MultipartMessage(Payload payload) {
@@ -58,7 +58,7 @@ public class MultipartMessage extends DefaultMessage {
 
 	private BElement createObjectFromMessage(Message message) {
 		if (message.getPayload() == null)
-			return BObject.newDefault();
+			return BObject.ofEmpty();
 		return message.getPayload().toBArray();
 	}
 }
