@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.util.Map;
 import java.util.TreeMap;
 
+import io.gridgo.bean.exceptions.FieldNotFoundException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.utils.ObjectUtils;
 import io.gridgo.utils.StringUtils;
@@ -57,7 +58,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as boolean");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
 	default Boolean getBoolean(String field, boolean defaultValue) {
@@ -76,7 +77,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as char");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
 	default Character getChar(String field, char defaultValue) {
@@ -95,7 +96,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as char");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
 	default Byte getByte(String field, byte defaultValue) {
@@ -114,7 +115,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as short");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
 	default Short getShort(String field, short defaultValue) {
@@ -133,7 +134,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as integer");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
 	default Integer getInteger(String field, int defaultValue) {
@@ -152,7 +153,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as float");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
 	default Float getFloat(String field, float defaultValue) {
@@ -171,7 +172,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as long");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
 	default Long getLong(String field, long defaultValue) {
@@ -190,7 +191,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as double");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
 	default Double getDouble(String field, double defaultValue) {
@@ -209,7 +210,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as string");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
 	default String getString(String field, String defaultValue) {
