@@ -334,6 +334,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
 				result.put(entry.getKey(), ((BArray) entry.getValue()).toList());
 			} else if (entry.getValue() instanceof BObject) {
 				result.put(entry.getKey(), ((BObject) entry.getValue()).toMap());
+            } else if (entry.getValue() instanceof BReference) {
+                result.put(entry.getKey(), ((BReference) entry.getValue()).getReference());
 			} else {
 				throw new InvalidTypeException(
 						"Found unrecognized MElement implementation: " + entry.getValue().getClass());
