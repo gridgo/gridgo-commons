@@ -20,19 +20,19 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		return BFactory.DEFAULT.newObject(data);
 	}
 
-	static BObject newFromPojo(Object pojo) {
+	static BObject ofPojo(Object pojo) {
 		BObject result = ofEmpty();
 		result.putAnyAllPojo(pojo);
 		return result;
 	}
 
-	static BObject newFromPojoRecursive(Object pojo) {
+	static BObject ofPojoRecursive(Object pojo) {
 		BObject result = ofEmpty();
 		result.putAnyAllPojoRecursive(pojo);
 		return result;
 	}
 
-	static BObject newFromSequence(Object... sequence) {
+	static BObject ofSequence(Object... sequence) {
 		return BFactory.DEFAULT.newObjectFromSequence(sequence);
 	}
 
@@ -48,7 +48,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		return null;
 	}
 
-	default boolean getBoolean(String field) {
+	default Boolean getBoolean(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -60,14 +60,14 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		throw new NullPointerException("Field not found: " + field);
 	}
 
-	default boolean getBoolean(String field, boolean defaultValue) {
+	default Boolean getBoolean(String field, boolean defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getBoolean(field);
 		}
 		return defaultValue;
 	}
 
-	default char getChar(String field) {
+	default Character getChar(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -79,14 +79,14 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		throw new NullPointerException("Field not found: " + field);
 	}
 
-	default char getChar(String field, char defaultValue) {
+	default Character getChar(String field, char defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getChar(field);
 		}
 		return defaultValue;
 	}
 
-	default byte getByte(String field) {
+	default Byte getByte(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -98,14 +98,14 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		throw new NullPointerException("Field not found: " + field);
 	}
 
-	default byte getByte(String field, byte defaultValue) {
+	default Byte getByte(String field, byte defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getByte(field);
 		}
 		return defaultValue;
 	}
 
-	default short getShort(String field) {
+	default Short getShort(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -117,14 +117,14 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		throw new NullPointerException("Field not found: " + field);
 	}
 
-	default short getShort(String field, short defaultValue) {
+	default Short getShort(String field, short defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getShort(field);
 		}
 		return defaultValue;
 	}
 
-	default int getInteger(String field) {
+	default Integer getInteger(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -136,14 +136,14 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		throw new NullPointerException("Field not found: " + field);
 	}
 
-	default int getInteger(String field, int defaultValue) {
+	default Integer getInteger(String field, int defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getInteger(field);
 		}
 		return defaultValue;
 	}
 
-	default float getFloat(String field) {
+	default Float getFloat(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -155,14 +155,14 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		throw new NullPointerException("Field not found: " + field);
 	}
 
-	default float getFloat(String field, float defaultValue) {
+	default Float getFloat(String field, float defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getFloat(field);
 		}
 		return defaultValue;
 	}
 
-	default long getLong(String field) {
+	default Long getLong(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -174,14 +174,14 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		throw new NullPointerException("Field not found: " + field);
 	}
 
-	default long getLong(String field, long defaultValue) {
+	default Long getLong(String field, long defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getLong(field);
 		}
 		return defaultValue;
 	}
 
-	default double getDouble(String field) {
+	default Double getDouble(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -193,7 +193,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		throw new NullPointerException("Field not found: " + field);
 	}
 
-	default double getDouble(String field, double defaultValue) {
+	default Double getDouble(String field, double defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getDouble(field);
 		}
