@@ -58,8 +58,8 @@ public class MessageUnitTest {
 		Assert.assertEquals(2, msg.getPayload().getBody().asArray().size());
 		Assert.assertEquals(1, msg.getPayload().getBody().asArray().getArray(0).getObject(1).getInteger("key").intValue());
 		Assert.assertEquals(2, msg.getPayload().getBody().asArray().getArray(1).getObject(1).getInteger("key").intValue());
-		Assert.assertEquals(1, msg.getPayload().getBody().asArray().getArray(0).getInteger(2));
-		Assert.assertEquals(2, msg.getPayload().getBody().asArray().getArray(1).getInteger(2));
+		Assert.assertEquals(1, msg.getPayload().getBody().asArray().getArray(0).getInteger(2).intValue());
+		Assert.assertEquals(2, msg.getPayload().getBody().asArray().getArray(1).getInteger(2).intValue());
 	}
 
 	@Test
