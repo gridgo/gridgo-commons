@@ -20,7 +20,7 @@ public interface BArray extends BContainer, List<BElement> {
 		return BFactory.DEFAULT.newArray(data);
 	}
 
-	static BArray newFromSequence(Object... sequence) {
+	static BArray ofSequence(Object... sequence) {
 		return BFactory.DEFAULT.newArrayFromSequence(sequence);
 	}
 
