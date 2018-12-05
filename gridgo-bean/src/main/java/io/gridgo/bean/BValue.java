@@ -55,60 +55,60 @@ public interface BValue extends BElement {
 		return this.getData() == null;
 	}
 
-	default boolean getBoolean() {
+	default Boolean getBoolean() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getBooleanValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default char getChar() {
+	default Character getChar() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getCharValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default byte getByte() {
+	default Byte getByte() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getByteValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default short getShort() {
+	default Short getShort() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getShortValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default int getInteger() {
+	default Integer getInteger() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getIntegerValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default float getFloat() {
+	default Float getFloat() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getFloatValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default long getLong() {
+	default Long getLong() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getLongValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default double getDouble() {
+	default Double getDouble() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getDoubleValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
 	default String getString() {
