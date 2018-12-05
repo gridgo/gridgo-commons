@@ -124,35 +124,35 @@ public interface BArray extends BContainer, List<BElement> {
 		return this.get(index).asReference();
 	}
 
-	default boolean getBoolean(int index) {
+	default Boolean getBoolean(int index) {
 		return this.getValue(index).getBoolean();
 	}
 
-	default char getChar(int index) {
+	default Character getChar(int index) {
 		return this.getValue(index).getChar();
 	}
 
-	default byte getByte(int index) {
+	default Byte getByte(int index) {
 		return this.getValue(index).getByte();
 	}
 
-	default short getShort(int index) {
+	default Short getShort(int index) {
 		return this.getValue(index).getShort();
 	}
 
-	default int getInteger(int index) {
+	default Integer getInteger(int index) {
 		return this.getValue(index).getInteger();
 	}
 
-	default long getLong(int index) {
+	default Long getLong(int index) {
 		return this.getValue(index).getLong();
 	}
 
-	default float getFloat(int index) {
+	default Float getFloat(int index) {
 		return this.getValue(index).getFloat();
 	}
 
-	default double getDouble(int index) {
+	default Double getDouble(int index) {
 		return this.getValue(index).getDouble();
 	}
 
@@ -176,35 +176,35 @@ public interface BArray extends BContainer, List<BElement> {
 		return this.remove(index).asArray();
 	}
 
-	default boolean removeBoolean(int index) {
+	default Boolean removeBoolean(int index) {
 		return this.removeValue(index).getBoolean();
 	}
 
-	default char removeChar(int index) {
+	default Character removeChar(int index) {
 		return this.removeValue(index).getChar();
 	}
 
-	default byte removeByte(int index) {
+	default Byte removeByte(int index) {
 		return this.removeValue(index).getByte();
 	}
 
-	default short removeShort(int index) {
+	default Short removeShort(int index) {
 		return this.removeValue(index).getShort();
 	}
 
-	default int removeInteger(int index) {
+	default Integer removeInteger(int index) {
 		return this.removeValue(index).getInteger();
 	}
 
-	default long removeLong(int index) {
+	default Long removeLong(int index) {
 		return this.removeValue(index).getLong();
 	}
 
-	default float removeFloat(int index) {
+	default Float removeFloat(int index) {
 		return this.removeValue(index).getFloat();
 	}
 
-	default double removeDouble(int index) {
+	default Double removeDouble(int index) {
 		return this.removeValue(index).getDouble();
 	}
 
