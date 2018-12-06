@@ -1,6 +1,7 @@
 package io.gridgo.framework.test;
 
 import java.io.File;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class RegistryUnitTest {
 
 		}
 		try {
-			reg.lookupMandatory("age", String.class);
+			reg.lookupMandatory("age", List.class);
 			Assert.fail("must fail");
 		} catch (ClassCastException ex) {
 
