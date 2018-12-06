@@ -17,6 +17,10 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		return BFactory.DEFAULT.newObject();
 	}
 
+	static BObject of(String name, Object value) {
+		return ofEmpty().setAny(name, value);
+	}
+
 	static BObject of(Object data) {
 		return BFactory.DEFAULT.newObject(data);
 	}
@@ -334,8 +338,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
 				result.put(entry.getKey(), ((BArray) entry.getValue()).toList());
 			} else if (entry.getValue() instanceof BObject) {
 				result.put(entry.getKey(), ((BObject) entry.getValue()).toMap());
-            } else if (entry.getValue() instanceof BReference) {
-                result.put(entry.getKey(), ((BReference) entry.getValue()).getReference());
+			} else if (entry.getValue() instanceof BReference) {
+				result.put(entry.getKey(), ((BReference) entry.getValue()).getReference());
 			} else {
 				throw new InvalidTypeException(
 						"Found unrecognized MElement implementation: " + entry.getValue().getClass());
