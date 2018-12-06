@@ -10,10 +10,13 @@ public interface Registry {
 
 	public Object lookup(String name);
 
-	public default <T> T lookup(String name, Class<T> type) {
+	@SuppressWarnings("unchecked")
+    public default <T> T lookup(String name, Class<T> type) {
 		Object answer = lookup(name);
 		if (answer == null)
 			return null;
+		if (type == String.class)
+		    return (T) answer.toString();
 		return type.cast(answer);
 	}
 
