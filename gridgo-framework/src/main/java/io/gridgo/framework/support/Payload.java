@@ -52,4 +52,8 @@ public interface Payload {
 	public static Payload of(BElement body) {
 		return new DefaultPayload(body);
 	}
+
+    public static Payload ofEmpty() {
+        return of(null);
+    }
 }

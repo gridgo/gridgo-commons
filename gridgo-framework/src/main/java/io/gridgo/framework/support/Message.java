@@ -43,6 +43,10 @@ public interface Message {
 	}
 
 	public Message setPayload(Payload payload);
+	
+	static Message ofEmpty() {
+	    return of(Payload.ofEmpty());
+	}
 
 	static Message of(Payload payload) {
 		return new DefaultMessage(payload);
