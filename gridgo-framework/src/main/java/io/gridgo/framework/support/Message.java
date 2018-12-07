@@ -15,96 +15,104 @@ import io.gridgo.utils.wrapper.ByteBufferInputStream;
 
 public interface Message {
 
-	/**
-	 * routingId use for *-to-1 communication like duplex socket. RoutingId indicate
-	 * which endpoint will be the target
-	 * 
-	 * @return the routing id
-	 */
-	public Optional<BValue> getRoutingId();
+    /**
+     * routingId use for *-to-1 communication like duplex socket. RoutingId indicate
+     * which endpoint will be the target
+     * 
+     * @return the routing id
+     */
+    public Optional<BValue> getRoutingId();
 
-	public Map<String, Object> getMisc();
+    public Map<String, Object> getMisc();
 
-	public Payload getPayload();
+    public Payload getPayload();
 
-	public Message addMisc(String key, Object value);
+    public Message addMisc(String key, Object value);
 
-	public Message setRoutingId(BValue routingId);
+    public Message setRoutingId(BValue routingId);
 
-	public default Message setRoutingIdFromAny(Object routingId) {
-		this.setRoutingId(BValue.of(routingId));
-		return this;
-	}
+    public default Message setRoutingIdFromAny(Object routingId) {
+        this.setRoutingId(BValue.of(routingId));
+        return this;
+    }
 
-	public default Message attachSource(String name) {
-		if (name != null)
-			getMisc().putIfAbsent(MessageConstants.SOURCE, name);
-		return this;
-	}
+    public default Message attachSource(String name) {
+        if (name != null)
+            getMisc().putIfAbsent(MessageConstants.SOURCE, name);
+        return this;
+    }
 
-	public Message setPayload(Payload payload);
-	
-	static Message ofEmpty() {
-	    return of(Payload.ofEmpty());
-	}
+    public Message setPayload(Payload payload);
 
-	static Message of(Payload payload) {
-		return new DefaultMessage(payload);
-	}
+    static Message ofEmpty() {
+        return of(Payload.ofEmpty());
+    }
 
-	static Message of(BValue routingId, Payload payload) {
-		return new DefaultMessage(routingId, payload);
-	}
+    static Message ofAny(Object body) {
+        return of(Payload.of(BElement.fromAny(body)));
+    }
 
-	static Message of(BValue routingId, Map<String, Object> misc, Payload payload) {
-		return new DefaultMessage(routingId, misc, payload);
-	}
+    static Message ofAny(BObject headers, Object body) {
+        return of(Payload.of(headers, BElement.fromAny(body)));
+    }
 
-	static Message parse(byte[] bytes) {
-		return parse(ByteBuffer.wrap(bytes));
-	}
+    static Message of(Payload payload) {
+        return new DefaultMessage(payload);
+    }
 
-	static Message parse(ByteBuffer buffer) {
-		return parse(new ByteBufferInputStream(buffer));
-	}
+    static Message of(BValue routingId, Payload payload) {
+        return new DefaultMessage(routingId, payload);
+    }
 
-	static Message parse(InputStream inputStream) {
-		BElement data = BElement.fromRaw(inputStream);
-		return parse(data);
-	}
+    static Message of(BValue routingId, Map<String, Object> misc, Payload payload) {
+        return new DefaultMessage(routingId, misc, payload);
+    }
 
-	static Message parse(BElement data) {
-		Payload payload = null;
+    static Message parse(byte[] bytes) {
+        return parse(ByteBuffer.wrap(bytes));
+    }
 
-		var multipart = false;
+    static Message parse(ByteBuffer buffer) {
+        return parse(new ByteBufferInputStream(buffer));
+    }
 
-		if (data instanceof BArray && data.asArray().size() == 3) {
-			BArray arr = data.asArray();
-			BElement id = arr.get(0);
+    static Message parse(InputStream inputStream) {
+        BElement data = BElement.fromRaw(inputStream);
+        return parse(data);
+    }
 
-			BElement headers = arr.get(1);
-			if (headers.isValue() && headers.asValue().isNull()) {
-				headers = BObject.ofEmpty();
-			}
-			multipart = headers.asObject().getBoolean(MessageConstants.IS_MULTIPART, false);
+    static Message parse(BElement data) {
+        Payload payload = null;
 
-			BElement body = arr.get(2);
-			if (body.isValue() && body.asValue().isNull()) {
-				body = null;
-			}
+        var multipart = false;
 
-			if (id.isValue() && (headers == null || headers.isObject())) {
-				payload = Payload.of(id.asValue(), headers.asObject(), body);
-			}
-		}
+        if (data instanceof BArray && data.asArray().size() == 3) {
+            BArray arr = data.asArray();
+            BElement id = arr.get(0);
 
-		if (payload == null) {
-			payload = Payload.of(data);
-		}
-		
-		if (multipart)
-			return new MultipartMessage(payload);
+            BElement headers = arr.get(1);
+            if (headers.isValue() && headers.asValue().isNull()) {
+                headers = BObject.ofEmpty();
+            }
+            multipart = headers.asObject().getBoolean(MessageConstants.IS_MULTIPART, false);
 
-		return Message.of(payload);
-	}
+            BElement body = arr.get(2);
+            if (body.isValue() && body.asValue().isNull()) {
+                body = null;
+            }
+
+            if (id.isValue() && (headers == null || headers.isObject())) {
+                payload = Payload.of(id.asValue(), headers.asObject(), body);
+            }
+        }
+
+        if (payload == null) {
+            payload = Payload.of(data);
+        }
+
+        if (multipart)
+            return new MultipartMessage(payload);
+
+        return Message.of(payload);
+    }
 }
