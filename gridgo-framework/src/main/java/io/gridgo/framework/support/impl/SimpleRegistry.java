@@ -15,13 +15,6 @@ public class SimpleRegistry implements Registry {
 	}
 
 	@Override
-	public <T> T lookup(String name, Class<T> type) {
-		Object answer = lookup(name);
-		if (answer == null)
-			return null;
-		return type.cast(answer);
-	}
-
 	public SimpleRegistry register(String name, Object answer) {
 		map.put(name, answer);
 		return this;

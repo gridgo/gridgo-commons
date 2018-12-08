@@ -1,5 +1,7 @@
 package io.gridgo.bean;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,11 +12,11 @@ import net.minidev.json.JSONArray;
 
 public interface BArray extends BContainer, List<BElement> {
 
-	static BArray newDefault() {
+	static BArray ofEmpty() {
 		return BFactory.DEFAULT.newArray();
 	}
 
-	static BArray newDefault(Object data) {
+	static BArray of(Object data) {
 		return BFactory.DEFAULT.newArray(data);
 	}
 
@@ -31,20 +33,23 @@ public interface BArray extends BContainer, List<BElement> {
 		return this.get(index).getType();
 	}
 
-	default void addAny(Object obj) {
+	default BArray addAny(Object obj) {
 		this.add(this.getFactory().fromAny(obj));
+		return this;
 	}
 
-	default void addAnySequence(Object... elements) {
+	default BArray addAnySequence(Object... elements) {
 		for (Object object : elements) {
 			this.addAny(object);
 		}
+		return this;
 	}
 
-	default void addAnyAll(Collection<?> collection) {
+	default BArray addAnyAll(Collection<?> collection) {
 		for (Object object : collection) {
 			this.addAny(object);
 		}
+		return this;
 	}
 
 	@Override
@@ -57,8 +62,19 @@ public interface BArray extends BContainer, List<BElement> {
 		return list;
 	}
 
+	@Override
+	default void writeJson(Appendable out) {
+		try {
+			JSONArray.writeJSONString(this.toJsonElement(), out);
+		} catch (IOException e) {
+			throw new RuntimeException("Error while write json to output appendable", e);
+		}
+	}
+
 	default String toJson() {
-		return JSONArray.toJSONString(this.toJsonElement());
+		StringWriter sw = new StringWriter();
+		this.writeJson(sw);
+		return sw.toString();
 	}
 
 	@Override
@@ -104,35 +120,39 @@ public interface BArray extends BContainer, List<BElement> {
 		return this.get(index).asObject();
 	}
 
-	default boolean getBoolean(int index) {
+	default BReference getReference(int index) {
+		return this.get(index).asReference();
+	}
+
+	default Boolean getBoolean(int index) {
 		return this.getValue(index).getBoolean();
 	}
 
-	default char getChar(int index) {
+	default Character getChar(int index) {
 		return this.getValue(index).getChar();
 	}
 
-	default byte getByte(int index) {
+	default Byte getByte(int index) {
 		return this.getValue(index).getByte();
 	}
 
-	default short getShort(int index) {
+	default Short getShort(int index) {
 		return this.getValue(index).getShort();
 	}
 
-	default int getInteger(int index) {
+	default Integer getInteger(int index) {
 		return this.getValue(index).getInteger();
 	}
 
-	default long getLong(int index) {
+	default Long getLong(int index) {
 		return this.getValue(index).getLong();
 	}
 
-	default float getFloat(int index) {
+	default Float getFloat(int index) {
 		return this.getValue(index).getFloat();
 	}
 
-	default double getDouble(int index) {
+	default Double getDouble(int index) {
 		return this.getValue(index).getDouble();
 	}
 
@@ -156,35 +176,35 @@ public interface BArray extends BContainer, List<BElement> {
 		return this.remove(index).asArray();
 	}
 
-	default boolean removeBoolean(int index) {
+	default Boolean removeBoolean(int index) {
 		return this.removeValue(index).getBoolean();
 	}
 
-	default char removeChar(int index) {
+	default Character removeChar(int index) {
 		return this.removeValue(index).getChar();
 	}
 
-	default byte removeByte(int index) {
+	default Byte removeByte(int index) {
 		return this.removeValue(index).getByte();
 	}
 
-	default short removeShort(int index) {
+	default Short removeShort(int index) {
 		return this.removeValue(index).getShort();
 	}
 
-	default int removeInteger(int index) {
+	default Integer removeInteger(int index) {
 		return this.removeValue(index).getInteger();
 	}
 
-	default long removeLong(int index) {
+	default Long removeLong(int index) {
 		return this.removeValue(index).getLong();
 	}
 
-	default float removeFloat(int index) {
+	default Float removeFloat(int index) {
 		return this.removeValue(index).getFloat();
 	}
 
-	default double removeDouble(int index) {
+	default Double removeDouble(int index) {
 		return this.removeValue(index).getDouble();
 	}
 
@@ -219,7 +239,7 @@ public interface BArray extends BContainer, List<BElement> {
 	@Override
 	@SuppressWarnings("unchecked")
 	default <T> T deepClone() {
-		BArray result = newDefault();
+		BArray result = ofEmpty();
 		for (BElement entry : this) {
 			result.addAny(entry);
 		}

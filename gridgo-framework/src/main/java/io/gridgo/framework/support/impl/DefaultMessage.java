@@ -8,7 +8,6 @@ import io.gridgo.bean.BValue;
 import io.gridgo.framework.support.Message;
 import io.gridgo.framework.support.Payload;
 import lombok.Getter;
-import lombok.NonNull;
 
 @Getter
 public class DefaultMessage implements Message {
@@ -42,14 +41,6 @@ public class DefaultMessage implements Message {
 		this.payload = payload;
 		if (misc != null) {
 			this.misc.putAll(misc);
-		}
-	}
-
-	public void setRoutingId(@NonNull Object routingId) {
-		if (routingId instanceof BValue) {
-			this.routingId = Optional.of((BValue) routingId);
-		} else {
-			this.routingId = Optional.of(BValue.newDefault(routingId));
 		}
 	}
 

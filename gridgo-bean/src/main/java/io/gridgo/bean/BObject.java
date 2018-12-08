@@ -5,21 +5,39 @@ import java.io.StringWriter;
 import java.util.Map;
 import java.util.TreeMap;
 
+import io.gridgo.bean.exceptions.FieldNotFoundException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
+import io.gridgo.utils.ObjectUtils;
 import io.gridgo.utils.StringUtils;
 import net.minidev.json.JSONObject;
 
 public interface BObject extends BContainer, Map<String, BElement> {
 
-	static BObject newDefault() {
+	static BObject ofEmpty() {
 		return BFactory.DEFAULT.newObject();
 	}
 
-	static BObject newDefault(Object data) {
+	static BObject of(String name, Object value) {
+		return ofEmpty().setAny(name, value);
+	}
+
+	static BObject of(Object data) {
 		return BFactory.DEFAULT.newObject(data);
 	}
 
-	static BObject newFromSequence(Object... sequence) {
+	static BObject ofPojo(Object pojo) {
+		BObject result = ofEmpty();
+		result.putAnyAllPojo(pojo);
+		return result;
+	}
+
+	static BObject ofPojoRecursive(Object pojo) {
+		BObject result = ofEmpty();
+		result.putAnyAllPojoRecursive(pojo);
+		return result;
+	}
+
+	static BObject ofSequence(Object... sequence) {
 		return BFactory.DEFAULT.newObjectFromSequence(sequence);
 	}
 
@@ -35,7 +53,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		return null;
 	}
 
-	default boolean getBoolean(String field) {
+	default Boolean getBoolean(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -44,17 +62,17 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as boolean");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
-	default boolean getBoolean(String field, boolean defaultValue) {
+	default Boolean getBoolean(String field, boolean defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getBoolean(field);
 		}
 		return defaultValue;
 	}
 
-	default char getChar(String field) {
+	default Character getChar(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -63,17 +81,17 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as char");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
-	default char getChar(String field, char defaultValue) {
+	default Character getChar(String field, char defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getChar(field);
 		}
 		return defaultValue;
 	}
 
-	default byte getByte(String field) {
+	default Byte getByte(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -82,17 +100,17 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as char");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
-	default byte getByte(String field, byte defaultValue) {
+	default Byte getByte(String field, byte defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getByte(field);
 		}
 		return defaultValue;
 	}
 
-	default short getShort(String field) {
+	default Short getShort(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -101,17 +119,17 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as short");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
-	default short getShort(String field, short defaultValue) {
+	default Short getShort(String field, short defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getShort(field);
 		}
 		return defaultValue;
 	}
 
-	default int getInteger(String field) {
+	default Integer getInteger(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -120,17 +138,17 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as integer");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
-	default int getInteger(String field, int defaultValue) {
+	default Integer getInteger(String field, int defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getInteger(field);
 		}
 		return defaultValue;
 	}
 
-	default float getFloat(String field) {
+	default Float getFloat(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -139,17 +157,17 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as float");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
-	default float getFloat(String field, float defaultValue) {
+	default Float getFloat(String field, float defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getFloat(field);
 		}
 		return defaultValue;
 	}
 
-	default long getLong(String field) {
+	default Long getLong(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -158,17 +176,17 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as long");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
-	default long getLong(String field, long defaultValue) {
+	default Long getLong(String field, long defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getLong(field);
 		}
 		return defaultValue;
 	}
 
-	default double getDouble(String field) {
+	default Double getDouble(String field) {
 		if (this.containsKey(field)) {
 			BElement element = this.get(field);
 			if (element instanceof BValue) {
@@ -177,10 +195,10 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as double");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
-	default double getDouble(String field, double defaultValue) {
+	default Double getDouble(String field, double defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getDouble(field);
 		}
@@ -196,7 +214,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 			throw new InvalidTypeException(
 					"BObject contains element with type " + element.getType() + " which cannot get as string");
 		}
-		throw new NullPointerException("Field not found: " + field);
+		throw new FieldNotFoundException("Field not found: " + field);
 	}
 
 	default String getString(String field, String defaultValue) {
@@ -221,6 +239,21 @@ public interface BObject extends BContainer, Map<String, BElement> {
 	default byte[] getRaw(String field, byte[] defaultValue) {
 		if (this.containsKey(field)) {
 			return this.getRaw(field);
+		}
+		return defaultValue;
+	}
+
+	default BReference getReference(String field) {
+		BType type = this.typeOf(field);
+		if (type == BType.REFERENCE) {
+			return (BReference) this.get(field);
+		}
+		throw new InvalidTypeException("Cannot get reference from field '" + field + "' which has type: " + type);
+	}
+
+	default BReference getReference(String field, BReference defaultValue) {
+		if (this.containsKey(field)) {
+			return getReference(field);
 		}
 		return defaultValue;
 	}
@@ -266,14 +299,19 @@ public interface BObject extends BContainer, Map<String, BElement> {
 	}
 
 	@Override
-	default String toJson() {
+	default void writeJson(Appendable out) {
 		try {
-			StringWriter out = new StringWriter();
 			JSONObject.writeJSON(this.toJsonElement(), out);
-			return out.toString();
 		} catch (IOException e) {
 			throw new RuntimeException("Writing json error", e);
 		}
+	}
+
+	@Override
+	default String toJson() {
+		StringWriter out = new StringWriter();
+		writeJson(out);
+		return out.toString();
 	}
 
 	@Override
@@ -300,7 +338,11 @@ public interface BObject extends BContainer, Map<String, BElement> {
 				result.put(entry.getKey(), ((BArray) entry.getValue()).toList());
 			} else if (entry.getValue() instanceof BObject) {
 				result.put(entry.getKey(), ((BObject) entry.getValue()).toMap());
+			} else if (entry.getValue() instanceof BReference) {
+				result.put(entry.getKey(), ((BReference) entry.getValue()).getReference());
 			} else {
+			    if (entry.getValue() == null)
+			        continue;
 				throw new InvalidTypeException(
 						"Found unrecognized MElement implementation: " + entry.getValue().getClass());
 			}
@@ -320,6 +362,30 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		for (Entry<?, ?> entry : map.entrySet()) {
 			this.putAny(entry.getKey().toString(), entry.getValue());
 		}
+	}
+
+	default BElement putAnyPojo(String name, Object pojo) {
+		return this.putAny(name, ObjectUtils.toMap(pojo));
+	}
+
+	default BElement putAnyPojoRecursive(String name, Object pojo) {
+		return this.putAny(name, ObjectUtils.toMapRecursive(pojo));
+	}
+
+	default BElement putAnyPojoIfAbsent(String name, Object pojo) {
+		return this.putAnyIfAbsent(name, ObjectUtils.toMap(pojo));
+	}
+
+	default BElement putAnyPojoRecursiveIfAbsent(String name, Object pojo) {
+		return this.putAnyIfAbsent(name, ObjectUtils.toMapRecursive(pojo));
+	}
+
+	default void putAnyAllPojo(Object pojo) {
+		this.putAnyAll(ObjectUtils.toMap(pojo));
+	}
+
+	default void putAnyAllPojoRecursive(Object pojo) {
+		this.putAnyAll(ObjectUtils.toMapRecursive(pojo));
 	}
 
 	default void putAnySequence(Object... elements) {
@@ -362,25 +428,45 @@ public interface BObject extends BContainer, Map<String, BElement> {
 		writer.append("}");
 	}
 
-	default BObject setAny(String attr, Object value) {
-		this.putAny(attr, value);
+	default BObject setAny(String name, Object value) {
+		this.putAny(name, value);
 		return this;
 	}
 
-	default BObject setAnyIfAbsent(String attr, Object value) {
-		this.putAnyIfAbsent(attr, value);
+	default BObject setAnyIfAbsent(String name, Object value) {
+		this.putAnyIfAbsent(name, value);
 		return this;
 	}
 
-	default BObject set(String attr, BElement value) {
-		this.put(attr, value);
+	default BObject setAnyPojo(String name, Object pojo) {
+		this.putAnyPojo(name, pojo);
+		return this;
+	}
+
+	default BObject setAnyPojoRecursive(String name, Object pojo) {
+		this.putAnyPojoRecursive(name, pojo);
+		return this;
+	}
+
+	default BObject setAnyPojoIfAbsent(String name, Object pojo) {
+		this.putAnyPojoIfAbsent(name, pojo);
+		return this;
+	}
+
+	default BObject setAnyPojoRecursiveIfAbsent(String name, Object pojo) {
+		this.putAnyPojoRecursiveIfAbsent(name, pojo);
+		return this;
+	}
+
+	default BObject set(String name, BElement value) {
+		this.put(name, value);
 		return this;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	default <T> T deepClone() {
-		BObject result = newDefault();
+		BObject result = ofEmpty();
 		for (Entry<String, BElement> entry : this.entrySet()) {
 			result.put(entry.getKey(), entry.getValue().deepClone());
 		}

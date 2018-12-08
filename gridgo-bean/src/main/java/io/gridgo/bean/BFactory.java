@@ -1,18 +1,19 @@
 package io.gridgo.bean;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
 
+import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.impl.DefaultBFactory;
 import io.gridgo.bean.serialize.BSerializer;
 import io.gridgo.bean.serialize.BSerializerAware;
 import io.gridgo.bean.xml.BXmlParser;
 import io.gridgo.utils.ArrayUtils;
-import io.gridgo.utils.ObjectUtils;
 import io.gridgo.utils.PrimitiveUtils;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
@@ -50,6 +51,16 @@ public interface BFactory {
 
 	Supplier<BValue> getValueSupplier();
 
+	default BReference newReference(Object reference) {
+		BReference bReference = newReference();
+		bReference.setReference(reference);
+		return bReference;
+	}
+
+	default BReference newReference() {
+		return this.getReferenceSupplier().get();
+	}
+
 	default BObject newObject() {
 		BObject result = this.getObjectSupplier().get();
 		result.setFactory(this);
@@ -59,31 +70,23 @@ public interface BFactory {
 		return result;
 	}
 
-	default BReference newReference(Object reference) {
-		BReference bReference = this.getReferenceSupplier().get();
-		bReference.setReference(reference);
-		return bReference;
-	}
-
-	default BObject newObject(Object obj) {
-		if (obj == null || obj instanceof byte[] || PrimitiveUtils.isPrimitive(obj.getClass())
-				|| ArrayUtils.isArrayOrCollection(obj.getClass())) {
-			throw new IllegalArgumentException(
-					"Cannot create new object from data of: " + (obj == null ? "null" : obj.getClass()));
+	default BObject newObject(Object mapData) {
+		if (mapData instanceof BObject) {
+			return ((BObject) mapData).deepClone();
 		}
 
 		Map<?, ?> map;
-		if (Map.class.isAssignableFrom(obj.getClass())) {
-			map = (Map<?, ?>) obj;
-		} else if (obj instanceof Properties) {
+		if (Map.class.isAssignableFrom(mapData.getClass())) {
+			map = (Map<?, ?>) mapData;
+		} else if (mapData instanceof Properties) {
 			Map<Object, Object> map1 = new HashMap<>();
-			Properties props = (Properties) obj;
+			Properties props = (Properties) mapData;
 			for (Object key : props.keySet()) {
 				map1.put(key, props.get(key));
 			}
 			map = map1;
 		} else {
-			map = ObjectUtils.toMap(obj);
+			throw new InvalidTypeException("Cannot create new object from non-map data: " + mapData.getClass());
 		}
 
 		BObject result = newObject();
@@ -164,8 +167,21 @@ public interface BFactory {
 			return (T) newValue(obj);
 		} else if (ArrayUtils.isArrayOrCollection(obj.getClass())) {
 			return (T) newArray(obj);
+		} else if (obj instanceof Map<?, ?> || obj instanceof Properties) {
+			return (T) newObject(obj);
 		}
-		return (T) newObject(obj);
+		return (T) newReference(obj);
+	}
+
+	default <T extends BElement> T fromJson(InputStream inputStream) {
+		if (inputStream != null) {
+			try {
+				return (T) fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(inputStream));
+			} catch (UnsupportedEncodingException | ParseException e) {
+				throw new RuntimeException("Cannot parse json from input stream", e);
+			}
+		}
+		return null;
 	}
 
 	default <T extends BElement> T fromJson(String json) {

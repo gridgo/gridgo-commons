@@ -64,14 +64,27 @@ public class HostAndPort {
 		return resolvedIP == null ? defaultIP : resolvedIP;
 	}
 
+	public boolean isResolvable() {
+		try {
+			this.getResolvedIp();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 	public String getResolvedIp() {
 		if (!isHostResolved) {
-			if (this.getHost().equalsIgnoreCase("*")) {
-				this.resolvedHost = ALL_INTERFACE_IP;
-			} else {
-				this.resolvedHost = InetAddressUtils.resolve(this.getHost());
+			synchronized (this) {
+				if (!isHostResolved) {
+					if (this.getHost().equalsIgnoreCase("*")) {
+						this.resolvedHost = ALL_INTERFACE_IP;
+					} else {
+						this.resolvedHost = InetAddressUtils.resolve(this.getHost());
+					}
+					this.isHostResolved = true;
+				}
 			}
-			this.isHostResolved = true;
 		}
 		return this.resolvedHost;
 	}
@@ -166,6 +179,10 @@ public class HostAndPort {
 
 	public static HostAndPort newInstance() {
 		return new HostAndPort();
+	}
+
+	public HostAndPort makeCopy() {
+		return new HostAndPort(this.host, this.port);
 	}
 
 	public static HostAndPort fromString(String hostAndPort) {

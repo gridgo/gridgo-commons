@@ -1,8 +1,12 @@
 package io.gridgo.bean;
 
+import java.io.IOException;
+
+import io.gridgo.utils.StringUtils;
+
 public interface BReference extends BElement {
 
-	static BReference newDefault(Object reference) {
+	static BReference of(Object reference) {
 		return BFactory.DEFAULT.newReference(reference);
 	}
 
@@ -16,7 +20,25 @@ public interface BReference extends BElement {
 	public void setReference(Object reference);
 
 	public default void writeString(String name, int numTab, StringBuilder writer) {
+		StringUtils.tabs(numTab, writer);
+		BType type = this.getType();
+		String content = "instanceOf:"
+				+ (this.getReference() == null ? "null" : this.getReference().getClass().getName());
+		if (name == null) {
+			writer.append("(").append(type.name()).append(")");
+		} else {
+			writer.append(name).append(": ").append(type.name());
+		}
+		writer.append(" = ").append(content);
+	}
 
+	@Override
+	default void writeJson(Appendable out) {
+		try {
+			out.append(this.toJson());
+		} catch (IOException e) {
+			throw new RuntimeException("Error while writing json", e);
+		}
 	}
 
 	public default String toJson() {
@@ -43,6 +65,6 @@ public interface BReference extends BElement {
 
 	@SuppressWarnings("unchecked")
 	public default <T> T deepClone() {
-		return (T) newDefault(this.getReference());
+		return (T) of(this.getReference());
 	}
 }

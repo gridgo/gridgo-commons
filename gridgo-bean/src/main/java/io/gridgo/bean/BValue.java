@@ -1,5 +1,6 @@
 package io.gridgo.bean;
 
+import java.io.IOException;
 import java.util.Base64;
 
 import io.gridgo.bean.exceptions.InvalidTypeException;
@@ -9,11 +10,11 @@ import io.gridgo.utils.StringUtils;
 
 public interface BValue extends BElement {
 
-	static BValue newDefault() {
+	static BValue ofEmpty() {
 		return BFactory.DEFAULT.newValue();
 	}
 
-	static BValue newDefault(Object data) {
+	static BValue of(Object data) {
 		return BFactory.DEFAULT.newValue(data);
 	}
 
@@ -54,60 +55,60 @@ public interface BValue extends BElement {
 		return this.getData() == null;
 	}
 
-	default boolean getBoolean() {
+	default Boolean getBoolean() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getBooleanValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default char getChar() {
+	default Character getChar() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getCharValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default byte getByte() {
+	default Byte getByte() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getByteValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default short getShort() {
+	default Short getShort() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getShortValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default int getInteger() {
+	default Integer getInteger() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getIntegerValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default float getFloat() {
+	default Float getFloat() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getFloatValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default long getLong() {
+	default Long getLong() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getLongValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
-	default double getDouble() {
+	default Double getDouble() {
 		if (!this.isNull()) {
 			return PrimitiveUtils.getDoubleValueFrom(this.getData());
 		}
-		throw new NullPointerException("BValue contains null data");
+		return null;
 	}
 
 	default String getString() {
@@ -151,6 +152,15 @@ public interface BValue extends BElement {
 			return this.getData();
 		}
 		return null;
+	}
+
+	@Override
+	default void writeJson(Appendable out) {
+		try {
+			out.append(this.toJsonElement().toString());
+		} catch (IOException e) {
+			throw new RuntimeException("write json error", e);
+		}
 	}
 
 	@Override
@@ -273,6 +283,6 @@ public interface BValue extends BElement {
 	@Override
 	@SuppressWarnings("unchecked")
 	default <T> T deepClone() {
-		return (T) newDefault(this.getData());
+		return (T) of(this.getData());
 	}
 }

@@ -14,6 +14,6 @@ public class TimeBasedIdGenerator implements IdGenerator {
 
 	@Override
 	public Optional<BValue> generateId() {
-		return Optional.of(BValue.newDefault(generator.generate().toString()));
+		return Optional.of(BValue.of(generator.generate().toString()));
 	}
 }

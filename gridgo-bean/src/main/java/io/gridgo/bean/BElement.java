@@ -3,6 +3,7 @@ package io.gridgo.bean;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.ByteBuffer;
 
 import io.gridgo.bean.serialize.BSerializerAware;
@@ -14,6 +15,12 @@ public interface BElement extends BSerializerAware {
 	BType getType();
 
 	String toJson();
+
+	void writeJson(Appendable out);
+
+	default void writeJson(OutputStream out) {
+		this.writeJson(new OutputStreamWriter(out));
+	}
 
 	<T> T toJsonElement();
 
@@ -31,6 +38,10 @@ public interface BElement extends BSerializerAware {
 
 	static <T extends BElement> T fromJson(String json) {
 		return BFactory.DEFAULT.fromJson(json);
+	}
+
+	static <T extends BElement> T fromJson(InputStream inputStream) {
+		return BFactory.DEFAULT.fromJson(inputStream);
 	}
 
 	static <T extends BElement> T fromRaw(InputStream in) {
@@ -78,7 +89,7 @@ public interface BElement extends BSerializerAware {
 	default boolean isValue() {
 		return this instanceof BValue;
 	}
-	
+
 	default boolean isReference() {
 		return this instanceof BReference;
 	}
@@ -94,7 +105,7 @@ public interface BElement extends BSerializerAware {
 	default BValue asValue() {
 		return (BValue) this;
 	}
-	
+
 	default BReference asReference() {
 		return (BReference) this;
 	}
