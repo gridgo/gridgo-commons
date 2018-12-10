@@ -17,46 +17,46 @@ import lombok.Setter;
 
 public class DefaultBFactory implements BFactory, BFactoryConfigurable {
 
-	@Setter
-	@Getter
-	private Supplier<BArray> arraySupplier = DefaultBArray::new;
+    @Setter
+    @Getter
+    private Supplier<BArray> arraySupplier = DefaultBArray::new;
 
-	@Getter
-	@Setter
-	private Supplier<BObject> objectSupplier = DefaultBObject::new;
+    @Getter
+    @Setter
+    private Supplier<BObject> objectSupplier = DefaultBObject::new;
 
-	@Getter
-	@Setter
-	private Supplier<BValue> valueSupplier = DefaultBValue::new;
-	
-	@Getter
-	@Setter
-	private Supplier<BReference> referenceSupplier = DefaultBReference::new;
+    @Getter
+    @Setter
+    private Supplier<BValue> valueSupplier = DefaultBValue::new;
 
-	@Getter
-	private BXmlParser xmlParser;
+    @Getter
+    @Setter
+    private Supplier<BReference> referenceSupplier = DefaultBReference::new;
 
-	@Getter
-	private BSerializer serializer;
+    @Getter
+    private BXmlParser xmlParser;
 
-	public DefaultBFactory() {
-		this.setSerializer(new MsgpackSerializer());
-		this.setXmlParser(new BXmlParser());
-	}
+    @Getter
+    private BSerializer serializer;
 
-	@Override
-	public void setXmlParser(BXmlParser xmlParser) {
-		this.xmlParser = xmlParser;
-		if (this.xmlParser instanceof BFactoryAware) {
-			this.xmlParser.setFactory(this);
-		}
-	}
+    public DefaultBFactory() {
+        this.setSerializer(new MsgpackSerializer());
+        this.setXmlParser(new BXmlParser());
+    }
 
-	@Override
-	public void setSerializer(BSerializer serializer) {
-		this.serializer = serializer;
-		if (this.serializer instanceof BFactoryAware) {
-			((BFactoryAware) this.serializer).setFactory(this);
-		}
-	}
+    @Override
+    public void setXmlParser(BXmlParser xmlParser) {
+        this.xmlParser = xmlParser;
+        if (this.xmlParser instanceof BFactoryAware) {
+            this.xmlParser.setFactory(this);
+        }
+    }
+
+    @Override
+    public void setSerializer(BSerializer serializer) {
+        this.serializer = serializer;
+        if (this.serializer instanceof BFactoryAware) {
+            ((BFactoryAware) this.serializer).setFactory(this);
+        }
+    }
 }

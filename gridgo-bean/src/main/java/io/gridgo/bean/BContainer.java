@@ -2,9 +2,9 @@ package io.gridgo.bean;
 
 public interface BContainer extends BElement, BFactoryAware {
 
-	int size();
+    int size();
 
-	boolean isEmpty();
+    boolean isEmpty();
 
-	void clear();
+    void clear();
 }

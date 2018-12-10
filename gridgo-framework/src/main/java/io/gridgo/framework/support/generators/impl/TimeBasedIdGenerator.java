@@ -10,10 +10,10 @@ import io.gridgo.framework.support.generators.IdGenerator;
 
 public class TimeBasedIdGenerator implements IdGenerator {
 
-	private NoArgGenerator generator = Generators.timeBasedGenerator();
+    private NoArgGenerator generator = Generators.timeBasedGenerator();
 
-	@Override
-	public Optional<BValue> generateId() {
-		return Optional.of(BValue.of(generator.generate().toString()));
-	}
+    @Override
+    public Optional<BValue> generateId() {
+        return Optional.of(BValue.of(generator.generate().toString()));
+    }
 }

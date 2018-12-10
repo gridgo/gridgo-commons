@@ -5,10 +5,10 @@ import lombok.Data;
 
 @Data
 public class ExecutionContextEvent<T, H> {
-	
-	private ExecutionContext<T, H> context;
-	
-	public void clear() {
-		this.context = null;
-	}
+
+    private ExecutionContext<T, H> context;
+
+    public void clear() {
+        this.context = null;
+    }
 }

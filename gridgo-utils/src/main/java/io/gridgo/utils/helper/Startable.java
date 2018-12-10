@@ -2,9 +2,9 @@ package io.gridgo.utils.helper;
 
 public interface Startable {
 
-	boolean isStarted();
+    boolean isStarted();
 
-	void start();
+    void start();
 
-	void stop();
+    void stop();
 }

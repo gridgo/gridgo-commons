@@ -7,15 +7,15 @@ import lombok.Data;
 @Data
 public class TestObject {
 
-	private int testInt;
-	
-	private boolean testBool;
-	
-	private String testStr;
-	
-	private TestObject testObj;
+    private int testInt;
 
-	private Map<String, Object> testMap;
+    private boolean testBool;
 
-	private int[] testArr;
+    private String testStr;
+
+    private TestObject testObj;
+
+    private Map<String, Object> testMap;
+
+    private int[] testArr;
 }

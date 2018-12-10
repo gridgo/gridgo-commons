@@ -22,9 +22,7 @@ public class BObjectUnitTest {
                          .setAny("str", "hello") //
                          .setAny("double", 1.11) //
                          .setAny("byte", (byte) 1) //
-                         .setAny("arr", new int[] { 1, 2, 3 })
-                         .set("obj", BObject.ofEmpty()
-                                            .setAny("int", 2));
+                         .setAny("arr", new int[] { 1, 2, 3 }).set("obj", BObject.ofEmpty().setAny("int", 2));
         assertObject(obj);
         assertObject(obj.deepClone());
         obj.setAnyIfAbsent("arr", 1);
@@ -72,17 +70,14 @@ public class BObjectUnitTest {
         Assert.assertEquals(Integer.valueOf(1), obj.getInteger("int", -1));
         Assert.assertEquals("hello", obj.getString("str", null));
         Assert.assertArrayEquals(new Integer[] { 1, 2, 3 }, //
-                obj.getArray("arr", BArray.ofEmpty())
-                   .stream() //
-                   .map(e -> e.asValue()
-                              .getData()) //
+                obj.getArray("arr", BArray.ofEmpty()).stream() //
+                   .map(e -> e.asValue().getData()) //
                    .toArray(size -> new Integer[size]));
         Assert.assertEquals(Long.valueOf(1L), obj.getLong("long", -1));
         Assert.assertEquals(Character.valueOf('a'), obj.getChar("char", '\0'));
         Assert.assertEquals(1.11, obj.getDouble("double", -1), 0);
         Assert.assertEquals(1.11, obj.getFloat("double", -1), 0.001);
         Assert.assertEquals(Byte.valueOf((byte) 1), obj.getByte("byte", (byte) -1));
-        Assert.assertEquals(Integer.valueOf(2), obj.getObject("obj", null)
-                                                   .getInteger("int"));
+        Assert.assertEquals(Integer.valueOf(2), obj.getObject("obj", null).getInteger("int"));
     }
 }

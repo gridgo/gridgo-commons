@@ -7,8 +7,8 @@ import io.gridgo.framework.support.generators.IdGenerator;
 
 public class NoOpIdGenerator implements IdGenerator {
 
-	@Override
-	public Optional<BValue> generateId() {
-		return Optional.empty();
-	}
+    @Override
+    public Optional<BValue> generateId() {
+        return Optional.empty();
+    }
 }

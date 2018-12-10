@@ -6,12 +6,12 @@ import lombok.NonNull;
 
 public class DefaultExecutionStrategy implements ExecutionStrategy {
 
-	public void execute(final @NonNull Runnable runnable) {
-		runnable.run();
-	}
+    public void execute(final @NonNull Runnable runnable) {
+        runnable.run();
+    }
 
-	@Override
-	public void execute(ExecutionContext<?, ?> context) {
-		context.execute();
-	}
+    @Override
+    public void execute(ExecutionContext<?, ?> context) {
+        context.execute();
+    }
 }
