@@ -72,7 +72,7 @@ public interface BFactory {
 
     default BObject newObject(Object mapData) {
         if (mapData instanceof BObject) {
-            return ((BObject) mapData).deepClone();
+            return ((BObject) mapData);
         }
 
         Map<?, ?> map;
@@ -117,7 +117,7 @@ public interface BFactory {
 
     default BArray newArray(Object src) {
         if (src instanceof BArray) {
-            return ((BArray) src).deepClone();
+            return ((BArray) src);
         }
 
         BArray array = newArray();
@@ -148,7 +148,7 @@ public interface BFactory {
 
     default BValue newValue(Object data) {
         if (data instanceof BValue) {
-            return ((BValue) data).deepClone();
+            return ((BValue) data);
         }
 
         if (data != null && !(data instanceof byte[]) && !PrimitiveUtils.isPrimitive(data.getClass())) {
@@ -162,7 +162,7 @@ public interface BFactory {
 
     default <T extends BElement> T fromAny(Object obj) {
         if (obj instanceof BElement) {
-            return (T) ((BElement) obj).deepClone();
+            return (T) ((BElement) obj);
         } else if (obj == null || (obj instanceof byte[]) || PrimitiveUtils.isPrimitive(obj.getClass())) {
             return (T) newValue(obj);
         } else if (ArrayUtils.isArrayOrCollection(obj.getClass())) {
