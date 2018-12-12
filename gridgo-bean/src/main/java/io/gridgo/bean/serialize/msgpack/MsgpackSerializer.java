@@ -20,7 +20,9 @@ import io.gridgo.bean.BValue;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.serialize.BSerializer;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class MsgpackSerializer implements BSerializer, BFactoryAware {
 
     @Setter
@@ -34,7 +36,8 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
         } else if (element instanceof BObject) {
             this.packObject(element.asObject(), packer);
         } else {
-            throw new IllegalArgumentException("Unrecoginzed BElement implementation: " + element.getClass());
+            if (log.isWarnEnabled())
+                log.warn("Unrecoginzed BElement implementation: %s", element.getClass());
         }
     }
 
