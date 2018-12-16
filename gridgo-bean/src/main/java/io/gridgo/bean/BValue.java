@@ -125,8 +125,7 @@ public interface BValue extends BElement {
             } else if (this.getData() instanceof String) {
                 return ((String) this.getData()).getBytes();
             } else {
-                throw new InvalidTypeException(
-                        "BValue contains data which cannot convert to byte[]: " + this.getType());
+                throw new InvalidTypeException("BValue contains data which cannot convert to byte[]: " + this.getType());
             }
         }
         return null;
@@ -135,6 +134,9 @@ public interface BValue extends BElement {
     @Override
     default String toJson() {
         if (!this.isNull()) {
+            if (this.getData() instanceof byte[]) {
+                return ByteArrayUtils.toHex(this.getRaw(), "0x");
+            }
             return this.getString();
         }
         return null;
@@ -172,7 +174,7 @@ public interface BValue extends BElement {
             if (name != null) {
                 sb.append(" name=\"").append(name).append("\"");
             }
-            String content = this.getString();
+            String content = this.getData() instanceof byte[] ? ByteArrayUtils.toHex(this.getRaw()) : this.getString();
             if (content.contains("<")) {
                 sb.append(">") //
                   .append("<![CDATA[")//
@@ -199,6 +201,10 @@ public interface BValue extends BElement {
     }
 
     default void decodeHex() {
+        if (this.getData() instanceof byte[]) {
+            // skip decode if data already in byte[]
+            return;
+        }
         if (!(this.getData() instanceof String)) {
             throw new InvalidTypeException("Cannot decode hex from data which is not in String format");
         }
