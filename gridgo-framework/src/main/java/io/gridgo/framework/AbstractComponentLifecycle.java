@@ -60,6 +60,11 @@ public abstract class AbstractComponentLifecycle implements ComponentLifecycle, 
         return name;
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
+
     protected abstract String generateName();
 
     protected abstract void onStart();
