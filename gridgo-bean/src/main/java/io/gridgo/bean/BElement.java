@@ -32,9 +32,6 @@ public interface BElement extends BSerializerAware {
 
     /**
      * use ofAny instead
-     * 
-     * @param data
-     * @return
      */
     @Deprecated
     static <T extends BElement> T fromAny(Object data) {
@@ -47,9 +44,6 @@ public interface BElement extends BSerializerAware {
 
     /**
      * use ofXml instead
-     * 
-     * @param xml
-     * @return
      */
     @Deprecated
     static <T extends BElement> T fromXml(String xml) {
@@ -62,9 +56,6 @@ public interface BElement extends BSerializerAware {
 
     /**
      * use ofJson instead
-     * 
-     * @param json
-     * @return
      */
     @Deprecated
     static <T extends BElement> T fromJson(String json) {
@@ -77,9 +68,6 @@ public interface BElement extends BSerializerAware {
 
     /**
      * use ofJson instead
-     * 
-     * @param json
-     * @return
      */
     @Deprecated
     static <T extends BElement> T fromJson(InputStream inputStream) {
@@ -92,9 +80,6 @@ public interface BElement extends BSerializerAware {
 
     /**
      * use ofBytes instead
-     * 
-     * @param json
-     * @return
      */
     @Deprecated
     static <T extends BElement> T fromRaw(InputStream in) {
@@ -107,9 +92,6 @@ public interface BElement extends BSerializerAware {
 
     /**
      * use ofBytes instead
-     * 
-     * @param json
-     * @return
      */
     @Deprecated
     static <T extends BElement> T fromRaw(ByteBuffer buffer) {
@@ -122,9 +104,6 @@ public interface BElement extends BSerializerAware {
 
     /**
      * use ofBytes instead
-     * 
-     * @param json
-     * @return
      */
     @Deprecated
     static <T extends BElement> T fromRaw(byte[] bytes) {
