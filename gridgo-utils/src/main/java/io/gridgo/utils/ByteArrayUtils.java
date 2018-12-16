@@ -13,7 +13,7 @@ public final class ByteArrayUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static final <T> T primitiveFromByteArray(Class<T> clazz, byte[] bytes) {
+    public static final <T> T bytesToPrimitive(Class<T> clazz, byte[] bytes) {
         if (clazz != null && bytes != null) {
             if (clazz == Boolean.class || clazz == Boolean.TYPE) {
                 return (T) Boolean.valueOf(Long.valueOf(ByteBuffer.wrap(bytes).getLong()) != 0);
@@ -85,8 +85,7 @@ public final class ByteArrayUtils {
         int len = hex.length() - start;
         byte[] data = new byte[len / 2];
         for (int i = start; i < hex.length(); i += 2) {
-            data[(i - start)
-                    / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character.digit(hex.charAt(i + 1), 16));
+            data[(i - start) / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character.digit(hex.charAt(i + 1), 16));
         }
         return data;
     }

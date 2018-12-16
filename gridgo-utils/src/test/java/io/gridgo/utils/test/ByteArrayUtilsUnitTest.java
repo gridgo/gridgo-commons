@@ -38,17 +38,17 @@ public class ByteArrayUtilsUnitTest {
 
     @Test
     public void testPrimitives() {
-        boolean bool = ByteArrayUtils.primitiveFromByteArray(Boolean.class, new byte[] { 0, 0, 0, 0, 0, 0, 0, 1 });
+        boolean bool = ByteArrayUtils.bytesToPrimitive(Boolean.class, new byte[] { 0, 0, 0, 0, 0, 0, 0, 1 });
         Assert.assertTrue(bool);
-        byte b = ByteArrayUtils.primitiveFromByteArray(Byte.class, new byte[] { 1 });
+        byte b = ByteArrayUtils.bytesToPrimitive(Byte.class, new byte[] { 1 });
         Assert.assertEquals(1, b);
-        short sh = ByteArrayUtils.primitiveFromByteArray(Short.class, new byte[] { 1, 1 });
+        short sh = ByteArrayUtils.bytesToPrimitive(Short.class, new byte[] { 1, 1 });
         Assert.assertEquals(257, sh);
-        int i = ByteArrayUtils.primitiveFromByteArray(Integer.class, new byte[] { 1, 1, 1, 1 });
+        int i = ByteArrayUtils.bytesToPrimitive(Integer.class, new byte[] { 1, 1, 1, 1 });
         Assert.assertEquals(16843009, i);
-        long l = ByteArrayUtils.primitiveFromByteArray(Long.class, new byte[] { 1, 0, 0, 0, 0, 0, 0, 0 });
+        long l = ByteArrayUtils.bytesToPrimitive(Long.class, new byte[] { 1, 0, 0, 0, 0, 0, 0, 0 });
         Assert.assertEquals(72057594037927936L, l);
-        char c = ByteArrayUtils.primitiveFromByteArray(Character.class, new byte[] { 0, 97 });
+        char c = ByteArrayUtils.bytesToPrimitive(Character.class, new byte[] { 0, 97 });
         Assert.assertEquals('a', c);
     }
 }
