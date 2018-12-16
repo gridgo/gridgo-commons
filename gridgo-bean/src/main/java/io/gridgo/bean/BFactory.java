@@ -199,15 +199,15 @@ public interface BFactory {
         return (T) this.getXmlParser().parse(xml);
     }
 
-    default <T extends BElement> T fromRaw(InputStream in) {
+    default <T extends BElement> T fromBytes(InputStream in) {
         return (T) this.getSerializer().deserialize(in);
     }
 
-    default <T extends BElement> T fromRaw(ByteBuffer buffer) {
+    default <T extends BElement> T fromBytes(ByteBuffer buffer) {
         return (T) this.getSerializer().deserialize(buffer);
     }
 
-    default <T extends BElement> T fromRaw(byte[] bytes) {
+    default <T extends BElement> T fromBytes(byte[] bytes) {
         return (T) this.getSerializer().deserialize(bytes);
     }
 
