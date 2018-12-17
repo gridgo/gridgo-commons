@@ -76,7 +76,8 @@ public class PrimitiveUtils {
         } else if (obj instanceof String) {
             return (String) obj;
         } else if (obj instanceof byte[]) {
-            return ByteArrayUtils.toHex((byte[]) obj, "0x");
+            // return ByteArrayUtils.toHex((byte[]) obj, "0x");
+            return new String((byte[]) obj);
         } else if (isPrimitive(obj.getClass())) {
             return String.valueOf(obj);
         }
@@ -94,7 +95,7 @@ public class PrimitiveUtils {
             } else if (obj instanceof Boolean) {
                 return (Boolean) obj ? 1 : 0;
             } else if (obj instanceof byte[]) {
-                return ByteArrayUtils.primitiveFromByteArray(Integer.class, (byte[]) obj);
+                return ByteArrayUtils.bytesToPrimitive(Integer.class, (byte[]) obj);
             }
         }
         throw new RuntimeException("cannot convert null object");
@@ -111,7 +112,7 @@ public class PrimitiveUtils {
             } else if (obj instanceof Boolean) {
                 return (Boolean) obj ? 1l : 0l;
             } else if (obj instanceof byte[]) {
-                return ByteArrayUtils.primitiveFromByteArray(Long.class, (byte[]) obj);
+                return ByteArrayUtils.bytesToPrimitive(Long.class, (byte[]) obj);
             }
         }
         throw new RuntimeException("cannot convert null object");
@@ -128,7 +129,7 @@ public class PrimitiveUtils {
             } else if (obj instanceof Boolean) {
                 return (Boolean) obj ? 1f : 0f;
             } else if (obj instanceof byte[]) {
-                return ByteArrayUtils.primitiveFromByteArray(Float.class, (byte[]) obj);
+                return ByteArrayUtils.bytesToPrimitive(Float.class, (byte[]) obj);
             }
         }
         throw new RuntimeException("cannot convert null object");
@@ -145,7 +146,7 @@ public class PrimitiveUtils {
             } else if (obj instanceof Boolean) {
                 return (Boolean) obj ? 1d : 0d;
             } else if (obj instanceof byte[]) {
-                return ByteArrayUtils.primitiveFromByteArray(Double.class, (byte[]) obj);
+                return ByteArrayUtils.bytesToPrimitive(Double.class, (byte[]) obj);
             }
         }
         throw new RuntimeException("cannot convert null object");
@@ -162,7 +163,7 @@ public class PrimitiveUtils {
             } else if (obj instanceof Boolean) {
                 return (short) ((Boolean) obj ? 1 : 0);
             } else if (obj instanceof byte[]) {
-                return ByteArrayUtils.primitiveFromByteArray(Short.class, (byte[]) obj);
+                return ByteArrayUtils.bytesToPrimitive(Short.class, (byte[]) obj);
             }
         }
         throw new RuntimeException("cannot convert null object");
@@ -179,7 +180,7 @@ public class PrimitiveUtils {
             } else if (obj instanceof Boolean) {
                 return (byte) ((Boolean) obj ? 1 : 0);
             } else if (obj instanceof byte[]) {
-                return ByteArrayUtils.primitiveFromByteArray(Byte.class, (byte[]) obj);
+                return ByteArrayUtils.bytesToPrimitive(Byte.class, (byte[]) obj);
             }
         }
         throw new RuntimeException("cannot convert null object");
@@ -208,7 +209,7 @@ public class PrimitiveUtils {
             } else if (obj instanceof Boolean) {
                 return ((Boolean) obj ? '1' : '0');
             } else if (obj instanceof byte[]) {
-                return ByteArrayUtils.primitiveFromByteArray(Character.class, (byte[]) obj);
+                return ByteArrayUtils.bytesToPrimitive(Character.class, (byte[]) obj);
             }
         }
         throw new RuntimeException("cannot convert null object");
@@ -234,7 +235,7 @@ public class PrimitiveUtils {
         } else if (obj instanceof Boolean) {
             return ((Boolean) obj).booleanValue();
         } else if (obj instanceof byte[]) {
-            return ByteArrayUtils.primitiveFromByteArray(Boolean.class, (byte[]) obj);
+            return ByteArrayUtils.bytesToPrimitive(Boolean.class, (byte[]) obj);
         }
         return obj != null;
     }

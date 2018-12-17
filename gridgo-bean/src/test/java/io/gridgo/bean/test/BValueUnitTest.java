@@ -20,11 +20,11 @@ public class BValueUnitTest {
         val.decodeBase64();
         Assert.assertArrayEquals(new byte[] { 1, 2, 4, 8, 16, 32, 64 }, (byte[]) val.getData());
 
-        val = BElement.fromJson(val.toJson()).asValue();
+        val = BElement.ofJson(val.toJson()).asValue();
         val.decodeHex();
         Assert.assertArrayEquals(new byte[] { 1, 2, 4, 8, 16, 32, 64 }, (byte[]) val.getData());
 
-        val = BElement.fromXml(val.toXml()).asValue();
+        val = BElement.ofXml(val.toXml()).asValue();
         Assert.assertArrayEquals(new byte[] { 1, 2, 4, 8, 16, 32, 64 }, (byte[]) val.getData());
     }
 }

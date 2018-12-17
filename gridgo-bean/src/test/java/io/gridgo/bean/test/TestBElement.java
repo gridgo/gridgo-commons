@@ -27,7 +27,7 @@ public class TestBElement {
             byte[] bytes = obj.toBytes();
             System.out.println("Serialized: " + Arrays.toString(bytes));
             System.out.println("Serialized as string: " + new String(bytes));
-            BElement fromRaw = BElement.fromRaw(bytes);
+            BElement fromRaw = BElement.ofBytes(bytes);
             System.out.println("Deserialized from raw: " + fromRaw);
         }
     }
