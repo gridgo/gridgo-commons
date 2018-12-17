@@ -2,6 +2,7 @@ package io.gridgo.bean;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -12,6 +13,15 @@ import io.gridgo.utils.StringUtils;
 import net.minidev.json.JSONObject;
 
 public interface BObject extends BContainer, Map<String, BElement> {
+
+    default <T> T toPojo(Class<T> clazz) {
+        try {
+            return ObjectUtils.fromMap(clazz, this);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     static BObject ofEmpty() {
         return BFactory.DEFAULT.newObject();
