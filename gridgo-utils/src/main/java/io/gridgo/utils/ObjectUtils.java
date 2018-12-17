@@ -2,6 +2,7 @@ package io.gridgo.utils;
 
 import java.beans.Statement;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -163,7 +164,8 @@ public final class ObjectUtils {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static final <T> T fromMap(Class<T> clazz, Map<String, ?> data) throws Exception {
+    public static final <T> T fromMap(Class<T> clazz, Map<String, ?> data)
+            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         Map<String, Setter> classSetter = findAllClassSetters(clazz);
         T result = clazz.getDeclaredConstructor().newInstance();
         for (Entry<String, ?> entry : data.entrySet()) {
