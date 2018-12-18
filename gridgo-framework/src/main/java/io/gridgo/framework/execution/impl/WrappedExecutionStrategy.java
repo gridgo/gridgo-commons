@@ -3,9 +3,15 @@ package io.gridgo.framework.execution.impl;
 import io.gridgo.framework.execution.ExecutionStrategy;
 import io.gridgo.framework.support.context.ExecutionContext;
 
-public class WrappedExecutionStrategy implements ExecutionStrategy {
+public abstract class WrappedExecutionStrategy implements ExecutionStrategy {
 
-    private ExecutionStrategy strategy;
+    private static final ExecutionStrategy DEFAULT_EXECUTION_STRATEGY = new DefaultExecutionStrategy();
+
+    private final ExecutionStrategy strategy;
+
+    public WrappedExecutionStrategy() {
+        this.strategy = DEFAULT_EXECUTION_STRATEGY;
+    }
 
     public WrappedExecutionStrategy(ExecutionStrategy strategy) {
         this.strategy = strategy;
@@ -13,11 +19,13 @@ public class WrappedExecutionStrategy implements ExecutionStrategy {
 
     @Override
     public void execute(Runnable runnable) {
-        this.strategy.execute(runnable);
+        this.strategy.execute(() -> wrap(runnable));
     }
 
     @Override
     public void execute(ExecutionContext<?, ?> context) {
         this.strategy.execute(context);
     }
+
+    protected abstract void wrap(Runnable runnable);
 }
