@@ -74,7 +74,7 @@ public interface Registry {
     public default <T> T lookupMandatory(String name, Class<T> type) {
         var answer = lookup(name, type);
         if (answer == null)
-            throw new BeanNotFoundException("Bean " + name + " cannot be found using" + this.getClass().getName());
+            throw new BeanNotFoundException("Bean " + name + " cannot be found using " + this.getClass().getName());
         return answer;
     }
 
