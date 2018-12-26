@@ -34,7 +34,7 @@ public interface Payload {
     public Payload setIdFromAny(Object id);
 
     public default BArray toBArray() {
-        return BArray.newFromSequence(this.getId().orElse(null), this.getHeaders(), this.getBody());
+        return BArray.ofSequence(this.getId().orElse(null), this.getHeaders(), this.getBody());
     }
 
     public static Payload of(BValue id, BElement body) {
