@@ -32,6 +32,10 @@ public final class ByteArrayUtils {
         if (data instanceof Byte)
             return new byte[] { (Byte) data };
 
+        return primitiveToBytesWithBuffer(data);
+    }
+
+    private static byte[] primitiveToBytesWithBuffer(Object data) {
         ByteBuffer buffer = null;
         if (data instanceof Short) {
             buffer = ByteBuffer.allocate(Short.BYTES);
@@ -62,7 +66,7 @@ public final class ByteArrayUtils {
         if (bytes == null)
             return 0;
         if (bytes.length == 1)
-            return (byte) bytes[0];
+            return bytes[0];
         if (bytes.length < 4)
             return ByteBuffer.wrap(bytes).getShort();
         if (bytes.length < 8) {
