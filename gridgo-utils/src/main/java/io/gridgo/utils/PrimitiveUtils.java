@@ -7,6 +7,8 @@ import lombok.NonNull;
 
 public class PrimitiveUtils {
 
+    private static final String UNSUPPORTED_TYPE_MSG = "Unsupported type: ";
+
     private PrimitiveUtils() {
         // make constructor private to prevent other where create new instance
     }
@@ -59,7 +61,7 @@ public class PrimitiveUtils {
             return (T) Character.valueOf(getCharValueFrom(obj));
         if (resultType == Boolean.TYPE || resultType == Boolean.class)
             return (T) Boolean.valueOf(getBooleanValueFrom(obj));
-        throw new UnsupportedTypeException("Unsupported type: " + resultType.getName());
+        throw new UnsupportedTypeException(UNSUPPORTED_TYPE_MSG + resultType.getName());
     }
 
     public static final String getStringValueFrom(Object obj) {
@@ -99,7 +101,7 @@ public class PrimitiveUtils {
             return (Boolean) obj ? 1l : 0l;
         if (obj instanceof byte[])
             return ByteArrayUtils.bytesToPrimitive(Long.class, (byte[]) obj);
-        throw new UnsupportedTypeException("Unsupported type: " + obj.getClass().getName());
+        throw new UnsupportedTypeException(UNSUPPORTED_TYPE_MSG + obj.getClass().getName());
     }
 
     public static final float getFloatValueFrom(@NonNull Object obj) {
@@ -113,7 +115,7 @@ public class PrimitiveUtils {
             return (Boolean) obj ? 1f : 0f;
         if (obj instanceof byte[])
             return ByteArrayUtils.bytesToPrimitive(Float.class, (byte[]) obj);
-        throw new UnsupportedTypeException("Unsupported type: " + obj.getClass().getName());
+        throw new UnsupportedTypeException(UNSUPPORTED_TYPE_MSG + obj.getClass().getName());
     }
 
     public static final double getDoubleValueFrom(@NonNull Object obj) {
@@ -127,7 +129,7 @@ public class PrimitiveUtils {
             return (Boolean) obj ? 1d : 0d;
         if (obj instanceof byte[])
             return ByteArrayUtils.bytesToPrimitive(Double.class, (byte[]) obj);
-        throw new UnsupportedTypeException("Unsupported type: " + obj.getClass().getName());
+        throw new UnsupportedTypeException(UNSUPPORTED_TYPE_MSG + obj.getClass().getName());
     }
 
     public static final short getShortValueFrom(@NonNull Object obj) {
@@ -141,7 +143,7 @@ public class PrimitiveUtils {
             return (short) ((Boolean) obj ? 1 : 0);
         if (obj instanceof byte[])
             return ByteArrayUtils.bytesToPrimitive(Short.class, (byte[]) obj);
-        throw new UnsupportedTypeException("Unsupported type: " + obj.getClass().getName());
+        throw new UnsupportedTypeException(UNSUPPORTED_TYPE_MSG + obj.getClass().getName());
     }
 
     public static final byte getByteValueFrom(@NonNull Object obj) {
@@ -155,7 +157,7 @@ public class PrimitiveUtils {
             return (byte) ((Boolean) obj ? 1 : 0);
         if (obj instanceof byte[])
             return ByteArrayUtils.bytesToPrimitive(Byte.class, (byte[]) obj);
-        throw new UnsupportedTypeException("Unsupported type: " + obj.getClass().getName());
+        throw new UnsupportedTypeException(UNSUPPORTED_TYPE_MSG + obj.getClass().getName());
     }
 
     /**
@@ -182,7 +184,7 @@ public class PrimitiveUtils {
             return ((Boolean) obj ? '1' : '0');
         if (obj instanceof byte[])
             return ByteArrayUtils.bytesToPrimitive(Character.class, (byte[]) obj);
-        throw new UnsupportedTypeException("Unsupported type: " + obj.getClass().getName());
+        throw new UnsupportedTypeException(UNSUPPORTED_TYPE_MSG + obj.getClass().getName());
     }
 
     /**
