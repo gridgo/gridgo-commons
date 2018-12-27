@@ -136,6 +136,10 @@ public interface BElement extends BSerializerAware {
         return this.toXml(null);
     }
 
+    default boolean isContainer() {
+        return this instanceof BContainer;
+    }
+
     default boolean isArray() {
         return this instanceof BArray;
     }

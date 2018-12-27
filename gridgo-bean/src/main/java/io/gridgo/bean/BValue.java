@@ -120,13 +120,7 @@ public interface BValue extends BElement {
 
     default byte[] getRaw() {
         if (!this.isNull()) {
-            if (this.getData() instanceof byte[]) {
-                return (byte[]) this.getData();
-            } else if (this.getData() instanceof String) {
-                return ((String) this.getData()).getBytes();
-            } else {
-                throw new InvalidTypeException("BValue contains data which cannot convert to byte[]: " + this.getType());
-            }
+            return ByteArrayUtils.primitiveToBytes(this.getData());
         }
         return null;
     }

@@ -2,6 +2,8 @@ package io.gridgo.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 import io.gridgo.utils.exception.UnsupportedTypeException;
@@ -12,29 +14,138 @@ public final class ByteArrayUtils {
         // private constructor
     }
 
+    public static byte[] primitiveToBytes(Object data) {
+        if (data != null) {
+            if (data instanceof byte[]) {
+                return (byte[]) data;
+            } else if (data instanceof Boolean) {
+                return new byte[] { (byte) (((Boolean) data) ? 1 : 0) };
+            } else if (data instanceof String) {
+                return ((String) data).getBytes();
+            } else if (data instanceof BigDecimal) {
+                BigInteger theInt = ((BigDecimal) data).unscaledValue();
+                return theInt.toByteArray();
+            } else if (data instanceof BigInteger) {
+                return ((BigInteger) data).toByteArray();
+            } else if (data instanceof Byte) {
+                return new byte[] { (Byte) data };
+            } else {
+                ByteBuffer buffer = null;
+                if (data instanceof Short) {
+                    buffer = ByteBuffer.allocate(Short.BYTES);
+                    buffer.putShort((Short) data);
+                } else if (data instanceof Integer) {
+                    buffer = ByteBuffer.allocate(Integer.BYTES);
+                    buffer.putInt((Integer) data);
+                } else if (data instanceof Float) {
+                    buffer = ByteBuffer.allocate(Float.BYTES);
+                    buffer.putFloat((Float) data);
+                } else if (data instanceof Long) {
+                    buffer = ByteBuffer.allocate(Long.BYTES);
+                    buffer.putLong((Long) data);
+                } else if (data instanceof Double) {
+                    buffer = ByteBuffer.allocate(Double.BYTES);
+                    buffer.putLong((Long) data);
+                } else if (data instanceof Character) {
+                    buffer = ByteBuffer.allocate(Character.BYTES);
+                    buffer.putChar((Character) data);
+                }
+
+                if (buffer != null) {
+                    return buffer.array();
+                }
+                throw new IllegalArgumentException("Data must be primitive type");
+            }
+        }
+        return null;
+    }
+
+    public static final Number bytesToNumber(byte[] bytes, boolean isDecimal) {
+        if (bytes != null) {
+            if (bytes.length == 1) {
+                return (byte) bytes[0];
+            } else if (bytes.length < 4) {
+                return ByteBuffer.wrap(bytes).getShort();
+            } else if (bytes.length < 8) {
+                if (isDecimal) {
+                    return ByteBuffer.wrap(bytes).getFloat();
+                }
+                return ByteBuffer.wrap(bytes).getInt();
+            } else if (bytes.length < 32) {
+                if (isDecimal) {
+                    return ByteBuffer.wrap(bytes).getDouble();
+                }
+                return ByteBuffer.wrap(bytes).getLong();
+            } else {
+                BigInteger bigInt = new BigInteger(bytes);
+                if (isDecimal) {
+                    return new BigDecimal(bigInt);
+                }
+                return bigInt;
+            }
+        }
+        return 0;
+    }
+
     @SuppressWarnings("unchecked")
     public static final <T> T bytesToPrimitive(Class<T> clazz, byte[] bytes) {
         if (clazz != null && bytes != null) {
             if (clazz == Boolean.class || clazz == Boolean.TYPE) {
-                return (T) Boolean.valueOf(Long.valueOf(ByteBuffer.wrap(bytes).getLong()) != 0);
-            } else if (clazz == Byte.class || clazz == Byte.TYPE) {
-                return (T) Byte.valueOf(bytes.length > 0 ? bytes[0] : 0);
-            } else if (clazz == Short.class || clazz == Short.TYPE) {
-                return (T) Short.valueOf(ByteBuffer.wrap(bytes).getShort());
-            } else if (clazz == Integer.class || clazz == Integer.TYPE) {
-                return (T) Integer.valueOf(ByteBuffer.wrap(bytes).getInt());
-            } else if (clazz == Float.class || clazz == Float.TYPE) {
-                return (T) Float.valueOf(ByteBuffer.wrap(bytes).getFloat());
-            } else if (clazz == Long.class || clazz == Long.TYPE) {
-                return (T) Long.valueOf(ByteBuffer.wrap(bytes).getLong());
-            } else if (clazz == Double.class || clazz == Double.TYPE) {
-                return (T) Double.valueOf(ByteBuffer.wrap(bytes).getDouble());
+                if (bytes.length == 0) {
+                    return (T) Boolean.FALSE;
+                } else {
+                    for (byte b : bytes) {
+                        if (b == 1) {
+                            return (T) Boolean.TRUE;
+                        }
+                    }
+                    return (T) Boolean.FALSE;
+                }
             } else if (clazz == String.class) {
                 return (T) new String(bytes);
             } else if (clazz == Character.class || clazz == Character.TYPE) {
                 return (T) Character.valueOf(ByteBuffer.wrap(bytes).getChar());
+            } else {
+                Object result = null;
+                if (clazz == Byte.class || clazz == Short.class || clazz == Integer.class || clazz == Long.class || clazz == BigInteger.class) {
+                    Number num = bytesToNumber(bytes, false);
+                    if (clazz == Byte.class) {
+                        result = num.byteValue();
+                    } else if (clazz == Short.class) {
+                        result = num.shortValue();
+                    } else if (clazz == Integer.class) {
+                        result = num.intValue();
+                    } else if (clazz == Long.class) {
+                        result = num.longValue();
+                    } else if (clazz == BigInteger.class) {
+                        if (num instanceof BigInteger) {
+                            result = num;
+                        } else {
+                            result = new BigInteger(num.toString());
+                        }
+                    }
+                } else if (clazz == Float.class || clazz == Double.class || clazz == BigDecimal.class) {
+                    Number num = bytesToNumber(bytes, true);
+                    if (clazz == Float.class) {
+                        result = num.floatValue();
+                    } else if (clazz == Double.class) {
+                        result = num.doubleValue();
+                    } else if (clazz == BigDecimal.class) {
+                        if (num instanceof BigDecimal) {
+                            result = num;
+                        } else if (num instanceof BigInteger) {
+                            result = new BigDecimal((BigInteger) num);
+                        } else {
+                            result = new BigDecimal(num.toString());
+                        }
+                    }
+                }
+
+                if (result != null) {
+                    return (T) result;
+                }
             }
-            throw new UnsupportedTypeException();
+            throw new UnsupportedTypeException("Cannot convert bytes to primitive type " + clazz);
         }
         return null;
     }
@@ -89,5 +200,4 @@ public final class ByteArrayUtils {
         }
         return data;
     }
-
 }
