@@ -1,8 +1,11 @@
 package io.gridgo.utils.test;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import io.gridgo.utils.ByteArrayUtils;
@@ -19,7 +22,7 @@ public class ByteArrayUtilsUnitTest {
         byte[] dehexBytes = ByteArrayUtils.fromHex(hex);
         String dehex = Arrays.toString(dehexBytes);
 
-        Assert.assertEquals(origin, dehex);
+        assertEquals(origin, dehex);
     }
 
     @Test
@@ -27,28 +30,46 @@ public class ByteArrayUtilsUnitTest {
         byte[] b1 = new byte[] { 1, 2 };
         byte[] b2 = new byte[] { 3, 4 };
         byte[] result = ByteArrayUtils.concat(b1, b2);
-        Assert.assertEquals(4, result.length);
-        Assert.assertEquals(1, result[0]);
-        Assert.assertEquals(2, result[1]);
-        Assert.assertEquals(3, result[2]);
-        Assert.assertEquals(4, result[3]);
+        assertEquals(4, result.length);
+        assertEquals(1, result[0]);
+        assertEquals(2, result[1]);
+        assertEquals(3, result[2]);
+        assertEquals(4, result[3]);
         result = ByteArrayUtils.concat();
-        Assert.assertEquals(0, result.length);
+        assertEquals(0, result.length);
     }
 
     @Test
     public void testPrimitives() {
-        boolean bool = ByteArrayUtils.bytesToPrimitive(Boolean.class, new byte[] { 0, 0, 0, 0, 0, 0, 0, 1 });
-        Assert.assertTrue(bool);
+        assertArrayEquals(new byte[] { 0 }, ByteArrayUtils.primitiveToBytes(false));
+        assertArrayEquals(new byte[] { 1 }, ByteArrayUtils.primitiveToBytes(true));
+        boolean bool = ByteArrayUtils.bytesToPrimitive(Boolean.class, new byte[] { 1 });
+        assertTrue(bool);
+        bool = ByteArrayUtils.bytesToPrimitive(Boolean.class, new byte[] { 0 });
+        assertTrue(!bool);
+        bool = ByteArrayUtils.bytesToPrimitive(Boolean.class, new byte[] { 0, 1 });
+        assertTrue(bool);
+        bool = ByteArrayUtils.bytesToPrimitive(Boolean.class, new byte[] { 0, 0 });
+        assertTrue(!bool);
+
+        assertArrayEquals(new byte[] { 1 }, ByteArrayUtils.primitiveToBytes((byte) 1));
+        assertArrayEquals(new byte[] { 0 }, ByteArrayUtils.primitiveToBytes((byte) 0));
         byte b = ByteArrayUtils.bytesToPrimitive(Byte.class, new byte[] { 1 });
-        Assert.assertEquals(1, b);
+        assertEquals(1, b);
+
         short sh = ByteArrayUtils.bytesToPrimitive(Short.class, new byte[] { 1, 1 });
-        Assert.assertEquals(257, sh);
+        assertEquals(257, sh);
+
         int i = ByteArrayUtils.bytesToPrimitive(Integer.class, new byte[] { 1, 1, 1, 1 });
-        Assert.assertEquals(16843009, i);
+        assertEquals(16843009, i);
+
+        float f = ByteArrayUtils.bytesToPrimitive(Float.class, new byte[] { 63, -128, 0, 0 });
+        assertEquals(1f, f, 0);
+
         long l = ByteArrayUtils.bytesToPrimitive(Long.class, new byte[] { 1, 0, 0, 0, 0, 0, 0, 0 });
-        Assert.assertEquals(72057594037927936L, l);
+        assertEquals(72057594037927936L, l);
+
         char c = ByteArrayUtils.bytesToPrimitive(Character.class, new byte[] { 0, 97 });
-        Assert.assertEquals('a', c);
+        assertEquals('a', c);
     }
 }
