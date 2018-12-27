@@ -188,6 +188,11 @@
 				<groupId>org.eluder.coveralls</groupId>
 				<artifactId>coveralls-maven-plugin</artifactId>
 				<version>${coveralls.maven.plugin.version}</version>
+				<configuration>
+					<jacocoReports>
+						<jacocoReport>${sonar.jacoco.reportPath}</jacocoReport>
+					</jacocoReports>
+				</configuration>
 				<dependencies>
 					<dependency>
 						<groupId>javax.xml.bind</groupId>
