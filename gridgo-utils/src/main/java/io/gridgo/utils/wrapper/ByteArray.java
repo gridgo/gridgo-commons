@@ -36,11 +36,15 @@ public class ByteArray implements Serializable, Comparable<ByteArray> {
     }
 
     private final byte[] source;
+
     private final int hashCodeCalculatorId;
 
     private transient String cachedString = null;
+    
     private transient String cachedBase64 = null;
+    
     private transient Integer cachedHashCode = null;
+    
     private transient BinaryHashCodeCalculator hashCodeCalculator = null;
 
     private ByteArray(byte[] source) {
@@ -57,14 +61,6 @@ public class ByteArray implements Serializable, Comparable<ByteArray> {
         this.source = source;
         this.hashCodeCalculator = hashCodeCalculator;
         this.hashCodeCalculatorId = hashCodeCalculator.getId();
-    }
-
-    private ByteArray(byte[] source, int hashCodeCalculatorId) {
-        if (source == null) {
-            throw new NullPointerException("Source byte[] cannot be null");
-        }
-        this.source = source;
-        this.hashCodeCalculatorId = hashCodeCalculatorId;
     }
 
     protected BinaryHashCodeCalculator getHashCodeCalculator() {

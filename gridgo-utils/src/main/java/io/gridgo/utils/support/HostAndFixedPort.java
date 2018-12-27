@@ -11,7 +11,6 @@ public class HostAndFixedPort extends HostAndPort {
     }
 
     @Override
-    @Deprecated
     public void setPort(int port) {
         throw new UnsupportedOperationException("Port cannot be changed");
     }

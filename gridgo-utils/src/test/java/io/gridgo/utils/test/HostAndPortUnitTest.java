@@ -19,29 +19,29 @@ public class HostAndPortUnitTest {
     public void testHostAndPort() {
         HostAndPort hostAndPort = HostAndPort.newInstance("localhost", 8080);
         assertNotNull(hostAndPort);
-        assertEquals(hostAndPort.getHost(), "localhost");
-        assertEquals(hostAndPort.getPort(), 8080);
-        assertEquals(hostAndPort.getResolvedIp(), "127.0.0.1");
-        assertEquals(hostAndPort.toString(), "localhost:8080");
-        assertEquals(hostAndPort.toHostAndPort(), "localhost:8080");
-        assertEquals(hostAndPort.toIpAndPort(), "127.0.0.1:8080");
+        assertEquals("localhost", hostAndPort.getHost());
+        assertEquals(8080, hostAndPort.getPort());
+        assertEquals("127.0.0.1", hostAndPort.getResolvedIp());
+        assertEquals("localhost:8080", hostAndPort.toString());
+        assertEquals("localhost:8080", hostAndPort.toHostAndPort());
+        assertEquals("127.0.0.1:8080", hostAndPort.toIpAndPort());
 
         hostAndPort = HostAndPort.fromString("localhost:8080");
         assertNotNull(hostAndPort);
-        assertEquals(hostAndPort.getHost(), "localhost");
-        assertEquals(hostAndPort.getPort(), 8080);
-        assertEquals(hostAndPort.getResolvedIp(), "127.0.0.1");
-        assertEquals(hostAndPort.toString(), "localhost:8080");
-        assertEquals(hostAndPort.toHostAndPort(), "localhost:8080");
-        assertEquals(hostAndPort.toIpAndPort(), "127.0.0.1:8080");
+        assertEquals("localhost", hostAndPort.getHost());
+        assertEquals(8080, hostAndPort.getPort());
+        assertEquals("127.0.0.1", hostAndPort.getResolvedIp());
+        assertEquals("localhost:8080", hostAndPort.toString());
+        assertEquals("localhost:8080", hostAndPort.toHostAndPort());
+        assertEquals("127.0.0.1:8080", hostAndPort.toIpAndPort());
 
         hostAndPort = new HostAndFixedPort("localhost", 8080);
-        assertEquals(hostAndPort.getHost(), "localhost");
-        assertEquals(hostAndPort.getPort(), 8080);
-        assertEquals(hostAndPort.getResolvedIp(), "127.0.0.1");
-        assertEquals(hostAndPort.toString(), "localhost:8080");
-        assertEquals(hostAndPort.toHostAndPort(), "localhost:8080");
-        assertEquals(hostAndPort.toIpAndPort(), "127.0.0.1:8080");
+        assertEquals("localhost", hostAndPort.getHost());
+        assertEquals(8080, hostAndPort.getPort());
+        assertEquals("127.0.0.1", hostAndPort.getResolvedIp());
+        assertEquals("localhost:8080", hostAndPort.toString());
+        assertEquals("localhost:8080", hostAndPort.toHostAndPort());
+        assertEquals("127.0.0.1:8080", hostAndPort.toIpAndPort());
 
         Exception ex = null;
         try {
@@ -63,14 +63,14 @@ public class HostAndPortUnitTest {
 
         List<HostAndPort> list = HostAndPort.parse("localhost:8080, 127.0.0.1:8080,localhost,* :9999,0.0.0.0:9999");
         assertNotNull(list);
-        assertEquals(list.size(), 5);
+        assertEquals(5, list.size());
         assertEquals(list.get(0), list.get(1));
         assertEquals(list.get(3), list.get(4));
         assertNotEquals(list.get(0), list.get(2));
 
         list = HostAndPort.parse("[localhost:8080, 127.0.0.1:8080,localhost,* :9999,0.0.0.0:9999]");
         assertNotNull(list);
-        assertEquals(list.size(), 5);
+        assertEquals(5, list.size());
         assertEquals(list.get(0), list.get(1));
         assertEquals(list.get(3), list.get(4));
         assertNotEquals(list.get(0), list.get(2));

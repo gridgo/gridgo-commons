@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.utils.StringUtils;
 import net.minidev.json.JSONArray;
@@ -67,7 +68,7 @@ public interface BArray extends BContainer, List<BElement> {
         try {
             JSONArray.writeJSONString(this.toJsonElement(), out);
         } catch (IOException e) {
-            throw new RuntimeException("Error while write json to output appendable", e);
+            throw new BeanSerializationException("Error while write json to output appendable", e);
         }
     }
 

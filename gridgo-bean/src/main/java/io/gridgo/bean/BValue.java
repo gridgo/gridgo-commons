@@ -3,6 +3,7 @@ package io.gridgo.bean;
 import java.io.IOException;
 import java.util.Base64;
 
+import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.utils.ByteArrayUtils;
 import io.gridgo.utils.PrimitiveUtils;
@@ -161,7 +162,7 @@ public interface BValue extends BElement {
         try {
             out.append(this.toJsonElement().toString());
         } catch (IOException e) {
-            throw new RuntimeException("write json error", e);
+            throw new BeanSerializationException("Error while writing json", e);
         }
     }
 

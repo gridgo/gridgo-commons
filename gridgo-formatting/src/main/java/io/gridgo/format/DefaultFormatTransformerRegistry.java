@@ -1,5 +1,6 @@
 package io.gridgo.format;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,17 +14,16 @@ class DefaultFormatTransformerRegistry implements FormatTransformerRegistry {
 
     @Override
     public List<FormatTransformer> getChain(List<String> transformerNames) {
-        if (transformerNames != null) {
-            List<FormatTransformer> list = new LinkedList<>();
-            for (String name : transformerNames) {
-                if (!registry.containsKey(name)) {
-                    throw new NullPointerException("StringTransformer for name " + name + " didn't registered");
-                }
-                list.add(this.registry.get(name));
+        if (transformerNames == null)
+            return Collections.emptyList();
+        List<FormatTransformer> list = new LinkedList<>();
+        for (String name : transformerNames) {
+            if (!registry.containsKey(name)) {
+                throw new NullPointerException("StringTransformer for name " + name + " didn't registered");
             }
-            return list;
+            list.add(this.registry.get(name));
         }
-        return null;
+        return list;
     }
 
     @Override

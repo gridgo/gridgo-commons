@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
 
+import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.FieldNotFoundException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.utils.ObjectUtils;
@@ -19,7 +20,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
             return ObjectUtils.fromMap(clazz, this);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException e) {
-            throw new RuntimeException(e);
+            throw new BeanSerializationException("Exception caught while converting BObject to POJO", e);
         }
     }
 
@@ -313,7 +314,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
         try {
             JSONObject.writeJSON(this.toJsonElement(), out);
         } catch (IOException e) {
-            throw new RuntimeException("Writing json error", e);
+            throw new BeanSerializationException("Writing json error", e);
         }
     }
 

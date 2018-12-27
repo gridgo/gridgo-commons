@@ -42,4 +42,9 @@ class DefaultBValue implements BValue {
                 ? obj == null //
                 : this.getData().equals(obj);
     }
+
+    @Override
+    public int hashCode() {
+        return data != null ? data.hashCode() : super.hashCode();
+    }
 }

@@ -25,8 +25,10 @@ import org.cliffc.high_scale_lib.NonBlockingHashMap;
 import io.gridgo.utils.ArrayUtils.ForeachCallback;
 import io.gridgo.utils.annotations.DefaultSetter;
 import io.gridgo.utils.annotations.Transparent;
+import io.gridgo.utils.exception.ObjectReflectiveException;
+import lombok.extern.slf4j.Slf4j;
 
-//this is object utils class
+@Slf4j
 public final class ObjectUtils {
 
     private static final String GETTER_PREFIX = "get";
@@ -67,7 +69,7 @@ public final class ObjectUtils {
                     return field.get(obj);
                 }
             } catch (Exception ex) {
-                throw new RuntimeException("Cannot get value from "
+                throw new ObjectReflectiveException("Cannot get value from "
                         + (this.isMethod ? ("method " + this.method.getName()) : ("field " + this.field.getName())),
                         ex);
             }
@@ -106,27 +108,17 @@ public final class ObjectUtils {
             } else if (method.isAnnotationPresent(DefaultSetter.class)) {
                 DefaultSetter annotation = method.getAnnotation(DefaultSetter.class);
                 this.setComponentType(annotation.value());
-                // System.out.println("method is annotated by " +
-                // DefaultSetter.class.getName() + ", component type is "
-                // + this.componentType);
             } else if (Iterable.class.isAssignableFrom(getParamType())) {
                 String fieldName = StringUtils.lowerCaseFirstLetter(method.getName().substring(SETTER_PREFIX.length()));
                 Class<?> clazz = this.method.getDeclaringClass();
-                // System.out.println("finding field name `" + fieldName +
-                // "` for class " + clazz.getName());
                 try {
                     Field field = clazz.getDeclaredField(fieldName);
                     ParameterizedType type = (ParameterizedType) field.getGenericType();
                     setComponentType((Class<?>) type.getActualTypeArguments()[0]);
                 } catch (Exception e) {
-                    // System.out.println("cannot to find field with name " +
-                    // fieldName + " for class " + clazz.getName());
-                    e.printStackTrace();
+                    log.warn("Exception caught when initializing setter", e);
                 }
             }
-            // System.out.println("setter created with method " +
-            // method.getName() + ", param type: " + paramType
-            // + " component type: " + componentType);
             this.usingMethod = true;
         }
 
@@ -142,7 +134,7 @@ public final class ObjectUtils {
                     field.set(obj, value);
                 }
             } catch (Exception ex) {
-                throw new RuntimeException(ex);
+                throw new ObjectReflectiveException(ex);
             }
         }
 
@@ -165,7 +157,7 @@ public final class ObjectUtils {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static final <T> T fromMap(Class<T> clazz, Map<String, ?> data)
-            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+            throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         Map<String, Setter> classSetter = findAllClassSetters(clazz);
         T result = clazz.getDeclaredConstructor().newInstance();
         for (Entry<String, ?> entry : data.entrySet()) {

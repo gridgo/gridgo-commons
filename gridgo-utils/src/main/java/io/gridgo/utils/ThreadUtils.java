@@ -66,6 +66,7 @@ public class ThreadUtils {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new ThreadingException("Interupted while sleeping", e);
         }
     }
@@ -108,11 +109,9 @@ public class ThreadUtils {
      * @return true if successful
      */
     public static boolean deregisterShutdownTask(int id) {
-        if (!SHUTTING_DOWN_SIGNAL.get()) {
-            if (shutdownTasks.containsKey(id)) {
-                shutdownTasks.remove(id);
-                return true;
-            }
+        if (!SHUTTING_DOWN_SIGNAL.get() && shutdownTasks.containsKey(id)) {
+            shutdownTasks.remove(id);
+            return true;
         }
         return false;
     }
