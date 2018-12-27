@@ -37,14 +37,8 @@ public class PrimitiveUtils {
             return (T) obj;
         if (resultType == String.class)
             return (T) getStringValueFrom(obj);
-        if (resultType == BigDecimal.class) {
-            if (obj instanceof Number) {
-                if (obj instanceof BigDecimal)
-                    return (T) (BigDecimal) obj;
-                return (T) BigDecimal.valueOf(((Number) obj).doubleValue());
-            }
-            return (T) new BigDecimal(getStringValueFrom(obj));
-        }
+        if (resultType == BigDecimal.class)
+            return (T) getBigDecimalFrom(obj);
         if (resultType == Integer.TYPE || resultType == Integer.class)
             return (T) Integer.valueOf(getIntegerValueFrom(obj));
         if (resultType == Float.TYPE || resultType == Float.class)
@@ -62,6 +56,14 @@ public class PrimitiveUtils {
         if (resultType == Boolean.TYPE || resultType == Boolean.class)
             return (T) Boolean.valueOf(getBooleanValueFrom(obj));
         throw new UnsupportedTypeException(UNSUPPORTED_TYPE_MSG + resultType.getName());
+    }
+
+    private static BigDecimal getBigDecimalFrom(Object obj) {
+        if (obj instanceof BigDecimal)
+            return (BigDecimal) obj;
+        if (obj instanceof Number)
+            return BigDecimal.valueOf(((Number) obj).doubleValue());
+        return new BigDecimal(getStringValueFrom(obj));
     }
 
     public static final String getStringValueFrom(Object obj) {
