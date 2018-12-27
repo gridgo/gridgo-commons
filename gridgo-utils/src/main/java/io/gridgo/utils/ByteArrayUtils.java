@@ -16,7 +16,7 @@ public final class ByteArrayUtils {
 
     public static byte[] primitiveToBytes(Object data) {
         if (data == null)
-            return null;
+            return new byte[0];
         if (data instanceof byte[])
             return (byte[]) data;
         if (data instanceof Boolean)
