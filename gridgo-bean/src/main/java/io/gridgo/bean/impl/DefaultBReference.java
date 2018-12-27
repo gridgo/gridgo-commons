@@ -32,4 +32,9 @@ class DefaultBReference implements BReference {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return reference != null ? reference.hashCode() : super.hashCode();
+    }
 }

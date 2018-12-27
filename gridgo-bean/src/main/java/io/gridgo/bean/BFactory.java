@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
 
+import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.impl.DefaultBFactory;
 import io.gridgo.bean.serialize.BSerializer;
-import io.gridgo.bean.serialize.BSerializerAware;
 import io.gridgo.bean.xml.BXmlParser;
 import io.gridgo.utils.ArrayUtils;
 import io.gridgo.utils.PrimitiveUtils;
@@ -64,9 +64,7 @@ public interface BFactory {
     default BObject newObject() {
         BObject result = this.getObjectSupplier().get();
         result.setFactory(this);
-        if (result instanceof BSerializerAware) {
-            ((BSerializerAware) result).setSerializer(this.getSerializer());
-        }
+        result.setSerializer(this.getSerializer());
         return result;
     }
 
@@ -109,9 +107,7 @@ public interface BFactory {
     default BArray newArray() {
         BArray result = this.getArraySupplier().get();
         result.setFactory(this);
-        if (result instanceof BSerializerAware) {
-            ((BSerializerAware) result).setSerializer(this.getSerializer());
-        }
+        result.setSerializer(this.getSerializer());
         return result;
     }
 
@@ -124,9 +120,7 @@ public interface BFactory {
         if (src != null && !ArrayUtils.isArrayOrCollection(src.getClass())) {
             array.addAny(src);
         } else {
-            ArrayUtils.foreach(src, (entry) -> {
-                array.addAny(entry);
-            });
+            ArrayUtils.foreach(src, array::addAny);
         }
 
         return array;
@@ -140,9 +134,7 @@ public interface BFactory {
 
     default BValue newValue() {
         BValue result = this.getValueSupplier().get();
-        if (result instanceof BSerializerAware) {
-            ((BSerializerAware) result).setSerializer(this.getSerializer());
-        }
+        result.setSerializer(this.getSerializer());
         return result;
     }
 
@@ -176,9 +168,9 @@ public interface BFactory {
     default <T extends BElement> T fromJson(InputStream inputStream) {
         if (inputStream != null) {
             try {
-                return (T) fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(inputStream));
+                return fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(inputStream));
             } catch (UnsupportedEncodingException | ParseException e) {
-                throw new RuntimeException("Cannot parse json from input stream", e);
+                throw new BeanSerializationException("Cannot parse json from input stream", e);
             }
         }
         return null;
@@ -187,9 +179,9 @@ public interface BFactory {
     default <T extends BElement> T fromJson(String json) {
         if (json != null) {
             try {
-                return (T) fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(json));
+                return fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(json));
             } catch (ParseException e) {
-                return (T) fromAny(json);
+                return fromAny(json);
             }
         }
         return null;

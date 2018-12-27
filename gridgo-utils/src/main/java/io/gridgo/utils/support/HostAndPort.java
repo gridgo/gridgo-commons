@@ -2,6 +2,7 @@ package io.gridgo.utils.support;
 
 import static io.gridgo.utils.hash.BinaryHashCodeCalculator.XXHASH32_JAVA_SAFE;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -106,49 +107,43 @@ public class HostAndPort {
 
     @Override
     public boolean equals(Object obj) {
-        HostAndPort other = null;
-        if (obj instanceof HostAndPort) {
-            other = (HostAndPort) obj;
-        } else if (obj instanceof String) {
-            other = fromString((String) obj);
-        } else if (obj instanceof HostAndPortSet) {
+        if (obj instanceof HostAndPortSet) {
             if (((HostAndPortSet) obj).size() == 1) {
                 return this.equals(((HostAndPortSet) obj).getFirst());
             }
             return false;
         }
-
-        if (other != null && this.getPort() == other.getPort()) {
-            if (other.getHost() != null) {
-                if (this.getHost() != null) {
-                    boolean equals = this.getHost().equalsIgnoreCase(other.getHost());
-                    if (!equals) {
-                        try {
-                            equals = this.getResolvedIp().equalsIgnoreCase(other.getResolvedIp());
-                        } catch (Exception ex) {
-                            // ignore exception
-                        }
-                    }
-                    return equals;
-                }
-            }
+        HostAndPort other = null;
+        if (obj instanceof HostAndPort) {
+            other = (HostAndPort) obj;
+        } else if (obj instanceof String) {
+            other = fromString((String) obj);
         }
-        return false;
+
+        if (other == null || port != other.port || other.host == null || this.host == null)
+            return false;
+        if (this.host.equalsIgnoreCase(other.host))
+            return true;
+        try {
+            return this.getResolvedIp().equalsIgnoreCase(other.getResolvedIp());
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     @Override
     public int hashCode() {
-        if (!this.isHashCodeCalculated) {
-            String representer;
-            try {
-                representer = this.toIpAndPort();
-            } catch (Exception ex) {
-                representer = this.toHostAndPort();
-            }
-
-            this.cachedHashCode = XXHASH32_JAVA_SAFE.calcHashCode(representer.getBytes());
-            this.isHashCodeCalculated = true;
+        if (this.isHashCodeCalculated)
+            return this.cachedHashCode;
+        String representer;
+        try {
+            representer = this.toIpAndPort();
+        } catch (Exception ex) {
+            representer = this.toHostAndPort();
         }
+
+        this.cachedHashCode = XXHASH32_JAVA_SAFE.calcHashCode(representer.getBytes());
+        this.isHashCodeCalculated = true;
         return this.cachedHashCode;
     }
 
@@ -186,38 +181,35 @@ public class HostAndPort {
     }
 
     public static HostAndPort fromString(String hostAndPort) {
-        if (hostAndPort != null) {
-            HostAndPort result = newInstance();
-            String[] arr = hostAndPort.trim().toLowerCase().split(":");
-            if (arr.length == 1) {
-                result.setHost(arr[0]);
-            } else if (arr.length > 1) {
-                result.setPort(Integer.parseInt(arr[arr.length - 1]));
-                result.setHost(StringUtils.join(arr, ":", 0, arr.length - 1));
-            }
-            return result;
+        if (hostAndPort == null)
+            return null;
+        HostAndPort result = newInstance();
+        String[] arr = hostAndPort.trim().toLowerCase().split(":");
+        if (arr.length == 1) {
+            result.setHost(arr[0]);
+        } else if (arr.length > 1) {
+            result.setPort(Integer.parseInt(arr[arr.length - 1]));
+            result.setHost(StringUtils.join(arr, ":", 0, arr.length - 1));
         }
-        return null;
+        return result;
     }
 
     public static List<HostAndPort> parse(String value) {
-        if (value != null) {
-            value = value.trim();
-            if (value.startsWith("[")) {
-                if (value.endsWith("]")) {
-                    value = value.substring(1, value.length() - 1);
-                } else {
-                    throw new MalformedHostAndPortException(
-                            "Multi host and port string if start with [ must end with ]");
-                }
+        if (value == null)
+            return Collections.emptyList();
+        value = value.trim();
+        if (value.startsWith("[")) {
+            if (value.endsWith("]")) {
+                value = value.substring(1, value.length() - 1);
+            } else {
+                throw new MalformedHostAndPortException("Multi host and port string if start with [ must end with ]");
             }
-            String[] arr = value.trim().split(",");
-            List<HostAndPort> results = new LinkedList<>();
-            for (String str : arr) {
-                results.add(fromString(str));
-            }
-            return results;
         }
-        return null;
+        String[] arr = value.trim().split(",");
+        List<HostAndPort> results = new LinkedList<>();
+        for (String str : arr) {
+            results.add(fromString(str));
+        }
+        return results;
     }
 }

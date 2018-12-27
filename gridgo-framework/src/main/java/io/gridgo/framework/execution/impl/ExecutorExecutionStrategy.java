@@ -35,7 +35,7 @@ public class ExecutorExecutionStrategy implements ExecutionStrategy {
 
     @Override
     public void start() {
-
+        // Nothing to do here
     }
 
     @Override

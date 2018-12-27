@@ -9,6 +9,13 @@ import com.udojava.evalex.Expression;
 
 public class CommonNumberTransformerRegistry extends DefaultFormatTransformerRegistry {
 
+    public static final FormatTransformer ROUND_TO_INTEGER = (source) -> source == null ? null
+            : Long.toString(new BigDecimal(source.toString()).longValue());
+
+    public static final FormatTransformer FORMAT_PERCENTAGE = newDecimaFormatTransformer("#.##%");
+
+    public static final FormatTransformer FORMAT_WITH_THOUSAND_SEPARATOR = newDecimaFormatTransformer("###,###.####");
+
     public static final FormatTransformer newDecimaFormatTransformer(final String pattern) {
         return source -> {
             if (source == null) {
@@ -31,12 +38,12 @@ public class CommonNumberTransformerRegistry extends DefaultFormatTransformerReg
                 for (Entry<?, ?> entry : ((Map<?, ?>) source).entrySet()) {
                     exp.with(entry.getKey().toString(),
                             entry.getValue() instanceof Number
-                                    ? new BigDecimal(((Number) entry.getValue()).doubleValue())
+                                    ? BigDecimal.valueOf(((Number) entry.getValue()).doubleValue())
                                     : new BigDecimal(entry.getValue().toString()));
                 }
             } else {
                 exp.with(defaultSingleVariable,
-                        source instanceof Number ? new BigDecimal(((Number) source).doubleValue())
+                        source instanceof Number ? BigDecimal.valueOf(((Number) source).doubleValue())
                                 : new BigDecimal(source.toString()));
             }
             return exp.eval();
@@ -47,11 +54,6 @@ public class CommonNumberTransformerRegistry extends DefaultFormatTransformerReg
         return newEvalExpTransformer(expression, "x");
     }
 
-    public static final FormatTransformer ROUND_TO_INTEGER = (source) -> source == null ? null
-            : Long.valueOf(new BigDecimal(source.toString()).longValue()).toString();
-    public static final FormatTransformer FORMAT_PERCENTAGE = newDecimaFormatTransformer("#.##%");
-    public static final FormatTransformer FORMAT_WITH_THOUSAND_SEPARATOR = newDecimaFormatTransformer("###,###.####");
-
     public static final CommonNumberTransformerRegistry newInstance() {
         return new CommonNumberTransformerRegistry();
     }
@@ -61,5 +63,4 @@ public class CommonNumberTransformerRegistry extends DefaultFormatTransformerReg
         this.addTransformer("percentage", FORMAT_PERCENTAGE);
         this.addTransformer("thousandSeparate", FORMAT_WITH_THOUSAND_SEPARATOR);
     }
-
 }

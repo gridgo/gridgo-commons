@@ -101,7 +101,7 @@ public interface Message {
                 body = null;
             }
 
-            if (id.isValue() && (headers == null || headers.isObject())) {
+            if (id.isValue() && headers.isObject()) {
                 payload = Payload.of(id.asValue(), headers.asObject(), body);
             }
         }

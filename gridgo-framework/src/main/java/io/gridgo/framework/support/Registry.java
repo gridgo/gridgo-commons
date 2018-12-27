@@ -96,4 +96,26 @@ public interface Registry {
             return obj != null ? obj.toString() : "";
         });
     }
+
+    /**
+     * Substitute all placeholders in the specified text with the correct entry in
+     * the registry. This operation is called in a loop until no more placeholders
+     * can be found.
+     * 
+     * @param text the text to be substituted
+     * @return the substituted text
+     */
+    public default String substituteRegistriesRecursive(String text) {
+        if (text.indexOf('$') == -1)
+            return text;
+        while (true) {
+            var matcher = REGISTRY_SUB_PATTERN.matcher(text);
+            if (!matcher.find())
+                return text;
+            text = matcher.replaceAll(result -> {
+                var obj = lookup(result.group(1));
+                return obj != null ? obj.toString() : "";
+            });
+        }
+    }
 }

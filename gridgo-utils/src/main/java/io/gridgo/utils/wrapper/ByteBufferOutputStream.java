@@ -24,6 +24,7 @@ public class ByteBufferOutputStream extends OutputStream {
         this.autoExpandBuffer = autoExpandBuffer;
     }
 
+    @Override
     public void write(int b) {
         if (buffer.remaining() < 1) {
             if (this.buffer.isDirect() || !this.autoExpandBuffer) {
@@ -35,6 +36,7 @@ public class ByteBufferOutputStream extends OutputStream {
         buffer.put((byte) b);
     }
 
+    @Override
     public void write(byte[] bytes, int off, int len) {
         if (buffer.remaining() < len) {
             if (this.buffer.isDirect() || !this.autoExpandBuffer) {

@@ -44,7 +44,7 @@ public class PrimitiveUtils {
                     if (obj instanceof BigDecimal) {
                         return (T) (BigDecimal) obj;
                     }
-                    return (T) new BigDecimal(((Number) obj).doubleValue());
+                    return (T) BigDecimal.valueOf(((Number) obj).doubleValue());
                 }
                 return (T) new BigDecimal(getStringValueFrom(obj));
             } else if (resultType == Integer.TYPE || resultType == Integer.class) {

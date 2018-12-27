@@ -30,84 +30,28 @@ public interface BElement extends BSerializerAware {
 
     <T> T deepClone();
 
-    /**
-     * use ofAny instead
-     */
-    @Deprecated
-    static <T extends BElement> T fromAny(Object data) {
-        return BFactory.DEFAULT.fromAny(data);
-    }
-
     static <T extends BElement> T ofAny(Object data) {
         return BFactory.DEFAULT.fromAny(data);
-    }
-
-    /**
-     * use ofXml instead
-     */
-    @Deprecated
-    static <T extends BElement> T fromXml(String xml) {
-        return BFactory.DEFAULT.fromXml(xml);
     }
 
     static <T extends BElement> T ofXml(String xml) {
         return BFactory.DEFAULT.fromXml(xml);
     }
 
-    /**
-     * use ofJson instead
-     */
-    @Deprecated
-    static <T extends BElement> T fromJson(String json) {
-        return BFactory.DEFAULT.fromJson(json);
-    }
-
     static <T extends BElement> T ofJson(String json) {
         return BFactory.DEFAULT.fromJson(json);
-    }
-
-    /**
-     * use ofJson instead
-     */
-    @Deprecated
-    static <T extends BElement> T fromJson(InputStream inputStream) {
-        return BFactory.DEFAULT.fromJson(inputStream);
     }
 
     static <T extends BElement> T ofJson(InputStream inputStream) {
         return BFactory.DEFAULT.fromJson(inputStream);
     }
 
-    /**
-     * use ofBytes instead
-     */
-    @Deprecated
-    static <T extends BElement> T fromRaw(InputStream in) {
-        return BFactory.DEFAULT.fromBytes(in);
-    }
-
     static <T extends BElement> T ofBytes(InputStream in) {
         return BFactory.DEFAULT.fromBytes(in);
     }
 
-    /**
-     * use ofBytes instead
-     */
-    @Deprecated
-    static <T extends BElement> T fromRaw(ByteBuffer buffer) {
-        return BFactory.DEFAULT.fromBytes(buffer);
-    }
-
     static <T extends BElement> T ofBytes(ByteBuffer buffer) {
         return BFactory.DEFAULT.fromBytes(buffer);
-    }
-
-    /**
-     * use ofBytes instead
-     */
-    @Deprecated
-    static <T extends BElement> T fromRaw(byte[] bytes) {
-        return BFactory.DEFAULT.fromBytes(bytes);
     }
 
     static <T extends BElement> T ofBytes(byte[] bytes) {

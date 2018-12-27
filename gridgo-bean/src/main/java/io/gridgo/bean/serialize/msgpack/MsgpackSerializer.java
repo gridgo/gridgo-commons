@@ -17,8 +17,10 @@ import io.gridgo.bean.BFactoryAware;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BType;
 import io.gridgo.bean.BValue;
+import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.serialize.BSerializer;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,6 +54,7 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
                 packer.packByte(value.getByte());
                 return;
             case CHAR:
+            case SHORT:
                 packer.packShort(value.getShort());
                 return;
             case DOUBLE:
@@ -73,9 +76,6 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
                 byte[] bytes = value.getRaw();
                 packer.packBinaryHeader(bytes.length);
                 packer.addPayload(bytes);
-                return;
-            case SHORT:
-                packer.packShort(value.getShort());
                 return;
             case STRING:
                 packer.packString(value.getString());
@@ -103,18 +103,12 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
     }
 
     @Override
-    public void serialize(BElement element, OutputStream out) {
-        if (element == null) {
-            throw new NullPointerException("Cannot serialize null element");
-        } else if (out == null) {
-            throw new NullPointerException("Cannot serialize with null output stream");
-        }
-
+    public void serialize(@NonNull BElement element, @NonNull OutputStream out) {
         try (MessagePacker packer = MessagePack.newDefaultPacker(out)) {
             packAny(element, packer);
             packer.flush();
         } catch (IOException e) {
-            throw new RuntimeException("Error while serialize element", e);
+            throw new BeanSerializationException("Error while serialize element", e);
         }
     }
 
@@ -203,7 +197,7 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
         try (MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(in)) {
             return this.unpackAny(unpacker);
         } catch (IOException e) {
-            throw new RuntimeException("Error while deserialize input stream", e);
+            throw new BeanSerializationException("Error while deserialize input stream", e);
         }
     }
 }

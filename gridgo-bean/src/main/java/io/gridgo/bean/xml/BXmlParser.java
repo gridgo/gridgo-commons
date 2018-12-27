@@ -20,6 +20,7 @@ import io.gridgo.bean.BFactoryAware;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BType;
 import io.gridgo.bean.BValue;
+import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.exceptions.NameAttributeNotFoundException;
 import io.gridgo.bean.xml.RefItem.RefItemBuilder;
@@ -28,6 +29,8 @@ import io.gridgo.utils.PrimitiveUtils;
 import lombok.Setter;
 
 public class BXmlParser implements BFactoryAware {
+
+    private static final String REF_NAME = "refName";
 
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
@@ -51,7 +54,7 @@ public class BXmlParser implements BFactoryAware {
                 refManager.resolve();
                 return result;
             } catch (SAXException | IOException | ParserConfigurationException e) {
-                throw new RuntimeException("Cannot parse xml", e);
+                throw new BeanSerializationException("Cannot parse xml", e);
             }
         }
         return null;
@@ -94,7 +97,7 @@ public class BXmlParser implements BFactoryAware {
 
             BValue value = this.factory.newValue();
 
-            Node refNameAttr = node.getAttributes().getNamedItem("refName");
+            Node refNameAttr = node.getAttributes().getNamedItem(REF_NAME);
             RefItemBuilder builder = RefItem.builder();
             builder.type(type).content(stringValue).target(value);
             RefItem refItem = builder.build();
@@ -153,7 +156,7 @@ public class BXmlParser implements BFactoryAware {
 
     private BArray parseArray(Node node, RefManager refManager) {
         BArray result = this.factory.newArray();
-        Node refNameAttr = node.getAttributes().getNamedItem("refName");
+        Node refNameAttr = node.getAttributes().getNamedItem(REF_NAME);
         if (refNameAttr != null) {
             refManager.addRef(
                     RefItem.builder().type(BType.ARRAY).name(refNameAttr.getNodeValue()).target(result).build());
@@ -170,7 +173,7 @@ public class BXmlParser implements BFactoryAware {
 
     private BObject parseObject(Node node, RefManager refManager) {
         BObject result = this.factory.newObject();
-        Node refNameAttr = node.getAttributes().getNamedItem("refName");
+        Node refNameAttr = node.getAttributes().getNamedItem(REF_NAME);
         if (refNameAttr != null) {
             refManager.addRef(
                     RefItem.builder().type(BType.OBJECT).name(refNameAttr.getNodeValue()).target(result).build());
