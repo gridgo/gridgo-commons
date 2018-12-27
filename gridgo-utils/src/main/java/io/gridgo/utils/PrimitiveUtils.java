@@ -1,6 +1,7 @@
 package io.gridgo.utils;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 public class PrimitiveUtils {
 
@@ -238,5 +239,12 @@ public class PrimitiveUtils {
             return ByteArrayUtils.bytesToPrimitive(Boolean.class, (byte[]) obj);
         }
         return obj != null;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Arrays.toString(ByteArrayUtils.primitiveToBytes(97.0f)));
+
+        Number f = ByteArrayUtils.bytesToPrimitive(Float.class, new byte[] { 66, -62, 0, 0 });
+        System.out.println(f);
     }
 }

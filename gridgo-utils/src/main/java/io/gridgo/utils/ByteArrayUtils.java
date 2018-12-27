@@ -107,38 +107,22 @@ public final class ByteArrayUtils {
                 return (T) Character.valueOf(ByteBuffer.wrap(bytes).getChar());
             } else {
                 Object result = null;
-                if (clazz == Byte.class || clazz == Short.class || clazz == Integer.class || clazz == Long.class || clazz == BigInteger.class) {
-                    Number num = bytesToNumber(bytes, false);
-                    if (clazz == Byte.class) {
-                        result = num.byteValue();
-                    } else if (clazz == Short.class) {
-                        result = num.shortValue();
-                    } else if (clazz == Integer.class) {
-                        result = num.intValue();
-                    } else if (clazz == Long.class) {
-                        result = num.longValue();
-                    } else if (clazz == BigInteger.class) {
-                        if (num instanceof BigInteger) {
-                            result = num;
-                        } else {
-                            result = new BigInteger(num.toString());
-                        }
-                    }
-                } else if (clazz == Float.class || clazz == Double.class || clazz == BigDecimal.class) {
-                    Number num = bytesToNumber(bytes, true);
-                    if (clazz == Float.class) {
-                        result = num.floatValue();
-                    } else if (clazz == Double.class) {
-                        result = num.doubleValue();
-                    } else if (clazz == BigDecimal.class) {
-                        if (num instanceof BigDecimal) {
-                            result = num;
-                        } else if (num instanceof BigInteger) {
-                            result = new BigDecimal((BigInteger) num);
-                        } else {
-                            result = new BigDecimal(num.toString());
-                        }
-                    }
+                if (clazz == Byte.class) {
+                    result = bytes[0];
+                } else if (clazz == Short.class) {
+                    result = ByteBuffer.wrap(bytes).getShort();
+                } else if (clazz == Integer.class) {
+                    result = ByteBuffer.wrap(bytes).getInt();
+                } else if (clazz == Long.class) {
+                    result = ByteBuffer.wrap(bytes).getLong();
+                } else if (clazz == BigInteger.class) {
+                    result = new BigInteger(bytes);
+                } else if (clazz == Float.class) {
+                    result = ByteBuffer.wrap(bytes).getFloat();
+                } else if (clazz == Double.class) {
+                    result = ByteBuffer.wrap(bytes).getDouble();
+                } else if (clazz == BigDecimal.class) {
+                    result = new BigDecimal(new BigInteger(bytes));
                 }
 
                 if (result != null) {
