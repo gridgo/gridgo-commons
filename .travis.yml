@@ -11,4 +11,4 @@ addons:
     token: $SONAR_TOKEN
 
 after_success:
-- mvn clean test jacoco:report sonar:sonar -Dsonar.projectKey=gridgo_gridgo-base -Dsonar.organization=gridgo -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN coveralls:report -DrepoToken=$CoverallsRepoToken
+- mvn clean test jacoco:report sonar:sonar -Dsonar.projectKey=gridgo_gridgo-base coveralls:report -DrepoToken=$CoverallsRepoToken
