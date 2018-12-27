@@ -12,17 +12,11 @@ public class PrimitiveUtils {
     }
 
     public static boolean isNumberClass(Class<?> clazz) {
-        if (clazz != null) {
-            return Number.class.isAssignableFrom(clazz);
-        }
-        return false;
+        return clazz != null && Number.class.isAssignableFrom(clazz);
     }
 
     public static boolean isNumber(Object obj) {
-        if (obj != null) {
-            return isNumberClass(obj.getClass());
-        }
-        return false;
+        return obj != null && isNumberClass(obj.getClass());
     }
 
     public static final boolean isPrimitive(Class<?> resultType) {
@@ -43,9 +37,8 @@ public class PrimitiveUtils {
             return (T) getStringValueFrom(obj);
         if (resultType == BigDecimal.class) {
             if (obj instanceof Number) {
-                if (obj instanceof BigDecimal) {
+                if (obj instanceof BigDecimal)
                     return (T) (BigDecimal) obj;
-                }
                 return (T) BigDecimal.valueOf(((Number) obj).doubleValue());
             }
             return (T) new BigDecimal(getStringValueFrom(obj));
