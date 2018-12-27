@@ -5,5 +5,10 @@ jdk:
 notifications:
   slack: gridgo:dSkxVIs1DZFv6k6UtTIPoDJr
 
+addons:
+  sonarcloud:
+    organization: "gridgo"
+    token: $SONAR_TOKEN
+
 after_success:
 - mvn clean test jacoco:report sonar:sonar -Dsonar.projectKey=gridgo_gridgo-base -Dsonar.organization=gridgo -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN coveralls:report -DrepoToken=$CoverallsRepoToken
