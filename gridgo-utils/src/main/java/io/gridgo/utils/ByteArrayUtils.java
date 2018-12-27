@@ -176,7 +176,7 @@ public final class ByteArrayUtils {
             appendBytes(os, bytesArray);
             return os.toByteArray();
         } catch (IOException e) {
-            return null;
+            return new byte[0];
         }
     }
 
