@@ -16,7 +16,7 @@ public final class ByteArrayUtils {
 
     public static byte[] primitiveToBytes(Object data) {
         if (data == null)
-            return new byte[0];
+            return null;
         if (data instanceof byte[])
             return (byte[]) data;
         if (data instanceof Boolean)
@@ -64,7 +64,7 @@ public final class ByteArrayUtils {
 
     public static final Number bytesToNumber(byte[] bytes, boolean isDecimal) {
         if (bytes == null)
-            return 0;
+            return null;
         if (bytes.length == 1)
             return bytes[0];
         if (bytes.length < 4)
