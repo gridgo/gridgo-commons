@@ -226,44 +226,54 @@ public interface BValue extends BElement {
         return PrimitiveUtils.getValueFrom(targetType, this.getData());
     }
 
-    default void convertToBoolean() {
+    default BValue convertToBoolean() {
         this.setData(this.getBoolean());
+        return this;
     }
 
-    default void convertToChar() {
+    default BValue convertToChar() {
         this.setData(this.getChar());
+        return this;
     }
 
-    default void convertToByte() {
+    default BValue convertToByte() {
         this.setData(this.getByte());
+        return this;
     }
 
-    default void convertToShort() {
+    default BValue convertToShort() {
         this.setData(this.getShort());
+        return this;
     }
 
-    default void convertToInteger() {
+    default BValue convertToInteger() {
         this.setData(this.getInteger());
+        return this;
     }
 
-    default void convertToLong() {
+    default BValue convertToLong() {
         this.setData(this.getLong());
+        return this;
     }
 
-    default void convertToFloat() {
+    default BValue convertToFloat() {
         this.setData(this.getFloat());
+        return this;
     }
 
-    default void convertToDouble() {
+    default BValue convertToDouble() {
         this.setData(this.getDouble());
+        return this;
     }
 
-    default void convertToRaw() {
+    default BValue convertToRaw() {
         this.setData(this.getRaw());
+        return this;
     }
 
-    default void convertToString() {
+    default BValue convertToString() {
         this.setData(this.getString());
+        return this;
     }
 
     @Override
