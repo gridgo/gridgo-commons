@@ -16,15 +16,14 @@ public interface BReference extends BElement {
         return BType.REFERENCE;
     }
 
-    public Object getReference();
+    public <T> T getReference();
 
     public void setReference(Object reference);
 
     public default void writeString(String name, int numTab, StringBuilder writer) {
         StringUtils.tabs(numTab, writer);
         BType type = this.getType();
-        String content = "instanceOf:"
-                + (this.getReference() == null ? "null" : this.getReference().getClass().getName());
+        String content = "instanceOf:" + (this.getReference() == null ? "null" : this.getReference().getClass().getName());
         if (name == null) {
             writer.append("(").append(type.name()).append(")");
         } else {
