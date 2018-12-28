@@ -1,6 +1,7 @@
 package io.gridgo.utils;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import io.gridgo.utils.exception.UnsupportedTypeException;
 import lombok.NonNull;
@@ -37,6 +38,8 @@ public class PrimitiveUtils {
             return (T) obj;
         if (resultType == String.class)
             return (T) getStringValueFrom(obj);
+        if (resultType == BigInteger.class)
+            return (T) getBigIntegerFrom(obj);
         if (resultType == BigDecimal.class)
             return (T) getBigDecimalFrom(obj);
         if (resultType == Integer.TYPE || resultType == Integer.class)
@@ -63,7 +66,19 @@ public class PrimitiveUtils {
             return (BigDecimal) obj;
         if (obj instanceof Number)
             return BigDecimal.valueOf(((Number) obj).doubleValue());
+        if (obj instanceof byte[])
+            return new BigDecimal(new BigInteger((byte[]) obj));
         return new BigDecimal(getStringValueFrom(obj));
+    }
+
+    private static BigInteger getBigIntegerFrom(Object obj) {
+        if (obj instanceof BigInteger)
+            return (BigInteger) obj;
+        if (obj instanceof Number)
+            return BigInteger.valueOf(((Number) obj).longValue());
+        if (obj instanceof byte[])
+            return new BigInteger((byte[]) obj);
+        return new BigInteger(getStringValueFrom(obj));
     }
 
     public static final String getStringValueFrom(Object obj) {

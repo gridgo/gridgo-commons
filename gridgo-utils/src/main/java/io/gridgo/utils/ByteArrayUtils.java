@@ -146,10 +146,11 @@ public final class ByteArrayUtils {
             result = new BigDecimal(new BigInteger(bytes));
         }
 
-        if (result != null) {
-            return (T) result;
+        if (result == null) {
+            throw new UnsupportedTypeException("Cannot convert bytes to primitive type " + clazz);
         }
-        throw new UnsupportedTypeException("Cannot convert bytes to primitive type " + clazz);
+
+        return (T) result;
     }
 
     public static final String toHex(byte[] bytes, String prefix) {
@@ -195,8 +196,7 @@ public final class ByteArrayUtils {
         int len = hex.length() - start;
         byte[] data = new byte[len / 2];
         for (int i = start; i < hex.length(); i += 2) {
-            data[(i - start)
-                    / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character.digit(hex.charAt(i + 1), 16));
+            data[(i - start) / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character.digit(hex.charAt(i + 1), 16));
         }
         return data;
     }
