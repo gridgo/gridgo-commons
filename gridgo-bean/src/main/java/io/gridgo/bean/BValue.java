@@ -188,38 +188,42 @@ public interface BValue extends BElement {
         return name == null ? "<null />" : ("<null name=\"" + name + "\"/>");
     }
 
-    default void encodeHex() {
+    default BValue encodeHex() {
         if (!(this.getData() instanceof byte[])) {
             throw new InvalidTypeException("Cannot encode hex from data which is not in raw (byte[]) format");
         }
         this.setData(ByteArrayUtils.toHex(getRaw(), "0x"));
+        return this;
     }
 
-    default void decodeHex() {
+    default BValue decodeHex() {
         if (this.getData() instanceof byte[]) {
             // skip decode if data already in byte[]
-            return;
+            return this;
         }
         if (!(this.getData() instanceof String)) {
             throw new InvalidTypeException("Cannot decode hex from data which is not in String format");
         }
         String hex = this.getString();
         this.setData(ByteArrayUtils.fromHex(hex));
+        return this;
     }
 
-    default void encodeBase64() {
+    default BValue encodeBase64() {
         if (!(this.getData() instanceof byte[])) {
             throw new InvalidTypeException("Cannot encode base64 from data which is not in raw (byte[]) format");
         }
         this.setData(Base64.getEncoder().encodeToString(getRaw()));
+        return this;
     }
 
-    default void decodeBase64() {
+    default BValue decodeBase64() {
         if (!(this.getData() instanceof String)) {
             throw new InvalidTypeException("Cannot decode base64 from data which is not in String format");
         }
         String base64 = this.getString();
         this.setData(Base64.getDecoder().decode(base64));
+        return this;
     }
 
     default <T> T getDataAs(Class<T> targetType) {
