@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Supplier;
 
 import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.FieldNotFoundException;
@@ -453,6 +454,13 @@ public interface BObject extends BContainer, Map<String, BElement> {
                 this.putAny(elements[i].toString(), elements[i + 1]);
             }
         }
+    }
+
+    default BElement getOrDefault(String field, Supplier<BElement> supplierForNonPresent) {
+        if (this.containsKey(field)) {
+            return this.get(field);
+        }
+        return supplierForNonPresent.get();
     }
 
     default BValue getValue(String field) {

@@ -12,4 +12,13 @@ public enum BType {
         }
         return null;
     }
+
+    public boolean isNumber() {
+        return this == BYTE //
+                || this == SHORT //
+                || this == INTEGER //
+                || this == FLOAT //
+                || this == LONG //
+                || this == DOUBLE;
+    }
 }
