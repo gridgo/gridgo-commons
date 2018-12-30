@@ -3,6 +3,7 @@ package io.gridgo.utils;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -78,37 +79,25 @@ public final class StringUtils {
     }
 
     public static String implodeWithGlue(String glue, Object... elements) {
-        if (elements != null && glue != null) {
-            StringBuilder sb = new StringBuilder();
-            boolean isFirst = true;
-            for (Object ele : elements) {
-                if (!isFirst) {
-                    sb.append(glue);
-                } else {
-                    isFirst = false;
-                }
-                sb.append(ele);
-            }
-            return sb.toString();
-        }
-        return null;
+        if (elements == null || glue == null)
+            return null;
+        return implodeWithGlue(glue, Arrays.asList(elements));
     }
 
     public static String implodeWithGlue(String glue, List<?> elements) {
-        if (elements != null && glue != null) {
-            StringBuilder sb = new StringBuilder();
-            boolean isFirst = true;
-            for (Object ele : elements) {
-                if (!isFirst) {
-                    sb.append(glue);
-                } else {
-                    isFirst = false;
-                }
-                sb.append(ele);
+        if (elements == null || glue == null)
+            return null;
+        StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+        for (Object ele : elements) {
+            if (!isFirst) {
+                sb.append(glue);
+            } else {
+                isFirst = false;
             }
-            return sb.toString();
+            sb.append(ele);
         }
-        return null;
+        return sb.toString();
     }
 
     public static boolean isRepresentNumber(String str) {
