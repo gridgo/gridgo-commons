@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import io.gridgo.utils.ByteArrayUtils;
@@ -71,5 +72,14 @@ public class ByteArrayUtilsUnitTest {
 
         char c = ByteArrayUtils.bytesToPrimitive(Character.class, new byte[] { 0, 97 });
         assertEquals('a', c);
+    }
+
+    @Test
+    public void testPrimitivesWithBuffer() {
+        Assert.assertEquals(2.2, ByteArrayUtils.bytesToNumber(ByteArrayUtils.primitiveToBytes(2.2), true));
+        Assert.assertEquals(2, ByteArrayUtils.bytesToNumber(ByteArrayUtils.primitiveToBytes(2), false));
+        Assert.assertEquals(2L, ByteArrayUtils.bytesToNumber(ByteArrayUtils.primitiveToBytes(2L), false));
+        Assert.assertEquals(Character.valueOf('a'),
+                ByteArrayUtils.bytesToPrimitive(Character.class, ByteArrayUtils.primitiveToBytes('a')));
     }
 }
