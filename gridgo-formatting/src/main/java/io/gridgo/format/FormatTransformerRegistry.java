@@ -1,17 +1,17 @@
 package io.gridgo.format;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public interface FormatTransformerRegistry {
 
     static FormatTransformerRegistry newInstance(FormatTransformerRegistry... registrys) {
-        FormatTransformerRegistry result = new DefaultFormatTransformerRegistry();
+        var result = new DefaultFormatTransformerRegistry();
         if (registrys != null) {
-            for (FormatTransformerRegistry registry : registrys) {
+            for (var registry : registrys) {
                 result.inherit(registry);
             }
         }
@@ -43,33 +43,26 @@ public interface FormatTransformerRegistry {
     FormatTransformer addTransformer(String name, FormatTransformer transformer);
 
     default FormatTransformer addAlias(String name, String... chain) {
-        if (name == null) {
+        if (name == null)
             throw new NullPointerException("Name cannot be null");
-        }
-        if (chain != null && chain.length > 0) {
-            CombinedFormatTransfromer combinedFormatTransformer = new CombinedFormatTransfromer();
-            List<String> list = new LinkedList<>();
-            for (String str : chain) {
-                if (str != null) {
-                    String[] arr = str.trim().split("\\s*>\\s*");
-                    for (String n : arr) {
-                        if (n.trim().length() > 0) {
-                            list.add(n);
-                        }
-                    }
-                }
-            }
-            combinedFormatTransformer.getChain().addAll(this.getChain(list));
-            return this.addTransformer(name, combinedFormatTransformer);
-        }
-        return null;
+        if (chain == null || chain.length == 0)
+            return null;
+        var list = Arrays.stream(chain) //
+                         .filter(Objects::nonNull) //
+                         .map(str -> str.trim().split("\\s*>\\s*")) //
+                         .flatMap(Arrays::stream) //
+                         .filter(n -> !n.isBlank()) //
+                         .collect(Collectors.toList());
+        var combinedFormatTransformer = new CombinedFormatTransfromer();
+        combinedFormatTransformer.getChain().addAll(this.getChain(list));
+        return this.addTransformer(name, combinedFormatTransformer);
     }
 
     FormatTransformer removeTransformer(String name);
 
     default FormatTransformerRegistry inherit(FormatTransformerRegistry parent) {
         if (parent != null) {
-            for (Entry<String, FormatTransformer> entry : parent.getAll().entrySet()) {
+            for (var entry : parent.getAll().entrySet()) {
                 this.addTransformer(entry.getKey(), entry.getValue());
             }
         }
