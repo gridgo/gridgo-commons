@@ -203,7 +203,8 @@ public interface BFactory {
         return (T) this.getSerializer().deserialize(bytes);
     }
 
-    default BFactoryConfigurable asConfigurableFactory() {
-        return (BFactoryConfigurable) this;
+    default BFactoryConfigurable asConfigurable() {
+        throw new UnsupportedOperationException(
+                "Instance of " + this.getClass().getName() + " cannot be used as a " + BFactoryConfigurable.class.getSimpleName());
     }
 }

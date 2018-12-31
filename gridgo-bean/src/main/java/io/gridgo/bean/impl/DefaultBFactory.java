@@ -13,30 +13,16 @@ import io.gridgo.bean.serialize.BSerializer;
 import io.gridgo.bean.serialize.msgpack.MsgpackSerializer;
 import io.gridgo.bean.xml.BXmlParser;
 import lombok.Getter;
-import lombok.Setter;
 
+@Getter
 public class DefaultBFactory implements BFactory, BFactoryConfigurable {
 
-    @Setter
-    @Getter
     private Supplier<BArray> arraySupplier = DefaultBArray::new;
-
-    @Getter
-    @Setter
     private Supplier<BObject> objectSupplier = DefaultBObject::new;
-
-    @Getter
-    @Setter
     private Supplier<BValue> valueSupplier = DefaultBValue::new;
-
-    @Getter
-    @Setter
     private Supplier<BReference> referenceSupplier = DefaultBReference::new;
 
-    @Getter
     private BXmlParser xmlParser;
-
-    @Getter
     private BSerializer serializer;
 
     public DefaultBFactory() {
@@ -45,18 +31,49 @@ public class DefaultBFactory implements BFactory, BFactoryConfigurable {
     }
 
     @Override
-    public void setXmlParser(BXmlParser xmlParser) {
+    public BFactoryConfigurable setXmlParser(BXmlParser xmlParser) {
         this.xmlParser = xmlParser;
         if (this.xmlParser instanceof BFactoryAware) {
             this.xmlParser.setFactory(this);
         }
+        return this;
     }
 
     @Override
-    public void setSerializer(BSerializer serializer) {
+    public BFactoryConfigurable setSerializer(BSerializer serializer) {
         this.serializer = serializer;
         if (this.serializer instanceof BFactoryAware) {
             ((BFactoryAware) this.serializer).setFactory(this);
         }
+        return this;
+    }
+
+    @Override
+    public BFactoryConfigurable setValueSupplier(Supplier<BValue> valueSupplier) {
+        this.valueSupplier = valueSupplier;
+        return this;
+    }
+
+    @Override
+    public BFactoryConfigurable setObjectSupplier(Supplier<BObject> objectSupplier) {
+        this.objectSupplier = objectSupplier;
+        return this;
+    }
+
+    @Override
+    public BFactoryConfigurable setArraySupplier(Supplier<BArray> arraySupplier) {
+        this.arraySupplier = arraySupplier;
+        return this;
+    }
+
+    @Override
+    public BFactoryConfigurable setReferenceSupplier(Supplier<BReference> referenceSupplier) {
+        this.referenceSupplier = referenceSupplier;
+        return this;
+    }
+
+    @Override
+    public BFactoryConfigurable asConfigurable() {
+        return this;
     }
 }
