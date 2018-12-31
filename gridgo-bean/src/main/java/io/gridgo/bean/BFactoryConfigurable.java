@@ -7,13 +7,15 @@ import io.gridgo.bean.xml.BXmlParser;
 
 public interface BFactoryConfigurable {
 
-    void setValueSupplier(Supplier<BValue> valueSupplier);
+    BFactoryConfigurable setValueSupplier(Supplier<BValue> valueSupplier);
 
-    void setObjectSupplier(Supplier<BObject> objectSupplier);
+    BFactoryConfigurable setObjectSupplier(Supplier<BObject> objectSupplier);
 
-    void setArraySupplier(Supplier<BArray> arraySupplier);
+    BFactoryConfigurable setArraySupplier(Supplier<BArray> arraySupplier);
 
-    void setXmlParser(BXmlParser parser);
+    BFactoryConfigurable setReferenceSupplier(Supplier<BReference> referenceSupplier);
 
-    void setSerializer(BSerializer serializer);
+    BFactoryConfigurable setXmlParser(BXmlParser parser);
+
+    BFactoryConfigurable setSerializer(BSerializer serializer);
 }
