@@ -61,8 +61,8 @@ public class BObjectUnitTest {
         obj.setAny("short", (short) 1);
         Assert.assertEquals((short) 1, (short) obj.getShort("short", (short) -1));
 
-        obj = BObject.ofSequence("int", 1, "str", "hello", "long", 1, "char", 'a', "double", 1.11, "arr", new int[] { 1, 2, 3 }, "byte", 1, "short", 1, "obj",
-                Collections.singletonMap("int", 2));
+        obj = BObject.ofSequence("int", 1, "str", "hello", "long", 1, "char", 'a', "double", 1.11, "arr",
+                new int[] { 1, 2, 3 }, "byte", 1, "short", 1, "obj", Collections.singletonMap("int", 2));
         assertObject(obj);
     }
 
@@ -79,5 +79,16 @@ public class BObjectUnitTest {
         Assert.assertEquals(1.11, obj.getFloat("double", -1), 0.001);
         Assert.assertEquals(Byte.valueOf((byte) 1), obj.getByte("byte", (byte) -1));
         Assert.assertEquals(Integer.valueOf(2), obj.getObject("obj", null).getInteger("int"));
+    }
+
+    @Test
+    public void testPojo() {
+        var bar = Bar.builder().b(true).build();
+        var pojo = Foo.builder().d(1.0).i(1).s("hello").b(bar).build();
+        var deserialized = BObject.ofPojoRecursive(pojo).toPojo(Foo.class);
+        Assert.assertEquals(pojo.getD(), deserialized.getD(), 0.0);
+        Assert.assertEquals(pojo.getI(), deserialized.getI());
+        Assert.assertEquals(pojo.getS(), deserialized.getS());
+        Assert.assertEquals(pojo.getB().isB(), deserialized.getB().isB());
     }
 }
