@@ -89,68 +89,77 @@ public final class ByteArrayUtils {
     public static final <T> T bytesToPrimitive(Class<T> clazz, byte[] bytes) {
         if (clazz == null || bytes == null)
             return null;
-        if (clazz == Boolean.class || clazz == Boolean.TYPE) {
-            if (bytes.length == 0)
-                return (T) Boolean.FALSE;
-            for (byte b : bytes) {
-                if (b == 1)
-                    return (T) Boolean.TRUE;
-            }
-            return (T) Boolean.FALSE;
-        }
+        if (clazz == Boolean.class || clazz == Boolean.TYPE)
+            return (T) bytesToBoolean(bytes);
         if (clazz == String.class)
             return (T) new String(bytes);
-        if (clazz == Character.class || clazz == Character.TYPE) {
-            if (bytes.length == 0)
-                return (T) Character.valueOf('\0');
-            if (bytes.length == 1)
-                return (T) Character.valueOf(bytes[0] == 0 ? '\0' : '\1');
-            return (T) Character.valueOf(ByteBuffer.wrap(bytes).getChar());
-        }
-        Object result = null;
-        if (clazz == Byte.class) {
-            result = bytes.length == 0 ? ((byte) 0) : bytes[0];
-        } else if (clazz == Short.class) {
-            if (bytes.length < Short.BYTES) {
-                result = bytesToNumber(bytes, false).shortValue();
-            } else {
-                result = ByteBuffer.wrap(bytes).getShort();
-            }
-        } else if (clazz == Integer.class) {
-            if (bytes.length < Integer.BYTES) {
-                result = bytesToNumber(bytes, false).intValue();
-            } else {
-                result = ByteBuffer.wrap(bytes).getInt();
-            }
-        } else if (clazz == Long.class) {
-            if (bytes.length < Long.BYTES) {
-                result = bytesToNumber(bytes, false).longValue();
-            } else {
-                result = ByteBuffer.wrap(bytes).getLong();
-            }
-        } else if (clazz == BigInteger.class) {
-            result = new BigInteger(bytes);
-        } else if (clazz == Float.class) {
-            if (bytes.length < Float.BYTES) {
-                result = bytesToNumber(bytes, true).floatValue();
-            } else {
-                result = ByteBuffer.wrap(bytes).getFloat();
-            }
-        } else if (clazz == Double.class) {
-            if (bytes.length < Double.BYTES) {
-                result = bytesToNumber(bytes, true).doubleValue();
-            } else {
-                result = ByteBuffer.wrap(bytes).getDouble();
-            }
-        } else if (clazz == BigDecimal.class) {
-            result = new BigDecimal(new BigInteger(bytes));
-        }
+        if (clazz == Character.class || clazz == Character.TYPE)
+            return (T) bytesToChar(bytes);
+        if (clazz == Byte.class)
+            return (T) (Byte) (bytes.length == 0 ? ((byte) 0) : bytes[0]);
+        if (clazz == Short.class)
+            return (T) bytesToShort(bytes);
+        if (clazz == Integer.class)
+            return (T) bytesToInt(bytes);
+        if (clazz == Long.class)
+            return (T) bytesToLong(bytes);
+        if (clazz == BigInteger.class)
+            return (T) new BigInteger(bytes);
+        if (clazz == Float.class)
+            return (T) bytesToFloat(bytes);
+        if (clazz == Double.class)
+            return (T) bytesToDouble(bytes);
+        if (clazz == BigDecimal.class)
+            return (T) new BigDecimal(new BigInteger(bytes));
+        throw new UnsupportedTypeException("Cannot convert bytes to primitive type " + clazz);
+    }
 
-        if (result == null) {
-            throw new UnsupportedTypeException("Cannot convert bytes to primitive type " + clazz);
-        }
+    private static Double bytesToDouble(byte[] bytes) {
+        if (bytes.length < Double.BYTES)
+            return bytesToNumber(bytes, true).doubleValue();
+        return ByteBuffer.wrap(bytes).getDouble();
+    }
 
-        return (T) result;
+    private static Float bytesToFloat(byte[] bytes) {
+        if (bytes.length < Float.BYTES)
+            return bytesToNumber(bytes, true).floatValue();
+        return ByteBuffer.wrap(bytes).getFloat();
+    }
+
+    private static Long bytesToLong(byte[] bytes) {
+        if (bytes.length < Long.BYTES)
+            return bytesToNumber(bytes, false).longValue();
+        return ByteBuffer.wrap(bytes).getLong();
+    }
+
+    private static Integer bytesToInt(byte[] bytes) {
+        if (bytes.length < Integer.BYTES)
+            return bytesToNumber(bytes, false).intValue();
+        return ByteBuffer.wrap(bytes).getInt();
+    }
+
+    private static Short bytesToShort(byte[] bytes) {
+        if (bytes.length < Short.BYTES)
+            return bytesToNumber(bytes, false).shortValue();
+        return ByteBuffer.wrap(bytes).getShort();
+    }
+
+    private static Character bytesToChar(byte[] bytes) {
+        if (bytes.length == 0)
+            return Character.valueOf('\0');
+        if (bytes.length == 1)
+            return Character.valueOf(bytes[0] == 0 ? '\0' : '\1');
+        return Character.valueOf(ByteBuffer.wrap(bytes).getChar());
+    }
+
+    private static Boolean bytesToBoolean(byte[] bytes) {
+        if (bytes.length == 0)
+            return Boolean.FALSE;
+        for (byte b : bytes) {
+            if (b == 1)
+                return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 
     public static final String toHex(byte[] bytes, String prefix) {
@@ -196,7 +205,8 @@ public final class ByteArrayUtils {
         int len = hex.length() - start;
         byte[] data = new byte[len / 2];
         for (int i = start; i < hex.length(); i += 2) {
-            data[(i - start) / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character.digit(hex.charAt(i + 1), 16));
+            data[(i - start)
+                    / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character.digit(hex.charAt(i + 1), 16));
         }
         return data;
     }
