@@ -77,10 +77,10 @@ public interface BFactory {
         if (Map.class.isAssignableFrom(mapData.getClass())) {
             map = (Map<?, ?>) mapData;
         } else if (mapData instanceof Properties) {
-            Map<Object, Object> map1 = new HashMap<>();
-            Properties props = (Properties) mapData;
-            for (Object key : props.keySet()) {
-                map1.put(key, props.get(key));
+            var map1 = new HashMap<>();
+            var props = (Properties) mapData;
+            for (var entry : props.entrySet()) {
+                map1.put(entry.getKey(), entry.getValue());
             }
             map = map1;
         } else {

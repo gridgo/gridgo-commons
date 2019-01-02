@@ -51,7 +51,7 @@ public final class ByteArrayUtils {
             buffer.putLong((Long) data);
         } else if (data instanceof Double) {
             buffer = ByteBuffer.allocate(Double.BYTES);
-            buffer.putLong((Long) data);
+            buffer.putDouble((Double) data);
         } else if (data instanceof Character) {
             buffer = ByteBuffer.allocate(Character.BYTES);
             buffer.putChar((Character) data);

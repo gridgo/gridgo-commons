@@ -18,7 +18,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 
     default <T> T toPojo(Class<T> clazz) {
         try {
-            return ObjectUtils.fromMap(clazz, this);
+            return ObjectUtils.fromMap(clazz, this.toMap());
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
                 | SecurityException e) {
             throw new BeanSerializationException("Exception caught while converting BObject to POJO", e);
