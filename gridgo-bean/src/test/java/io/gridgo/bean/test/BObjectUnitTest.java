@@ -10,6 +10,8 @@ import io.gridgo.bean.BArray;
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
+import io.gridgo.bean.test.support.Bar;
+import io.gridgo.bean.test.support.Foo;
 
 public class BObjectUnitTest {
 

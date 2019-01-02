@@ -1,4 +1,4 @@
-package io.gridgo.bean.test;
+package io.gridgo.bean.test.support;
 
 import java.util.Map;
 
