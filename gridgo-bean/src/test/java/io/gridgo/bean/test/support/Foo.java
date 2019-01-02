@@ -9,22 +9,25 @@ import lombok.Setter;
 @Builder
 public class Foo {
 
-    public Foo() {
-
-    }
-
-    private Foo(int i, double d, String s, Bar b) {
-        this.i = i;
-        this.d = d;
-        this.s = s;
-        this.b = b;
-    }
-
     private int i;
+
+    private int[] arr;
 
     private double d;
 
     private String s;
 
     private Bar b;
+
+    public Foo() {
+
+    }
+
+    private Foo(int i, int[] arr, double d, String s, Bar b) {
+        this.i = i;
+        this.arr = arr;
+        this.d = d;
+        this.s = s;
+        this.b = b;
+    }
 }

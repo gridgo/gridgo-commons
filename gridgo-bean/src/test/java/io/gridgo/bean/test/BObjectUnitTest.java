@@ -83,7 +83,7 @@ public class BObjectUnitTest {
     }
 
     @Test
-    public void testPojo() {
+    public void testPojoRecursive() {
         var bar = Bar.builder().b(true).build();
         var pojo = Foo.builder().d(1.0).i(1).s("hello").b(bar).build();
         var deserialized = BObject.ofPojoRecursive(pojo).toPojo(Foo.class);
@@ -91,6 +91,22 @@ public class BObjectUnitTest {
         Assert.assertEquals(pojo.getI(), deserialized.getI());
         Assert.assertEquals(pojo.getS(), deserialized.getS());
         Assert.assertEquals(pojo.getB().isB(), deserialized.getB().isB());
+    }
+
+    @Test
+    public void testPojo() {
+        var pojo = Foo.builder().d(1.0).i(1).s("hello").build();
+        var deserialized = BObject.ofPojo(pojo).toPojo(Foo.class);
+        Assert.assertEquals(pojo.getD(), deserialized.getD(), 0.0);
+        Assert.assertEquals(pojo.getI(), deserialized.getI());
+        Assert.assertEquals(pojo.getS(), deserialized.getS());
+    }
+
+    @Test
+    public void testWriteString() {
+        var pojo = Foo.builder().d(1.0).i(1).arr(new int[] { 1, 2 }).s("hello").build();
+        var obj = BObject.ofPojo(pojo);
+        Assert.assertNotNull(obj.toString());
     }
 
     @Test

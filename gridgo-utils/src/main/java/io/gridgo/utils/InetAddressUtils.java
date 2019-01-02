@@ -5,10 +5,14 @@ import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Enumeration;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class InetAddressUtils {
 
     public static final Pattern IPV4_PATTERN = Pattern.compile(
@@ -43,94 +47,79 @@ public class InetAddressUtils {
     }
 
     public static String resolveIPv4FromDomain(String domain) {
-        if (domain != null) {
-            if (isIPv4(domain)) {
-                return domain;
-            }
-            try {
-                String address = Inet4Address.getByName(domain).getHostAddress();
-                return isIPv4(address) ? address : null;
-            } catch (UnknownHostException e) {
-            }
+        if (domain == null)
+            return null;
+        if (isIPv4(domain))
+            return domain;
+        try {
+            String address = Inet4Address.getByName(domain).getHostAddress();
+            return isIPv4(address) ? address : null;
+        } catch (UnknownHostException e) {
+            log.info("Exception caught when resolving IPv4 address", e);
         }
         return null;
     }
 
     public static String resolveIPv6FromDomain(String domain) {
-        if (domain != null) {
-            if (isIPv6(domain)) {
-                return domain;
-            }
-            try {
-                String address = Inet6Address.getByName(domain).getHostAddress();
-                return isIPv6(address) ? address : null;
-            } catch (UnknownHostException e) {
-
-            }
+        if (domain == null)
+            return null;
+        if (isIPv6(domain)) {
+            return domain;
+        }
+        try {
+            String address = Inet6Address.getByName(domain).getHostAddress();
+            return isIPv6(address) ? address : null;
+        } catch (UnknownHostException e) {
+            log.info("Exception caught when resolving IPv6 address", e);
         }
         return null;
     }
 
     public static String resolveIPFromDomain(String domain, boolean preferIPv6) {
-        if (domain != null) {
-            String ip = preferIPv6 ? resolveIPv6FromDomain(domain) : resolveIPv4FromDomain(domain);
-            if (ip == null) {
-                ip = preferIPv6 ? resolveIPv4FromDomain(domain) : resolveIPv6FromDomain(domain);
-            }
-            return ip;
+        if (domain == null)
+            return null;
+        String ip = preferIPv6 ? resolveIPv6FromDomain(domain) : resolveIPv4FromDomain(domain);
+        if (ip == null) {
+            ip = preferIPv6 ? resolveIPv4FromDomain(domain) : resolveIPv6FromDomain(domain);
         }
-        return null;
+        return ip;
     }
 
     public static String resolveIPv4FromInterface(String nifName) {
-        if (nifName != null) {
-            try {
-                NetworkInterface nif = NetworkInterface.getByName(nifName);
-                if (nif != null) {
-                    Enumeration<InetAddress> addresses = nif.getInetAddresses();
-                    while (addresses.hasMoreElements()) {
-                        InetAddress addr = addresses.nextElement();
-                        if (addr instanceof Inet4Address) {
-                            return addr.getHostAddress();
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                return null;
-            }
-        }
-        return null;
+        return resolveIPFromInterface(nifName, addr -> addr instanceof Inet4Address);
     }
 
     public static String resolveIPv6FromInterface(String nifName) {
-        if (nifName != null) {
-            try {
-                NetworkInterface nif = NetworkInterface.getByName(nifName);
-                if (nif != null) {
-                    Enumeration<InetAddress> addresses = nif.getInetAddresses();
-                    while (addresses.hasMoreElements()) {
-                        InetAddress addr = addresses.nextElement();
-                        if (addr instanceof Inet6Address) {
-                            return addr.getHostAddress();
-                        }
-                    }
+        return resolveIPFromInterface(nifName, addr -> addr instanceof Inet6Address);
+    }
+
+    private static String resolveIPFromInterface(String nifName, Predicate<InetAddress> predicate) {
+        if (nifName == null)
+            return null;
+        try {
+            var nif = NetworkInterface.getByName(nifName);
+            if (nif != null) {
+                var addresses = nif.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    if (predicate.test(addr))
+                        return addr.getHostAddress();
                 }
-            } catch (Exception e) {
-                return null;
             }
+        } catch (SocketException e) {
+            log.info("Socket exception caught while resolving from interface", e);
         }
         return null;
     }
 
     public static String resolveIPFromInterface(String nifName, boolean preferIPv6) {
-        if (nifName != null) {
-            String ip = preferIPv6 ? resolveIPv6FromInterface(nifName) : resolveIPv4FromInterface(nifName);
-            if (ip == null) {
-                ip = preferIPv6 ? resolveIPv4FromInterface(nifName) : resolveIPv6FromInterface(nifName);
-            }
-            return ip;
+        if (nifName == null)
+            return null;
+        String ip = preferIPv6 ? resolveIPv6FromInterface(nifName) : resolveIPv4FromInterface(nifName);
+        if (ip == null) {
+            ip = preferIPv6 ? resolveIPv4FromInterface(nifName) : resolveIPv6FromInterface(nifName);
         }
-        return null;
+        return ip;
     }
 
     public static String resolveIPFromInterface(String nifName) {
@@ -138,38 +127,34 @@ public class InetAddressUtils {
     }
 
     public static String resolveIPv4(String input, boolean preferInterface) {
-        if (input != null) {
-            String ip = preferInterface ? resolveIPv4FromInterface(input) : resolveIPv4FromDomain(input);
-            if (ip == null) {
-                ip = preferInterface ? resolveIPv4FromDomain(input) : resolveIPv4FromInterface(input);
-            }
-            return ip;
+        if (input == null)
+            return null;
+        String ip = preferInterface ? resolveIPv4FromInterface(input) : resolveIPv4FromDomain(input);
+        if (ip == null) {
+            ip = preferInterface ? resolveIPv4FromDomain(input) : resolveIPv4FromInterface(input);
         }
-        return null;
+        return ip;
     }
 
     public static String resolveIPv6(String input, boolean preferInterface) {
-        if (input != null) {
-            String ip = preferInterface ? resolveIPv6FromInterface(input) : resolveIPv6FromDomain(input);
-            if (ip == null) {
-                ip = preferInterface ? resolveIPv6FromDomain(input) : resolveIPv6FromInterface(input);
-            }
-            return ip;
+        if (input == null)
+            return null;
+        String ip = preferInterface ? resolveIPv6FromInterface(input) : resolveIPv6FromDomain(input);
+        if (ip == null) {
+            ip = preferInterface ? resolveIPv6FromDomain(input) : resolveIPv6FromInterface(input);
         }
-        return null;
+        return ip;
     }
 
     public static String resolve(String input, boolean preferIPv6, boolean preferInterface) {
-        if (input != null) {
-            String ip = preferInterface ? resolveIPFromInterface(input, preferIPv6)
-                    : resolveIPFromDomain(input, preferIPv6);
-            if (ip == null) {
-                ip = preferInterface ? resolveIPFromDomain(input, preferIPv6)
-                        : resolveIPFromInterface(input, preferIPv6);
-            }
-            return ip;
+        if (input == null)
+            return null;
+        String ip = preferInterface ? resolveIPFromInterface(input, preferIPv6)
+                : resolveIPFromDomain(input, preferIPv6);
+        if (ip == null) {
+            ip = preferInterface ? resolveIPFromDomain(input, preferIPv6) : resolveIPFromInterface(input, preferIPv6);
         }
-        return null;
+        return ip;
     }
 
     public static String resolve(String input) {
