@@ -5,9 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.msgpack.core.MessageFormat;
 import org.msgpack.core.MessagePack;
@@ -19,7 +16,6 @@ import io.gridgo.bean.BElement;
 import io.gridgo.bean.BFactory;
 import io.gridgo.bean.BFactoryAware;
 import io.gridgo.bean.BObject;
-import io.gridgo.bean.BType;
 import io.gridgo.bean.BValue;
 import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
@@ -48,7 +44,7 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
     }
 
     private void packValue(BValue value, MessagePacker packer) throws IOException {
-        BType type = value.getType();
+        var type = value.getType();
         if (type != null) {
             switch (type) {
             case BOOLEAN:
@@ -92,8 +88,8 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
     }
 
     private void packObject(BObject object, MessagePacker packer) throws IOException {
-        Map<String, BElement> tobePacked = new HashMap<>();
-        for (Entry<String, BElement> entry : object.entrySet()) {
+        var tobePacked = new HashMap<String, BElement>();
+        for (var entry : object.entrySet()) {
             if (entry.getValue().isValue() || entry.getValue().isArray() || entry.getValue().isObject()) {
                 tobePacked.put(entry.getKey(), entry.getValue());
             } else if (log.isWarnEnabled()) {
@@ -101,28 +97,28 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
             }
         }
         packer.packMapHeader(tobePacked.size());
-        for (Entry<String, BElement> entry : tobePacked.entrySet()) {
+        for (var entry : tobePacked.entrySet()) {
             packer.packString(entry.getKey());
             packAny(entry.getValue(), packer);
         }
     }
 
     private void packArray(BArray array, MessagePacker packer) throws IOException {
-        List<BElement> tobePacked = new LinkedList<>();
-        for (BElement entry : array) {
+        var tobePacked = new LinkedList<BElement>();
+        for (var entry : array) {
             if (entry.isValue() || entry.isArray() || entry.isObject()) {
                 tobePacked.add(entry);
             }
         }
         packer.packArrayHeader(tobePacked.size());
-        for (BElement entry : tobePacked) {
+        for (var entry : tobePacked) {
             packAny(entry, packer);
         }
     }
 
     @Override
     public void serialize(@NonNull BElement element, @NonNull OutputStream out) {
-        try (MessagePacker packer = MessagePack.newDefaultPacker(out)) {
+        try (var packer = MessagePack.newDefaultPacker(out)) {
             packAny(element, packer);
             packer.flush();
         } catch (IOException e) {
@@ -131,7 +127,7 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
     }
 
     private BArray unpackArray(MessageUnpacker unpacker) throws IOException {
-        BArray result = this.getFactory().newArray();
+        var result = this.getFactory().newArray();
         int size = unpacker.unpackArrayHeader();
         for (int i = 0; i < size; i++) {
             result.addAny(this.unpackAny(unpacker));
@@ -140,18 +136,18 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
     }
 
     private BObject unpackMap(MessageUnpacker unpacker) throws IOException {
-        BObject result = this.getFactory().newObject();
+        var result = this.getFactory().newObject();
         int size = unpacker.unpackMapHeader();
         for (int i = 0; i < size; i++) {
-            String key = unpacker.unpackString();
-            BElement value = unpackAny(unpacker);
+            var key = unpacker.unpackString();
+            var value = unpackAny(unpacker);
             result.putAny(key, value);
         }
         return result;
     }
 
     private BValue unpackValue(MessageFormat format, MessageUnpacker unpacker) throws IOException {
-        BValue value = this.getFactory().newValue();
+        var value = this.getFactory().newValue();
         switch (format.getValueType()) {
         case BINARY:
             int len = unpacker.unpackBinaryHeader();
@@ -191,7 +187,7 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
     }
 
     private BElement unpackAny(MessageUnpacker unpacker) throws IOException {
-        MessageFormat format = unpacker.getNextFormat();
+        var format = unpacker.getNextFormat();
         switch (format.getValueType()) {
         case ARRAY:
             return unpackArray(unpacker);
@@ -213,7 +209,7 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
 
     @Override
     public BElement deserialize(InputStream in) {
-        try (MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(in)) {
+        try (var unpacker = MessagePack.newDefaultUnpacker(in)) {
             return this.unpackAny(unpacker);
         } catch (IOException e) {
             throw new BeanSerializationException("Error while deserialize input stream", e);
