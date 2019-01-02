@@ -90,8 +90,14 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
     private void packObject(BObject object, MessagePacker packer) throws IOException {
         packer.packMapHeader(object.size());
         for (Entry<String, BElement> entry : object.entrySet()) {
-            packer.packString(entry.getKey());
-            packAny(entry.getValue(), packer);
+            if (entry.getValue().isArray() || entry.getValue().isObject() || entry.getValue().isValue()) {
+                packer.packString(entry.getKey());
+                packAny(entry.getValue(), packer);
+            } else {
+                if (log.isWarnEnabled()) {
+                    log.warn("Ignore key {} while packing bObject because of value cannot be packed in msgpack format", entry.getKey());
+                }
+            }
         }
     }
 
@@ -125,7 +131,9 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
         BObject result = this.getFactory().newObject();
         int size = unpacker.unpackMapHeader();
         for (int i = 0; i < size; i++) {
-            result.putAny(unpacker.unpackString(), unpackAny(unpacker));
+            String key = unpacker.unpackString();
+            BElement value = unpackAny(unpacker);
+            result.putAny(key, value);
         }
         return result;
     }
@@ -152,8 +160,7 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
                 value.setData(unpacker.unpackByte());
             } else if (format == MessageFormat.INT16 || format == MessageFormat.UINT8) {
                 value.setData(unpacker.unpackShort());
-            } else if (format == MessageFormat.UINT32 || format == MessageFormat.INT64
-                    || format == MessageFormat.UINT64) {
+            } else if (format == MessageFormat.UINT32 || format == MessageFormat.INT64 || format == MessageFormat.UINT64) {
                 value.setData(unpacker.unpackLong());
             } else {
                 value.setData(unpacker.unpackInt());
