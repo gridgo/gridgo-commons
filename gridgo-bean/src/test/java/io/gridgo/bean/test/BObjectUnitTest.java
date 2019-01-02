@@ -53,7 +53,6 @@ public class BObjectUnitTest {
 
         obj = BElement.ofBytes(obj.toBytes());
         assertObject(obj);
-        System.out.println(obj.toString());
 
         byte[] raw = obj.getRaw("str", new byte[0]);
         Assert.assertEquals("hello", new String(raw));
@@ -90,5 +89,14 @@ public class BObjectUnitTest {
         Assert.assertEquals(pojo.getI(), deserialized.getI());
         Assert.assertEquals(pojo.getS(), deserialized.getS());
         Assert.assertEquals(pojo.getB().isB(), deserialized.getB().isB());
+    }
+
+    @Test
+    public void testBytes() {
+        var obj = BObject.of("id", 1).setAny("_id", new Object());
+        var clone = BElement.ofBytes(obj.toBytes());
+        Assert.assertNotNull(clone);
+        Assert.assertTrue(clone.isObject());
+        Assert.assertEquals(1, clone.asObject().getInteger("id").intValue());
     }
 }
