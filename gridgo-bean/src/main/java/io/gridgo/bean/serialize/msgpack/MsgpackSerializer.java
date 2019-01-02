@@ -39,7 +39,7 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
             this.packObject(element.asObject(), packer);
         } else {
             if (log.isWarnEnabled())
-                log.warn("Unrecoginzed BElement implementation: %s", element.getClass());
+                log.warn("Unrecoginzed BElement implementation: {}", element.getClass());
         }
     }
 
