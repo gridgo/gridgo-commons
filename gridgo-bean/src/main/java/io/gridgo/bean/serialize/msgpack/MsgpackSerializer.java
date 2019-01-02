@@ -3,6 +3,10 @@ package io.gridgo.bean.serialize.msgpack;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.msgpack.core.MessageFormat;
@@ -88,22 +92,30 @@ public class MsgpackSerializer implements BSerializer, BFactoryAware {
     }
 
     private void packObject(BObject object, MessagePacker packer) throws IOException {
-        packer.packMapHeader(object.size());
+        Map<String, BElement> tobePacked = new HashMap<>();
         for (Entry<String, BElement> entry : object.entrySet()) {
-            if (entry.getValue().isArray() || entry.getValue().isObject() || entry.getValue().isValue()) {
-                packer.packString(entry.getKey());
-                packAny(entry.getValue(), packer);
-            } else {
-                if (log.isWarnEnabled()) {
-                    log.warn("Ignore key {} while packing bObject because of value cannot be packed in msgpack format", entry.getKey());
-                }
+            if (entry.getValue().isValue() || entry.getValue().isArray() || entry.getValue().isObject()) {
+                tobePacked.put(entry.getKey(), entry.getValue());
+            } else if (log.isWarnEnabled()) {
+                log.warn("Ignore key {} while packing bObject because of value cannot be packed in msgpack format", entry.getKey());
             }
+        }
+        packer.packMapHeader(tobePacked.size());
+        for (Entry<String, BElement> entry : tobePacked.entrySet()) {
+            packer.packString(entry.getKey());
+            packAny(entry.getValue(), packer);
         }
     }
 
     private void packArray(BArray array, MessagePacker packer) throws IOException {
-        packer.packArrayHeader(array.size());
+        List<BElement> tobePacked = new LinkedList<>();
         for (BElement entry : array) {
+            if (entry.isValue() || entry.isArray() || entry.isObject()) {
+                tobePacked.add(entry);
+            }
+        }
+        packer.packArrayHeader(tobePacked.size());
+        for (BElement entry : tobePacked) {
             packAny(entry, packer);
         }
     }
