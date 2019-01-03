@@ -19,8 +19,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
     default <T> T toPojo(Class<T> clazz) {
         try {
             return ObjectUtils.fromMap(clazz, this.toMap());
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-                | SecurityException e) {
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException e) {
             throw new BeanSerializationException("Exception caught while converting BObject to POJO", e);
         }
     }
@@ -71,7 +71,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
             if (element instanceof BValue) {
                 return ((BValue) element).getBoolean();
             }
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as boolean");
+            throw new InvalidTypeException(
+                    "BObject contains element with type " + element.getType() + " which cannot get as boolean");
         }
         throw new FieldNotFoundException("Field not found: " + field);
     }
@@ -96,7 +97,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
             if (element instanceof BValue) {
                 return ((BValue) element).getChar();
             }
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as char");
+            throw new InvalidTypeException(
+                    "BObject contains element with type " + element.getType() + " which cannot get as char");
         }
         throw new FieldNotFoundException("Field not found: " + field);
     }
@@ -121,7 +123,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
             if (element instanceof BValue) {
                 return ((BValue) element).getByte();
             }
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as char");
+            throw new InvalidTypeException(
+                    "BObject contains element with type " + element.getType() + " which cannot get as char");
         }
         throw new FieldNotFoundException("Field not found: " + field);
     }
@@ -146,7 +149,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
             if (element instanceof BValue) {
                 return ((BValue) element).getShort();
             }
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as short");
+            throw new InvalidTypeException(
+                    "BObject contains element with type " + element.getType() + " which cannot get as short");
         }
         throw new FieldNotFoundException("Field not found: " + field);
     }
@@ -171,7 +175,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
             if (element instanceof BValue) {
                 return ((BValue) element).getInteger();
             }
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as integer");
+            throw new InvalidTypeException(
+                    "BObject contains element with type " + element.getType() + " which cannot get as integer");
         }
         throw new FieldNotFoundException("Field not found: " + field);
     }
@@ -196,7 +201,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
             if (element instanceof BValue) {
                 return ((BValue) element).getFloat();
             }
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as float");
+            throw new InvalidTypeException(
+                    "BObject contains element with type " + element.getType() + " which cannot get as float");
         }
         throw new FieldNotFoundException("Field not found: " + field);
     }
@@ -221,7 +227,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
             if (element instanceof BValue) {
                 return ((BValue) element).getLong();
             }
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as long");
+            throw new InvalidTypeException(
+                    "BObject contains element with type " + element.getType() + " which cannot get as long");
         }
         throw new FieldNotFoundException("Field not found: " + field);
     }
@@ -246,7 +253,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
             if (element instanceof BValue) {
                 return ((BValue) element).getDouble();
             }
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as double");
+            throw new InvalidTypeException(
+                    "BObject contains element with type " + element.getType() + " which cannot get as double");
         }
         throw new FieldNotFoundException("Field not found: " + field);
     }
@@ -271,7 +279,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
             if (element instanceof BValue) {
                 return ((BValue) element).getString();
             }
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as string");
+            throw new InvalidTypeException(
+                    "BObject contains element with type " + element.getType() + " which cannot get as string");
         }
         throw new FieldNotFoundException("Field not found: " + field);
     }
@@ -289,7 +298,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
             if (element instanceof BValue) {
                 return ((BValue) element).getRaw();
             }
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as byte[]");
+            throw new InvalidTypeException(
+                    "BObject contains element with type " + element.getType() + " which cannot get as byte[]");
         }
         return null;
     }
@@ -401,7 +411,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
             } else {
                 if (entry.getValue() == null)
                     continue;
-                throw new InvalidTypeException("Found unrecognized MElement implementation: " + entry.getValue().getClass());
+                throw new InvalidTypeException(
+                        "Found unrecognized MElement implementation: " + entry.getValue().getClass());
             }
         }
         return result;
