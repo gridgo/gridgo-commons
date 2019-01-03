@@ -111,7 +111,7 @@ public class BObjectUnitTest {
 
     @Test
     public void testBytes() {
-        var obj = BObject.of("id", 1).setAny("_id", new Object());
+        var obj = BObject.of("id", 1).setAny("_id", new Object()).setAny("abc", null);
         var clone = BElement.ofBytes(obj.toBytes());
         Assert.assertNotNull(clone);
         Assert.assertTrue(clone.isObject());
