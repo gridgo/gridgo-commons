@@ -8,10 +8,10 @@ import io.gridgo.framework.support.generators.IdGenerator;
 
 public class AtomicIdGenerator implements IdGenerator {
 
-	private AtomicLong counter = new AtomicLong();
+    private AtomicLong counter = new AtomicLong();
 
-	@Override
-	public Optional<BValue> generateId() {
-		return Optional.of(BValue.of(counter.incrementAndGet()));
-	}
+    @Override
+    public Optional<BValue> generateId() {
+        return Optional.of(BValue.of(counter.incrementAndGet()));
+    }
 }

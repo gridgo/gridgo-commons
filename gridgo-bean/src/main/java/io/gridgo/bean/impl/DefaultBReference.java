@@ -9,27 +9,32 @@ import lombok.Setter;
 @NoArgsConstructor
 class DefaultBReference implements BReference {
 
-	@Setter
-	@Getter
-	private Object reference;
+    @Setter
+    @Getter
+    private Object reference;
 
-	@Setter
-	@Getter
-	private transient BSerializer serializer;
+    @Setter
+    @Getter
+    private transient BSerializer serializer;
 
-	@Override
-	public String toString() {
-		return reference != null ? reference.toString() : null;
-	}
+    @Override
+    public String toString() {
+        return reference != null ? reference.toString() : null;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof BReference) {
-			var other = (BReference) obj;
-			return reference == null //
-					? other.getReference() == null //
-					: reference.equals(other.getReference());
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BReference) {
+            var other = (BReference) obj;
+            return reference == null //
+                    ? other.getReference() == null //
+                    : reference.equals(other.getReference());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return reference != null ? reference.hashCode() : super.hashCode();
+    }
 }

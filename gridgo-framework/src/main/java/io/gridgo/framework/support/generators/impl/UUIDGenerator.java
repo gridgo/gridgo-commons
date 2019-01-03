@@ -8,8 +8,8 @@ import io.gridgo.framework.support.generators.IdGenerator;
 
 public class UUIDGenerator implements IdGenerator {
 
-	@Override
-	public Optional<BValue> generateId() {
-		return Optional.of(BValue.of(UUID.randomUUID().toString()));
-	}
+    @Override
+    public Optional<BValue> generateId() {
+        return Optional.of(BValue.of(UUID.randomUUID().toString()));
+    }
 }

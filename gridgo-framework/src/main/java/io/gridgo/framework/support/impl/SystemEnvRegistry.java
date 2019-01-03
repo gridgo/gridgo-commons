@@ -4,13 +4,13 @@ import io.gridgo.framework.support.Registry;
 
 public class SystemEnvRegistry implements Registry {
 
-	@Override
-	public Object lookup(String name) {
-		return System.getenv(name);
-	}
+    @Override
+    public Object lookup(String name) {
+        return System.getenv(name);
+    }
 
-	@Override
-	public SystemEnvRegistry register(String name, Object answer) {
-		throw new UnsupportedOperationException("System Env does not support register()");
-	}
+    @Override
+    public SystemEnvRegistry register(String name, Object answer) {
+        throw new UnsupportedOperationException("System Env does not support register()");
+    }
 }

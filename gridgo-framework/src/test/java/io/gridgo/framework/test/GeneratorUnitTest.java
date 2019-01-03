@@ -9,13 +9,13 @@ import io.gridgo.framework.support.generators.impl.UUIDGenerator;
 
 public class GeneratorUnitTest {
 
-	@Test
-	public void testGenerator() {
-		var g1 = new NoOpIdGenerator();
-		Assert.assertTrue(g1.generateId().isEmpty());
-		var g2 = new TimeBasedIdGenerator();
-		Assert.assertTrue(g2.generateId().isPresent());
-		var g3 = new UUIDGenerator();
-		Assert.assertTrue(g3.generateId().isPresent());
-	}
+    @Test
+    public void testGenerator() {
+        var g1 = new NoOpIdGenerator();
+        Assert.assertTrue(g1.generateId().isEmpty());
+        var g2 = new TimeBasedIdGenerator();
+        Assert.assertTrue(g2.generateId().isPresent());
+        var g3 = new UUIDGenerator();
+        Assert.assertTrue(g3.generateId().isPresent());
+    }
 }

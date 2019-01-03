@@ -6,19 +6,19 @@ package io.gridgo.framework;
  */
 public interface ComponentLifecycle {
 
-	/**
-	 * Start the component
-	 */
-	public default void start() {
+    /**
+     * Start the component
+     */
+    public default void start() {
 
-	}
+    }
 
-	/**
-	 * Stop the component
-	 */
-	public default void stop() {
+    /**
+     * Stop the component
+     */
+    public default void stop() {
 
-	}
-	
-	public String getName();
+    }
+
+    public String getName();
 }

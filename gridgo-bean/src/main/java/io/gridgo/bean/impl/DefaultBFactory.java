@@ -13,50 +13,67 @@ import io.gridgo.bean.serialize.BSerializer;
 import io.gridgo.bean.serialize.msgpack.MsgpackSerializer;
 import io.gridgo.bean.xml.BXmlParser;
 import lombok.Getter;
-import lombok.Setter;
 
+@Getter
 public class DefaultBFactory implements BFactory, BFactoryConfigurable {
 
-	@Setter
-	@Getter
-	private Supplier<BArray> arraySupplier = DefaultBArray::new;
+    private Supplier<BArray> arraySupplier = DefaultBArray::new;
+    private Supplier<BObject> objectSupplier = DefaultBObject::new;
+    private Supplier<BValue> valueSupplier = DefaultBValue::new;
+    private Supplier<BReference> referenceSupplier = DefaultBReference::new;
 
-	@Getter
-	@Setter
-	private Supplier<BObject> objectSupplier = DefaultBObject::new;
+    private BXmlParser xmlParser;
+    private BSerializer serializer;
 
-	@Getter
-	@Setter
-	private Supplier<BValue> valueSupplier = DefaultBValue::new;
-	
-	@Getter
-	@Setter
-	private Supplier<BReference> referenceSupplier = DefaultBReference::new;
+    public DefaultBFactory() {
+        this.setSerializer(new MsgpackSerializer());
+        this.setXmlParser(new BXmlParser());
+    }
 
-	@Getter
-	private BXmlParser xmlParser;
+    @Override
+    public BFactoryConfigurable setXmlParser(BXmlParser xmlParser) {
+        this.xmlParser = xmlParser;
+        if (this.xmlParser instanceof BFactoryAware) {
+            this.xmlParser.setFactory(this);
+        }
+        return this;
+    }
 
-	@Getter
-	private BSerializer serializer;
+    @Override
+    public BFactoryConfigurable setSerializer(BSerializer serializer) {
+        this.serializer = serializer;
+        if (this.serializer instanceof BFactoryAware) {
+            ((BFactoryAware) this.serializer).setFactory(this);
+        }
+        return this;
+    }
 
-	public DefaultBFactory() {
-		this.setSerializer(new MsgpackSerializer());
-		this.setXmlParser(new BXmlParser());
-	}
+    @Override
+    public BFactoryConfigurable setValueSupplier(Supplier<BValue> valueSupplier) {
+        this.valueSupplier = valueSupplier;
+        return this;
+    }
 
-	@Override
-	public void setXmlParser(BXmlParser xmlParser) {
-		this.xmlParser = xmlParser;
-		if (this.xmlParser instanceof BFactoryAware) {
-			this.xmlParser.setFactory(this);
-		}
-	}
+    @Override
+    public BFactoryConfigurable setObjectSupplier(Supplier<BObject> objectSupplier) {
+        this.objectSupplier = objectSupplier;
+        return this;
+    }
 
-	@Override
-	public void setSerializer(BSerializer serializer) {
-		this.serializer = serializer;
-		if (this.serializer instanceof BFactoryAware) {
-			((BFactoryAware) this.serializer).setFactory(this);
-		}
-	}
+    @Override
+    public BFactoryConfigurable setArraySupplier(Supplier<BArray> arraySupplier) {
+        this.arraySupplier = arraySupplier;
+        return this;
+    }
+
+    @Override
+    public BFactoryConfigurable setReferenceSupplier(Supplier<BReference> referenceSupplier) {
+        this.referenceSupplier = referenceSupplier;
+        return this;
+    }
+
+    @Override
+    public BFactoryConfigurable asConfigurable() {
+        return this;
+    }
 }

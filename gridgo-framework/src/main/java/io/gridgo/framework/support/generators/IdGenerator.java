@@ -6,5 +6,5 @@ import io.gridgo.bean.BValue;
 
 public interface IdGenerator {
 
-	public Optional<BValue> generateId();
+    public Optional<BValue> generateId();
 }

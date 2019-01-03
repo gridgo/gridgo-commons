@@ -49,11 +49,11 @@ public interface Message {
     }
 
     static Message ofAny(Object body) {
-        return of(Payload.of(BElement.fromAny(body)));
+        return of(Payload.of(BElement.ofAny(body)));
     }
 
     static Message ofAny(BObject headers, Object body) {
-        return of(Payload.of(headers, BElement.fromAny(body)));
+        return of(Payload.of(headers, BElement.ofAny(body)));
     }
 
     static Message of(Payload payload) {
@@ -77,7 +77,7 @@ public interface Message {
     }
 
     static Message parse(InputStream inputStream) {
-        BElement data = BElement.fromRaw(inputStream);
+        BElement data = BElement.ofBytes(inputStream);
         return parse(data);
     }
 
@@ -101,7 +101,7 @@ public interface Message {
                 body = null;
             }
 
-            if (id.isValue() && (headers == null || headers.isObject())) {
+            if (id.isValue() && headers.isObject()) {
                 payload = Payload.of(id.asValue(), headers.asObject(), body);
             }
         }

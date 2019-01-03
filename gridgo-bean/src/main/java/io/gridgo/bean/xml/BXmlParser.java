@@ -20,6 +20,7 @@ import io.gridgo.bean.BFactoryAware;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BType;
 import io.gridgo.bean.BValue;
+import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.exceptions.NameAttributeNotFoundException;
 import io.gridgo.bean.xml.RefItem.RefItemBuilder;
@@ -29,164 +30,166 @@ import lombok.Setter;
 
 public class BXmlParser implements BFactoryAware {
 
-	private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+    private static final String REF_NAME = "refName";
 
-	@Setter
-	private BFactory factory;
+    private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
-	public BXmlParser(BFactory factory) {
-		this.factory = factory;
-	}
+    @Setter
+    private BFactory factory;
 
-	public BXmlParser() {
-		this(BFactory.DEFAULT);
-	}
+    public BXmlParser(BFactory factory) {
+        this.factory = factory;
+    }
 
-	public BElement parse(String xml) {
-		if (xml != null) {
-			try (InputStream in = new ByteArrayInputStream(xml.getBytes(Charset.forName("utf-8")))) {
-				Document document = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder().parse(in);
-				RefManager refManager = new RefManager();
-				BElement result = parse(document, refManager);
-				refManager.resolve();
-				return result;
-			} catch (SAXException | IOException | ParserConfigurationException e) {
-				throw new RuntimeException("Cannot parse xml", e);
-			}
-		}
-		return null;
-	}
+    public BXmlParser() {
+        this(BFactory.DEFAULT);
+    }
 
-	public BElement parse(Node node, RefManager refManager) {
-		if (node != null) {
-			if (node instanceof Document) {
-				node = node.getFirstChild();
-			}
-			String nodeName = node.getNodeName();
-			BElement result = null;
-			switch (nodeName.toLowerCase()) {
-			case "object":
-				result = parseObject(node, refManager);
-				break;
-			case "array":
-				result = parseArray(node, refManager);
-				break;
-			default:
-				result = parseValue(node, refManager);
-				break;
-			}
-			return result;
-		}
-		return null;
-	}
+    public BElement parse(String xml) {
+        if (xml != null) {
+            try (InputStream in = new ByteArrayInputStream(xml.getBytes(Charset.forName("utf-8")))) {
+                Document document = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder().parse(in);
+                RefManager refManager = new RefManager();
+                BElement result = parse(document, refManager);
+                refManager.resolve();
+                return result;
+            } catch (SAXException | IOException | ParserConfigurationException e) {
+                throw new BeanSerializationException("Cannot parse xml", e);
+            }
+        }
+        return null;
+    }
 
-	private BValue parseValue(Node node, RefManager refManager) {
-		String nodeName = node.getNodeName();
-		BType type = BType.forName(nodeName);
-		if (type != null) {
-			String stringValue;
-			Node valueAttr = node.getAttributes().getNamedItem("value");
-			if (valueAttr != null) {
-				stringValue = valueAttr.getNodeValue();
-			} else {
-				stringValue = node.getTextContent().trim();
-			}
+    public BElement parse(Node node, RefManager refManager) {
+        if (node != null) {
+            if (node instanceof Document) {
+                node = node.getFirstChild();
+            }
+            String nodeName = node.getNodeName();
+            BElement result = null;
+            switch (nodeName.toLowerCase()) {
+            case "object":
+                result = parseObject(node, refManager);
+                break;
+            case "array":
+                result = parseArray(node, refManager);
+                break;
+            default:
+                result = parseValue(node, refManager);
+                break;
+            }
+            return result;
+        }
+        return null;
+    }
 
-			BValue value = this.factory.newValue();
+    private BValue parseValue(Node node, RefManager refManager) {
+        String nodeName = node.getNodeName();
+        BType type = BType.forName(nodeName);
+        if (type != null) {
+            String stringValue;
+            Node valueAttr = node.getAttributes().getNamedItem("value");
+            if (valueAttr != null) {
+                stringValue = valueAttr.getNodeValue();
+            } else {
+                stringValue = node.getTextContent().trim();
+            }
 
-			Node refNameAttr = node.getAttributes().getNamedItem("refName");
-			RefItemBuilder builder = RefItem.builder();
-			builder.type(type).content(stringValue).target(value);
-			RefItem refItem = builder.build();
-			if (refNameAttr != null) {
-				refItem.setName(refNameAttr.getNodeValue());
-				refManager.addRef(refItem);
-			}
+            BValue value = this.factory.newValue();
 
-			try {
-				switch (type) {
-				case BOOLEAN:
-					value.setData(PrimitiveUtils.getBooleanValueFrom(stringValue));
-					break;
-				case BYTE:
-					value.setData(PrimitiveUtils.getByteValueFrom(stringValue));
-					break;
-				case CHAR:
-					value.setData(PrimitiveUtils.getCharValueFrom(stringValue));
-					break;
-				case DOUBLE:
-					value.setData(PrimitiveUtils.getDoubleValueFrom(stringValue));
-					break;
-				case FLOAT:
-					value.setData(PrimitiveUtils.getFloatValueFrom(stringValue));
-					break;
-				case INTEGER:
-					value.setData(PrimitiveUtils.getIntegerValueFrom(stringValue));
-					break;
-				case LONG:
-					value.setData(PrimitiveUtils.getLongValueFrom(stringValue));
-					break;
-				case RAW:
-					value.setData(ByteArrayUtils.fromHex(stringValue));
-					break;
-				case SHORT:
-					value.setData(PrimitiveUtils.getShortValueFrom(stringValue));
-					break;
-				case STRING:
-					value.setData(stringValue);
-					break;
-				case NULL:
-					break;
-				default:
-					throw new InvalidTypeException("Cannot parse node with name " + nodeName + " as BValue");
-				}
-			} catch (NumberFormatException ex) {
-				refItem.setResolved(false);
-				if (refItem.getName() == null) {
-					refManager.addRef(refItem);
-				}
-			}
-			return value;
-		}
-		throw new InvalidTypeException("Cannot parse node with name " + nodeName + " as BValue");
-	}
+            Node refNameAttr = node.getAttributes().getNamedItem(REF_NAME);
+            RefItemBuilder builder = RefItem.builder();
+            builder.type(type).content(stringValue).target(value);
+            RefItem refItem = builder.build();
+            if (refNameAttr != null) {
+                refItem.setName(refNameAttr.getNodeValue());
+                refManager.addRef(refItem);
+            }
 
-	private BArray parseArray(Node node, RefManager refManager) {
-		BArray result = this.factory.newArray();
-		Node refNameAttr = node.getAttributes().getNamedItem("refName");
-		if (refNameAttr != null) {
-			refManager.addRef(
-					RefItem.builder().type(BType.ARRAY).name(refNameAttr.getNodeValue()).target(result).build());
-		}
-		Node child = node.getFirstChild();
-		while (child != null) {
-			if (child.getNodeType() == Element.ELEMENT_NODE) {
-				result.add(parse(child, refManager));
-			}
-			child = child.getNextSibling();
-		}
-		return result;
-	}
+            try {
+                switch (type) {
+                case BOOLEAN:
+                    value.setData(PrimitiveUtils.getBooleanValueFrom(stringValue));
+                    break;
+                case BYTE:
+                    value.setData(PrimitiveUtils.getByteValueFrom(stringValue));
+                    break;
+                case CHAR:
+                    value.setData(PrimitiveUtils.getCharValueFrom(stringValue));
+                    break;
+                case DOUBLE:
+                    value.setData(PrimitiveUtils.getDoubleValueFrom(stringValue));
+                    break;
+                case FLOAT:
+                    value.setData(PrimitiveUtils.getFloatValueFrom(stringValue));
+                    break;
+                case INTEGER:
+                    value.setData(PrimitiveUtils.getIntegerValueFrom(stringValue));
+                    break;
+                case LONG:
+                    value.setData(PrimitiveUtils.getLongValueFrom(stringValue));
+                    break;
+                case RAW:
+                    value.setData(ByteArrayUtils.fromHex(stringValue));
+                    break;
+                case SHORT:
+                    value.setData(PrimitiveUtils.getShortValueFrom(stringValue));
+                    break;
+                case STRING:
+                    value.setData(stringValue);
+                    break;
+                case NULL:
+                    break;
+                default:
+                    throw new InvalidTypeException("Cannot parse node with name " + nodeName + " as BValue");
+                }
+            } catch (NumberFormatException ex) {
+                refItem.setResolved(false);
+                if (refItem.getName() == null) {
+                    refManager.addRef(refItem);
+                }
+            }
+            return value;
+        }
+        throw new InvalidTypeException("Cannot parse node with name " + nodeName + " as BValue");
+    }
 
-	private BObject parseObject(Node node, RefManager refManager) {
-		BObject result = this.factory.newObject();
-		Node refNameAttr = node.getAttributes().getNamedItem("refName");
-		if (refNameAttr != null) {
-			refManager.addRef(
-					RefItem.builder().type(BType.OBJECT).name(refNameAttr.getNodeValue()).target(result).build());
-		}
-		Node child = node.getFirstChild();
-		while (child != null) {
-			if (child.getNodeType() == Element.ELEMENT_NODE) {
-				Node nameAttr = child.getAttributes().getNamedItem("name");
-				if (nameAttr == null) {
-					throw new NameAttributeNotFoundException(
-							"Name attribute (which is required for any item in BObject's xml) cannot be found");
-				}
-				result.put(nameAttr.getNodeValue(), parse(child, refManager));
-			}
-			child = child.getNextSibling();
-		}
-		return result;
-	}
+    private BArray parseArray(Node node, RefManager refManager) {
+        BArray result = this.factory.newArray();
+        Node refNameAttr = node.getAttributes().getNamedItem(REF_NAME);
+        if (refNameAttr != null) {
+            refManager.addRef(
+                    RefItem.builder().type(BType.ARRAY).name(refNameAttr.getNodeValue()).target(result).build());
+        }
+        Node child = node.getFirstChild();
+        while (child != null) {
+            if (child.getNodeType() == Element.ELEMENT_NODE) {
+                result.add(parse(child, refManager));
+            }
+            child = child.getNextSibling();
+        }
+        return result;
+    }
+
+    private BObject parseObject(Node node, RefManager refManager) {
+        BObject result = this.factory.newObject();
+        Node refNameAttr = node.getAttributes().getNamedItem(REF_NAME);
+        if (refNameAttr != null) {
+            refManager.addRef(
+                    RefItem.builder().type(BType.OBJECT).name(refNameAttr.getNodeValue()).target(result).build());
+        }
+        Node child = node.getFirstChild();
+        while (child != null) {
+            if (child.getNodeType() == Element.ELEMENT_NODE) {
+                Node nameAttr = child.getAttributes().getNamedItem("name");
+                if (nameAttr == null) {
+                    throw new NameAttributeNotFoundException(
+                            "Name attribute (which is required for any item in BObject's xml) cannot be found");
+                }
+                result.put(nameAttr.getNodeValue(), parse(child, refManager));
+            }
+            child = child.getNextSibling();
+        }
+        return result;
+    }
 }
