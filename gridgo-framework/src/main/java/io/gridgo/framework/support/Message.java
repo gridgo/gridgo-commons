@@ -35,14 +35,18 @@ public interface Message {
         this.setRoutingId(BValue.of(routingId));
         return this;
     }
-    
+
     public default Message attachTraceId(String traceId) {
         getPayload().getHeaders().setAny(MessageConstants.TRACE_ID, traceId);
         return this;
     }
-    
+
     public default String getTraceId() {
         return getPayload().getHeaders().getString(MessageConstants.TRACE_ID);
+    }
+
+    public default Message copyTraceId(Message source) {
+        return attachTraceId(source.getTraceId());
     }
 
     public default Message attachSource(String name) {
@@ -50,7 +54,7 @@ public interface Message {
             getMisc().putIfAbsent(MessageConstants.SOURCE, name);
         return this;
     }
-    
+
     public default Object getSource() {
         return getMisc().getOrDefault(MessageConstants.SOURCE, MessageConstants.NO_NAMED);
     }
