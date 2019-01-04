@@ -55,8 +55,9 @@ public interface Message {
         return this;
     }
 
-    public default Object getSource() {
-        return getMisc().getOrDefault(MessageConstants.SOURCE, MessageConstants.NO_NAMED);
+    public default String getSource() {
+        var source = getMisc().get(MessageConstants.SOURCE);
+        return source != null ? source.toString() : MessageConstants.NO_NAMED;
     }
 
     public Message setPayload(Payload payload);
