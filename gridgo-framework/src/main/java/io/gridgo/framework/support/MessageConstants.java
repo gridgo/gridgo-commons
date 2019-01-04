@@ -2,8 +2,6 @@ package io.gridgo.framework.support;
 
 public class MessageConstants {
 
-    public static final String CREATOR = "MessageCreator";
-
     public static final String ID = "MessageID";
 
     public static final String HEADERS = "MessageHeaders";
