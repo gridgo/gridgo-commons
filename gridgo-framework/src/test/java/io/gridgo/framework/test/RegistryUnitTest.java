@@ -13,6 +13,12 @@ import io.gridgo.framework.support.impl.SimpleRegistry;
 public class RegistryUnitTest {
 
     @Test
+    public void testPrimitive() {
+        var registry = new SimpleRegistry().register("flag", "true");
+        Assert.assertTrue(registry.lookup("flag", Boolean.class));
+    }
+
+    @Test
     public void testPropertyRegistry() {
         var classLoader = getClass().getClassLoader();
         var file = new File(classLoader.getResource("test.properties").getFile());

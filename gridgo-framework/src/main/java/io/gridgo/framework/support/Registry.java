@@ -3,6 +3,7 @@ package io.gridgo.framework.support;
 import java.util.regex.Pattern;
 
 import io.gridgo.framework.support.exceptions.BeanNotFoundException;
+import io.gridgo.utils.PrimitiveUtils;
 
 /**
  * Acts as a dictionary for Gridgo application. It can be used to store and
@@ -28,13 +29,12 @@ public interface Registry {
      * @return the value of the entry
      * @throws ClassCastException if the entry has a different type
      */
-    @SuppressWarnings("unchecked")
     public default <T> T lookup(String name, Class<T> type) {
         Object answer = lookup(name);
         if (answer == null)
             return null;
-        if (type == String.class)
-            return (T) answer.toString();
+        if (PrimitiveUtils.isPrimitive(type))
+            return PrimitiveUtils.getValueFrom(type, answer);
         return type.cast(answer);
     }
 
