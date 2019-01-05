@@ -18,11 +18,11 @@ public interface Message {
     public Payload getPayload();
 
     public default BElement body() {
-        return body();
+        return getPayload().getBody();
     }
 
     public default BObject headers() {
-        return headers();
+        return getPayload().getHeaders();
     }
 
     public Map<String, Object> getMisc();
