@@ -56,8 +56,7 @@ public class DefaultMessage implements Message {
         return this;
     }
 
-    @Override
-    public Message setPayload(Payload payload) {
+    protected Message setPayload(Payload payload) {
         this.payload = payload;
         return this;
     }

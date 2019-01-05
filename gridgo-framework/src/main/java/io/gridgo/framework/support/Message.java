@@ -15,6 +15,20 @@ import io.gridgo.utils.wrapper.ByteBufferInputStream;
 
 public interface Message {
 
+    public Payload getPayload();
+
+    public default BElement body() {
+        return body();
+    }
+
+    public default BObject headers() {
+        return headers();
+    }
+
+    public Map<String, Object> getMisc();
+
+    public Message addMisc(String key, Object value);
+
     /**
      * routingId use for *-to-1 communication like duplex socket. RoutingId indicate
      * which endpoint will be the target
@@ -22,12 +36,6 @@ public interface Message {
      * @return the routing id
      */
     public Optional<BValue> getRoutingId();
-
-    public Map<String, Object> getMisc();
-
-    public Payload getPayload();
-
-    public Message addMisc(String key, Object value);
 
     public Message setRoutingId(BValue routingId);
 
@@ -37,12 +45,12 @@ public interface Message {
     }
 
     public default Message attachTraceId(String traceId) {
-        getPayload().getHeaders().setAny(MessageConstants.TRACE_ID, traceId);
+        headers().setAny(MessageConstants.TRACE_ID, traceId);
         return this;
     }
 
     public default String getTraceId() {
-        return getPayload().getHeaders().getString(MessageConstants.TRACE_ID);
+        return headers().getString(MessageConstants.TRACE_ID);
     }
 
     public default Message copyTraceId(Message source) {
@@ -59,8 +67,6 @@ public interface Message {
         var source = getMisc().get(MessageConstants.SOURCE);
         return source != null ? source.toString() : MessageConstants.NO_NAMED;
     }
-
-    public Message setPayload(Payload payload);
 
     static Message ofEmpty() {
         return of(Payload.ofEmpty());

@@ -47,9 +47,9 @@ public class MultipartMessage extends DefaultMessage {
     }
 
     public Message[] buildOriginalMessages() {
-        var size = getPayload().getHeaders().getInteger(MessageConstants.SIZE);
+        var size = headers().getInteger(MessageConstants.SIZE);
         var messages = new Message[size];
-        var body = getPayload().getBody().asArray();
+        var body = body().asArray();
         for (int i = 0; i < body.size(); i++) {
             messages[i] = Message.parse(body.get(i));
         }
