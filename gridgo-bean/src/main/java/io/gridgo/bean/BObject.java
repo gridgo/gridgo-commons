@@ -12,6 +12,7 @@ import io.gridgo.bean.exceptions.FieldNotFoundException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.utils.ObjectUtils;
 import io.gridgo.utils.StringUtils;
+import lombok.NonNull;
 import net.minidev.json.JSONObject;
 
 public interface BObject extends BContainer, Map<String, BElement> {
@@ -533,7 +534,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
         return this;
     }
 
-    default BObject set(String name, BElement value) {
+    default BObject set(String name, @NonNull BElement value) {
         this.put(name, value);
         return this;
     }
