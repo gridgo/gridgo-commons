@@ -40,4 +40,12 @@ public class MultiSourceRegistry implements Registry {
             // do nothing
         }
     }
+
+    @Override
+    public Object lookupByType(Class<?> type) {
+        return Arrays.stream(registries) //
+                     .map(registry -> registry.lookupByType(type)) //
+                     .filter(Objects::nonNull) //
+                     .findAny().orElse(null);
+    }
 }

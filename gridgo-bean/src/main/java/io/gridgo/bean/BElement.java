@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -45,6 +46,10 @@ public interface BElement extends BSerializerAware {
 
     static <T extends BElement> T ofJson(String json) {
         return BFactory.DEFAULT.fromJson(json);
+    }
+
+    static <T extends BElement> T ofJson(Reader reader) {
+        return BFactory.DEFAULT.fromJson(reader);
     }
 
     static <T extends BElement> T ofJson(InputStream inputStream) {

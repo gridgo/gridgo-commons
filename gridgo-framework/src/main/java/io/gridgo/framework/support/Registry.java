@@ -57,7 +57,7 @@ public interface Registry {
     public default Object lookupMandatory(String name) {
         var answer = lookup(name);
         if (answer == null)
-            throw new BeanNotFoundException("Bean " + name + " cannot be found using" + this.getClass().getName());
+            throw new BeanNotFoundException("Bean " + name + " cannot be found using " + this.getClass().getName());
         return answer;
     }
 
@@ -117,5 +117,9 @@ public interface Registry {
                 return obj != null ? obj.toString() : "";
             });
         }
+    }
+
+    public default Object lookupByType(Class<?> type) {
+        return null;
     }
 }

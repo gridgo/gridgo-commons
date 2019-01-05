@@ -36,10 +36,28 @@ public interface Message {
         return this;
     }
 
+    public default Message attachTraceId(String traceId) {
+        getPayload().getHeaders().setAny(MessageConstants.TRACE_ID, traceId);
+        return this;
+    }
+
+    public default String getTraceId() {
+        return getPayload().getHeaders().getString(MessageConstants.TRACE_ID);
+    }
+
+    public default Message copyTraceId(Message source) {
+        return attachTraceId(source.getTraceId());
+    }
+
     public default Message attachSource(String name) {
         if (name != null)
             getMisc().putIfAbsent(MessageConstants.SOURCE, name);
         return this;
+    }
+
+    public default String getSource() {
+        var source = getMisc().get(MessageConstants.SOURCE);
+        return source != null ? source.toString() : MessageConstants.NO_NAMED;
     }
 
     public Message setPayload(Payload payload);

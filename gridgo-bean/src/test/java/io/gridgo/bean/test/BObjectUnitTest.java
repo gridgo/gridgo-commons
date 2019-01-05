@@ -117,4 +117,13 @@ public class BObjectUnitTest {
         Assert.assertTrue(clone.isObject());
         Assert.assertEquals(1, clone.asObject().getInteger("id").intValue());
     }
+    
+    @Test
+    public void testJsonWithNullFields() {
+        var json = "{\"id\": null}";
+        var obj = BElement.ofJson(json);
+        System.out.println(obj);
+        Assert.assertTrue(obj.isObject());
+        Assert.assertNotNull(obj.asObject().get("id"));
+    }
 }
