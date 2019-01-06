@@ -26,20 +26,23 @@ public class MultipartMessage extends DefaultMessage {
             array.add(createObjectFromMessage(message));
             count++;
         }
-        var headers = BObject.ofEmpty() //
-                             .setAny(MessageConstants.IS_MULTIPART, true) //
-                             .setAny(MessageConstants.SIZE, count);
+        var headers = createMultipartHeaders(count);
         setPayload(Payload.of(headers, array));
     }
 
     public MultipartMessage(final @NonNull Collection<Message> messages) {
-        var headers = BObject.ofEmpty().setAny(MessageConstants.IS_MULTIPART, true).setAny(MessageConstants.SIZE,
-                messages.size());
+        var headers = createMultipartHeaders(messages.size());
         var array = BArray.ofEmpty();
         for (Message message : messages) {
             array.add(createObjectFromMessage(message));
         }
         setPayload(Payload.of(headers, array));
+    }
+
+    private BObject createMultipartHeaders(int count) {
+        return BObject.ofEmpty() //
+                      .setAny(MessageConstants.IS_MULTIPART, true) //
+                      .setAny(MessageConstants.SIZE, count);
     }
 
     public MultipartMessage(Payload payload) {
