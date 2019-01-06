@@ -26,6 +26,10 @@ public interface Message {
     }
 
     public Map<String, Object> getMisc();
+    
+    public default Object getMisc(String key) {
+        return getMisc().get(key);
+    }
 
     public Message addMisc(String key, Object value);
 
