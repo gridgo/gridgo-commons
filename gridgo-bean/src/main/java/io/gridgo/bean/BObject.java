@@ -25,6 +25,10 @@ public interface BObject extends BContainer, Map<String, BElement> {
         }
     }
 
+    static BObject wrap(Map<?, ?> source) {
+        return BFactory.DEFAULT.wrap(source);
+    }
+
     static BObject withHolder(Map<String, BElement> holder) {
         return BFactory.DEFAULT.newObjectWithHolder(holder);
     }

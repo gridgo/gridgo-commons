@@ -21,10 +21,14 @@ import lombok.Getter;
 @Getter
 public class DefaultBFactory implements BFactory, BFactoryConfigurable {
 
-    private Function<List<BElement>, BArray> arraySupplier = DefaultBArray::new;
-    private Function<Map<String, BElement>, BObject> objectSupplier = DefaultBObject::new;
     private Supplier<BValue> valueSupplier = DefaultBValue::new;
     private Supplier<BReference> referenceSupplier = DefaultBReference::new;
+
+    private Function<List<BElement>, BArray> arraySupplier = DefaultBArray::new;
+    private Function<List<?>, BArray> wrappedArraySupplier = WrappedImmutableBArray::new;
+
+    private Function<Map<String, BElement>, BObject> objectSupplier = DefaultBObject::new;
+    private Function<Map<?, ?>, BObject> wrappedObjectSupplier = WrappedImmutableBObject::new;
 
     private BXmlParser xmlParser;
     private BSerializer serializer;

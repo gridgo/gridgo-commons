@@ -52,9 +52,21 @@ public interface BFactory {
 
     Function<Map<String, BElement>, BObject> getObjectSupplier();
 
+    Function<Map<?, ?>, BObject> getWrappedObjectSupplier();
+
     Function<List<BElement>, BArray> getArraySupplier();
 
+    Function<List<?>, BArray> getWrappedArraySupplier();
+
     Supplier<BValue> getValueSupplier();
+
+    default BObject wrap(Map<?, ?> source) {
+        return this.getWrappedObjectSupplier().apply(source);
+    }
+
+    default BArray wrap(List<?> source) {
+        return this.getWrappedArraySupplier().apply(source);
+    }
 
     default BReference newReference(Object reference) {
         BReference bReference = newReference();
