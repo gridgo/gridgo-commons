@@ -305,7 +305,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
             } else {
                 if (entry.getValue() == null)
                     continue;
-                throw new InvalidTypeException("Found unrecognized MElement implementation: " + entry.getValue().getClass());
+                throw new InvalidTypeException("Found unrecognized BElement implementation: " + entry.getValue().getClass());
             }
         }
         return result;
