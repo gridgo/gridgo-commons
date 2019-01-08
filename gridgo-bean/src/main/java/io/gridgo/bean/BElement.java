@@ -94,6 +94,10 @@ public interface BElement extends BSerializerAware {
         return this instanceof BContainer;
     }
 
+    default boolean isNullValue() {
+        return this.isValue() && this.asValue().isNull();
+    }
+
     default boolean isArray() {
         return this instanceof BArray;
     }

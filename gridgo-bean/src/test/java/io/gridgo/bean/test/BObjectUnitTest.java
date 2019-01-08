@@ -62,8 +62,8 @@ public class BObjectUnitTest {
         obj.setAny("short", (short) 1);
         Assert.assertEquals((short) 1, (short) obj.getShort("short", (short) -1));
 
-        obj = BObject.ofSequence("int", 1, "str", "hello", "long", 1, "char", 'a', "double", 1.11, "arr",
-                new int[] { 1, 2, 3 }, "byte", 1, "short", 1, "obj", Collections.singletonMap("int", 2));
+        obj = BObject.ofSequence("int", 1, "str", "hello", "long", 1, "char", 'a', "double", 1.11, "arr", new int[] { 1, 2, 3 }, "byte", 1, "short", 1, "obj",
+                Collections.singletonMap("int", 2));
         assertObject(obj);
     }
 
@@ -78,7 +78,7 @@ public class BObjectUnitTest {
         Assert.assertEquals(Character.valueOf('a'), obj.getChar("char", '\0'));
         Assert.assertEquals(1.11, obj.getDouble("double", -1), 0);
         Assert.assertEquals(1.11, obj.getFloat("double", -1), 0.001);
-        Assert.assertEquals(Byte.valueOf((byte) 1), obj.getByte("byte", (byte) -1));
+        Assert.assertEquals(Byte.valueOf((byte) 1), obj.getByte("byte", -1));
         Assert.assertEquals(Integer.valueOf(2), obj.getObject("obj", null).getInteger("int"));
     }
 
@@ -117,7 +117,7 @@ public class BObjectUnitTest {
         Assert.assertTrue(clone.isObject());
         Assert.assertEquals(1, clone.asObject().getInteger("id").intValue());
     }
-    
+
     @Test
     public void testJsonWithNullFields() {
         var json = "{\"id\": null}";
