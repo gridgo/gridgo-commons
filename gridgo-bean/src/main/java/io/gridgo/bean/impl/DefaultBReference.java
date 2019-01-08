@@ -19,18 +19,21 @@ class DefaultBReference implements BReference {
 
     @Override
     public String toString() {
-        return reference != null ? reference.toString() : null;
+        return "reference-to-instanceOf:" + (reference == null ? null : reference.getClass());
     }
 
     @Override
     public boolean equals(Object obj) {
+        final Object myValue = this.getReference();
+        final Object other;
         if (obj instanceof BReference) {
-            var other = (BReference) obj;
-            return reference == null //
-                    ? other.getReference() == null //
-                    : reference.equals(other.getReference());
+            other = ((BReference) obj).getReference();
+        } else {
+            other = obj;
         }
-        return false;
+        return myValue == null //
+                ? other == null //
+                : myValue.equals(obj);
     }
 
     @Override

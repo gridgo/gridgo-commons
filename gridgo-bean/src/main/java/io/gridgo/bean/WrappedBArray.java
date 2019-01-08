@@ -37,7 +37,7 @@ public interface WrappedBArray extends BArray {
 
             @Override
             public BElement next() {
-                return BElement.ofAny(iterator.next());
+                return BElement.wrapAny(iterator.next());
             }
         };
     }
@@ -59,7 +59,7 @@ public interface WrappedBArray extends BArray {
 
     @Override
     default BElement get(int index) {
-        return BElement.ofAny(this.getSource().get(index));
+        return BElement.wrapAny(this.getSource().get(index));
     }
 
     @Override
@@ -97,7 +97,7 @@ public interface WrappedBArray extends BArray {
 
             @Override
             public BElement next() {
-                return BElement.ofAny(listIterator.next());
+                return BElement.wrapAny(listIterator.next());
             }
 
             @Override
@@ -107,7 +107,7 @@ public interface WrappedBArray extends BArray {
 
             @Override
             public BElement previous() {
-                return BElement.ofAny(listIterator.previous());
+                return BElement.wrapAny(listIterator.previous());
             }
 
             @Override

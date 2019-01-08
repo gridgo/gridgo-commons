@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @SuppressWarnings("unchecked")
-class WrappedImmutableBObject extends AbstractBContainer implements ImmutableBObject, WrappedBObject {
+class WrappedImmutableBObject extends AbstractBObject implements ImmutableBObject, WrappedBObject {
 
     @Getter
     private final Map<?, ?> source;

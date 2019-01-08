@@ -1,10 +1,12 @@
 package io.gridgo.utils;
 
+import java.awt.color.ICC_Profile;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
 
 import io.gridgo.utils.exception.UnsupportedTypeException;
+import lombok.NonNull;
 
 public final class ArrayUtils {
 
@@ -36,8 +38,7 @@ public final class ArrayUtils {
                     callback.apply((T) element);
                 }
             } else {
-                throw new IllegalArgumentException(
-                        "cannot perform foreach for unsupported type: " + arrayOrCollection.getClass().getName());
+                throw new IllegalArgumentException("cannot perform foreach for unsupported type: " + arrayOrCollection.getClass().getName());
             }
         }
     }
@@ -50,7 +51,7 @@ public final class ArrayUtils {
                 return ((Collection<?>) arrayCollection).size();
             }
         }
-        return 0;
+        return -1;
     }
 
     @SuppressWarnings("unchecked")
@@ -121,5 +122,16 @@ public final class ArrayUtils {
             arr[i] = (T) list.get(i);
         }
         return arr;
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static Object entryAt(@NonNull Object arrayOrList, int index) {
+        if (index < 0)
+            throw new IllegalArgumentException("Index must >= 0, got: " + index);
+        if (arrayOrList instanceof List)
+            return ((List) arrayOrList).get(index);
+        if (arrayOrList.getClass().isArray())
+            return Array.get(arrayOrList, index);
+        throw new IllegalArgumentException("First argument expected an array or a list, got: " + arrayOrList.getClass());
     }
 }

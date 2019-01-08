@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
+import io.gridgo.utils.PrimitiveUtils;
+
 public interface WrappedBObject extends BObject {
 
     Map<?, ?> getSource();
@@ -32,7 +34,7 @@ public interface WrappedBObject extends BObject {
 
     @Override
     default BElement get(Object key) {
-        return BElement.ofAny(key);
+        return BElement.wrapAny(this.getSource().get(key));
     }
 
     @Override
@@ -55,7 +57,8 @@ public interface WrappedBObject extends BObject {
     default Set<Entry<String, BElement>> entrySet() {
         return getSource().entrySet() //
                           .stream() //
-                          .collect(Collectors.toMap(Object::toString, val -> (BElement) BElement.ofAny(val))) //
+                          .collect(Collectors.toMap(entry -> PrimitiveUtils.getStringValueFrom(entry.getKey()),
+                                  entry -> (BElement) BElement.ofAny(entry.getValue()))) //
                           .entrySet();
     }
 
@@ -68,7 +71,7 @@ public interface WrappedBObject extends BObject {
     @Override
     default void forEach(BiConsumer<? super String, ? super BElement> action) {
         this.getSource().entrySet().forEach(entry -> {
-            action.accept(entry.getKey().toString(), BElement.ofAny(entry.getValue()));
+            action.accept(entry.getKey().toString(), BElement.wrapAny(entry.getValue()));
         });
     }
 }

@@ -13,7 +13,7 @@ import net.minidev.json.JSONArray;
 
 public interface BArray extends BContainer, List<BElement> {
 
-    static BArray wrap(List<?> source) {
+    static BArray wrap(Collection<?> source) {
         return BFactory.DEFAULT.wrap(source);
     }
 

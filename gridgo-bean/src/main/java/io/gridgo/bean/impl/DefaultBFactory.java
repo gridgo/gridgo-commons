@@ -1,5 +1,6 @@
 package io.gridgo.bean.impl;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -24,10 +25,10 @@ public class DefaultBFactory implements BFactory, BFactoryConfigurable {
     private Supplier<BValue> valueSupplier = DefaultBValue::new;
     private Supplier<BReference> referenceSupplier = DefaultBReference::new;
 
-    private Function<List<BElement>, BArray> arraySupplier = DefaultBArray::new;
-    private Function<List<?>, BArray> wrappedArraySupplier = WrappedImmutableBArray::new;
+    private Function<List<BElement>, BArray> arraySupplier = MutableBArray::new;
+    private Function<Collection<?>, BArray> wrappedArraySupplier = WrappedImmutableBArray::new;
 
-    private Function<Map<String, BElement>, BObject> objectSupplier = DefaultBObject::new;
+    private Function<Map<String, BElement>, BObject> objectSupplier = MutableBObject::new;
     private Function<Map<?, ?>, BObject> wrappedObjectSupplier = WrappedImmutableBObject::new;
 
     private BXmlParser xmlParser;

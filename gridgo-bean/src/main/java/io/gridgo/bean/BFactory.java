@@ -5,6 +5,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,16 +57,31 @@ public interface BFactory {
 
     Function<List<BElement>, BArray> getArraySupplier();
 
-    Function<List<?>, BArray> getWrappedArraySupplier();
+    Function<Collection<?>, BArray> getWrappedArraySupplier();
 
     Supplier<BValue> getValueSupplier();
 
-    default BObject wrap(Map<?, ?> source) {
-        return this.getWrappedObjectSupplier().apply(source);
-    }
+    @SuppressWarnings("rawtypes")
+    default <T extends BElement> T wrap(@NonNull Object data) {
+        Class<?> clazz = data.getClass();
 
-    default BArray wrap(List<?> source) {
-        return this.getWrappedArraySupplier().apply(source);
+        if (PrimitiveUtils.isPrimitive(clazz))
+            return (T) newValue(data);
+
+        if (Collection.class.isAssignableFrom(clazz))
+            return (T) this.getWrappedArraySupplier().apply((Collection) data);
+
+        if (clazz.isArray()) {
+            final List<Object> list = new ArrayList<>();
+            ArrayUtils.foreach(data, entry -> list.add(entry));
+            return (T) this.getWrappedArraySupplier().apply(list);
+        }
+
+        if (Map.class.isAssignableFrom(clazz)) {
+            return (T) this.getWrappedObjectSupplier().apply((Map<?, ?>) data);
+        }
+
+        return (T) newReference(data);
     }
 
     default BReference newReference(Object reference) {
