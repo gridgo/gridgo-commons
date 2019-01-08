@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-class DefaultBValue implements BValue {
+public class MutableBValue implements BValue {
 
     @Setter
     @Getter
@@ -19,7 +19,7 @@ class DefaultBValue implements BValue {
     @Getter
     private transient BSerializer serializer;
 
-    DefaultBValue(Object data) {
+    public MutableBValue(Object data) {
         if (data != null && !(data instanceof byte[]) && !PrimitiveUtils.isPrimitive(data.getClass())) {
             throw new InvalidTypeException("Cannot create DefaultBValue from: " + data.getClass() + " instance");
         }

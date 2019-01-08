@@ -22,8 +22,8 @@ import lombok.Getter;
 @Getter
 public class DefaultBFactory implements BFactory, BFactoryConfigurable {
 
-    private Supplier<BValue> valueSupplier = DefaultBValue::new;
-    private Supplier<BReference> referenceSupplier = DefaultBReference::new;
+    private Supplier<BValue> valueSupplier = MutableBValue::new;
+    private Supplier<BReference> referenceSupplier = MutableBReference::new;
 
     private Function<List<BElement>, BArray> arraySupplier = MutableBArray::new;
     private Function<Collection<?>, BArray> wrappedArraySupplier = WrappedImmutableBArray::new;

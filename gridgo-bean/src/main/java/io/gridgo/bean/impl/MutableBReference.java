@@ -2,12 +2,14 @@ package io.gridgo.bean.impl;
 
 import io.gridgo.bean.BReference;
 import io.gridgo.bean.serialize.BSerializer;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-class DefaultBReference implements BReference {
+@AllArgsConstructor
+public class MutableBReference implements BReference {
 
     @Setter
     @Getter
