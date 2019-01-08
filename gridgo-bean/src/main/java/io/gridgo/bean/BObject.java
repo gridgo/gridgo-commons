@@ -66,14 +66,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
     }
 
     default Boolean getBoolean(String field) {
-        BElement element = this.get(field);
-        if (element != null) {
-            if (element.isValue())
-                return element.asValue().getBoolean();
-
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as boolean");
-        }
-        return null;
+        var value = this.getValue(field);
+        return value == null ? null : value.getBoolean();
     }
 
     default Boolean getBoolean(String field, Boolean defaultValue) {
@@ -82,14 +76,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
     }
 
     default Character getChar(String field) {
-        BElement element = this.get(field);
-        if (element != null) {
-            if (element.isValue())
-                return element.asValue().getChar();
-
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as Character");
-        }
-        return null;
+        var value = this.getValue(field);
+        return value == null ? null : value.getChar();
     }
 
     default Character getChar(String field, Character defaultValue) {
@@ -98,14 +86,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
     }
 
     default Byte getByte(String field) {
-        BElement element = this.get(field);
-        if (element != null) {
-            if (element.isValue())
-                return element.asValue().getByte();
-
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as Byte");
-        }
-        return null;
+        var value = this.getValue(field);
+        return value == null ? null : value.getByte();
     }
 
     default Byte getByte(String field, Number defaultValue) {
@@ -114,14 +96,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
     }
 
     default Short getShort(String field) {
-        BElement element = this.get(field);
-        if (element != null) {
-            if (element.isValue())
-                return element.asValue().getShort();
-
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as Short");
-        }
-        return null;
+        var value = this.getValue(field);
+        return value == null ? null : value.getShort();
     }
 
     default Short getShort(String field, Number defaultValue) {
@@ -130,14 +106,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
     }
 
     default Integer getInteger(String field) {
-        BElement element = this.get(field);
-        if (element != null) {
-            if (element.isValue())
-                return element.asValue().getInteger();
-
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as Integer");
-        }
-        return null;
+        var value = this.getValue(field);
+        return value == null ? null : value.getInteger();
     }
 
     default Integer getInteger(String field, Number defaultValue) {
@@ -146,14 +116,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
     }
 
     default Float getFloat(String field) {
-        BElement element = this.get(field);
-        if (element != null) {
-            if (element.isValue())
-                return element.asValue().getFloat();
-
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as Float");
-        }
-        return null;
+        var value = this.getValue(field);
+        return value == null ? null : value.getFloat();
     }
 
     default Float getFloat(String field, Number defaultValue) {
@@ -162,14 +126,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
     }
 
     default Long getLong(String field) {
-        BElement element = this.get(field);
-        if (element != null) {
-            if (element.isValue())
-                return element.asValue().getLong();
-
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as Long");
-        }
-        return null;
+        var value = this.getValue(field);
+        return value == null ? null : value.getLong();
     }
 
     default Long getLong(String field, Number defaultValue) {
@@ -178,14 +136,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
     }
 
     default Double getDouble(String field) {
-        BElement element = this.get(field);
-        if (element != null) {
-            if (element.isValue())
-                return element.asValue().getDouble();
-
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as Double");
-        }
-        return null;
+        var value = this.getValue(field);
+        return value == null ? null : value.getDouble();
     }
 
     default Double getDouble(String field, Number defaultValue) {
@@ -194,14 +146,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
     }
 
     default String getString(String field) {
-        BElement element = this.get(field);
-        if (element != null) {
-            if (element.isValue())
-                return element.asValue().getString();
-
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as String");
-        }
-        return null;
+        var value = this.getValue(field);
+        return value == null ? null : value.getString();
     }
 
     default String getString(String field, String defaultValue) {
@@ -210,14 +156,8 @@ public interface BObject extends BContainer, Map<String, BElement> {
     }
 
     default byte[] getRaw(String field) {
-        BElement element = this.get(field);
-        if (element != null) {
-            if (element.isValue())
-                return element.asValue().getRaw();
-
-            throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as Raw");
-        }
-        return null;
+        var value = this.getValue(field);
+        return value == null ? null : value.getRaw();
     }
 
     default byte[] getRaw(String field, byte[] defaultValue) {
@@ -241,15 +181,36 @@ public interface BObject extends BContainer, Map<String, BElement> {
         return value == null ? defaultValue : value;
     }
 
+    default BValue getValue(String field) {
+        BElement element = this.get(field);
+        if (element == null)
+            return null;
+        if (element.isValue())
+            return element.asValue();
+        throw new InvalidTypeException("BObject contains field " + field + " in type of " + element.getType() + " which cannot convert to BValue");
+    }
+
+    default BValue getValue(String field, BValue defaultValue) {
+        var value = this.getValue(field);
+        return value == null ? defaultValue : value;
+    }
+
+    default BValue getValueOrNew(String field, @NonNull Supplier<BValue> bValueSupplier) {
+        var value = this.getValue(field);
+        return value == null ? bValueSupplier.get() : value;
+    }
+
+    default BValue getValueOrEmpty(String field) {
+        return getValueOrNew(field, getFactory().getValueSupplier());
+    }
+
     default BObject getObject(String field) {
         BElement element = this.get(field);
-        if (element != null) {
-            if (element.isObject())
-                return element.asObject();
-            if (!element.isNullValue())
-                throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as BObject");
-        }
-        return null;
+        if (element == null || element.isNullValue())
+            return null;
+        if (element.isObject())
+            return element.asObject();
+        throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as BObject");
     }
 
     default BObject getObject(String field, BObject defaultValue) {
@@ -257,20 +218,36 @@ public interface BObject extends BContainer, Map<String, BElement> {
         return value == null ? defaultValue : value;
     }
 
+    default BObject getObjectOrNew(String field, @NonNull Supplier<BObject> bObjectSupplier) {
+        var value = this.getObject(field);
+        return value == null ? bObjectSupplier.get() : value;
+    }
+
+    default BObject getObjectOrEmpty(String field) {
+        return getObjectOrNew(field, getFactory().getObjectSupplier());
+    }
+
     default BArray getArray(String field) {
         BElement element = this.get(field);
-        if (element != null) {
-            if (element.isArray())
-                return element.asArray();
-            if (!element.isNullValue())
-                throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as BArray");
-        }
-        return null;
+        if (element == null || element.isNullValue())
+            return null;
+        if (element.isArray())
+            return element.asArray();
+        throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as BArray");
     }
 
     default BArray getArray(String field, BArray defaultValue) {
         var value = this.getArray(field);
         return value == null ? defaultValue : value;
+    }
+
+    default BArray getArrayOrNew(String field, @NonNull Supplier<BArray> bArraySupplier) {
+        var value = this.getArray(field);
+        return value == null ? bArraySupplier.get() : value;
+    }
+
+    default BArray getArrayOrEmpty(String field) {
+        return getArrayOrNew(field, getFactory().getArraySupplier());
     }
 
     @Override
@@ -388,11 +365,6 @@ public interface BObject extends BContainer, Map<String, BElement> {
             return this.get(field);
         }
         return supplierForNonPresent.get();
-    }
-
-    default BValue getValue(String field) {
-        BElement element = this.get(field);
-        return element != null ? element.asValue() : null;
     }
 
     @Override

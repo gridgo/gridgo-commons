@@ -20,6 +20,14 @@ public interface BObjectOptional {
         return Optional.ofNullable(this.getBObject().getArray(field));
     }
 
+    default Optional<BReference> getReference(@NonNull String field) {
+        return Optional.ofNullable(this.getBObject().getReference(field));
+    }
+
+    default Optional<BValue> getValue(@NonNull String field) {
+        return Optional.ofNullable(this.getBObject().getValue(field));
+    }
+
     default Optional<Boolean> getBoolean(@NonNull String field) {
         return Optional.ofNullable(this.getBObject().getBoolean(field));
     }

@@ -110,19 +110,32 @@ public interface BArray extends BContainer, List<BElement> {
     }
 
     default BValue getValue(int index) {
-        return this.get(index).asValue();
+        BElement element = this.get(index);
+        if (!element.isValue()) {
+            throw new InvalidTypeException("BArray contains element at " + index + " of type " + element.getType() + ", which cannot convert to BValue");
+        }
+        return element.asValue();
     }
 
     default BArray getArray(int index) {
-        return this.get(index).asArray();
+        BElement element = this.get(index);
+        if (element.isNullValue())
+            return null;
+        return element.asArray();
     }
 
     default BObject getObject(int index) {
-        return this.get(index).asObject();
+        BElement element = this.get(index);
+        if (element.isNullValue())
+            return null;
+        return element.asObject();
     }
 
     default BReference getReference(int index) {
-        return this.get(index).asReference();
+        BElement element = this.get(index);
+        if (element.isNullValue())
+            return null;
+        return element.asReference();
     }
 
     default Boolean getBoolean(int index) {
@@ -245,5 +258,15 @@ public interface BArray extends BContainer, List<BElement> {
             result.addAny(entry);
         }
         return (T) result;
+    }
+
+    default BArrayOptional asOptional() {
+        return new BArrayOptional() {
+
+            @Override
+            public BArray getBArray() {
+                return BArray.this;
+            }
+        };
     }
 }
