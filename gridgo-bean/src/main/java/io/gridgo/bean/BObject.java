@@ -25,6 +25,10 @@ public interface BObject extends BContainer, Map<String, BElement> {
         }
     }
 
+    static BObject withHolder(Map<String, BElement> holder) {
+        return BFactory.DEFAULT.newObjectWithHolder(holder);
+    }
+
     static BObject ofEmpty() {
         return BFactory.DEFAULT.newObject();
     }
@@ -224,7 +228,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
     }
 
     default BObject getObjectOrEmpty(String field) {
-        return getObjectOrNew(field, getFactory().getObjectSupplier());
+        return getObjectOrNew(field, getFactory()::newObject);
     }
 
     default BArray getArray(String field) {
@@ -247,7 +251,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
     }
 
     default BArray getArrayOrEmpty(String field) {
-        return getArrayOrNew(field, getFactory().getArraySupplier());
+        return getArrayOrNew(field, getFactory()::newArray);
     }
 
     @Override

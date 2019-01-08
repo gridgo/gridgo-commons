@@ -13,6 +13,10 @@ import net.minidev.json.JSONArray;
 
 public interface BArray extends BContainer, List<BElement> {
 
+    static BArray withHolder(List<BElement> holder) {
+        return BFactory.DEFAULT.newArrayWithHolder(holder);
+    }
+
     static BArray ofEmpty() {
         return BFactory.DEFAULT.newArray();
     }
