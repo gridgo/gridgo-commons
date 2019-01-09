@@ -1,36 +1,36 @@
 package io.gridgo.bean.impl;
 
 import io.gridgo.bean.BReference;
-import io.gridgo.bean.serialize.BSerializer;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-class DefaultBReference implements BReference {
+@AllArgsConstructor
+public class MutableBReference extends AbstractBElement implements BReference {
 
     @Setter
     @Getter
     private Object reference;
 
-    @Setter
-    @Getter
-    private transient BSerializer serializer;
-
     @Override
     public String toString() {
-        return reference != null ? reference.toString() : null;
+        return "reference-to-instanceOf:" + (reference == null ? null : reference.getClass());
     }
 
     @Override
     public boolean equals(Object obj) {
+        final Object myValue = this.getReference();
+        final Object other;
         if (obj instanceof BReference) {
-            var other = (BReference) obj;
-            return reference == null //
-                    ? other.getReference() == null //
-                    : reference.equals(other.getReference());
+            other = ((BReference) obj).getReference();
+        } else {
+            other = obj;
         }
-        return false;
+        return myValue == null //
+                ? other == null //
+                : myValue.equals(obj);
     }
 
     @Override

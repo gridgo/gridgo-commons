@@ -36,6 +36,10 @@ public interface BElement extends BSerializerAware {
 
     <T> T deepClone();
 
+    static <T extends BElement> T wrapAny(Object data) {
+        return BFactory.DEFAULT.wrap(data);
+    }
+
     static <T extends BElement> T ofAny(Object data) {
         return BFactory.DEFAULT.fromAny(data);
     }

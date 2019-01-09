@@ -1,5 +1,8 @@
 package io.gridgo.bean;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import io.gridgo.bean.serialize.BSerializer;
@@ -9,9 +12,9 @@ public interface BFactoryConfigurable {
 
     BFactoryConfigurable setValueSupplier(Supplier<BValue> valueSupplier);
 
-    BFactoryConfigurable setObjectSupplier(Supplier<BObject> objectSupplier);
+    BFactoryConfigurable setObjectSupplier(Function<Map<String, BElement>, BObject> objectSupplier);
 
-    BFactoryConfigurable setArraySupplier(Supplier<BArray> arraySupplier);
+    BFactoryConfigurable setArraySupplier(Function<List<BElement>, BArray> arraySupplier);
 
     BFactoryConfigurable setReferenceSupplier(Supplier<BReference> referenceSupplier);
 

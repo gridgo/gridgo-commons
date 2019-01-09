@@ -13,6 +13,14 @@ import net.minidev.json.JSONArray;
 
 public interface BArray extends BContainer, List<BElement> {
 
+    static BArray wrap(Collection<?> source) {
+        return BFactory.DEFAULT.wrap(source);
+    }
+
+    static BArray withHolder(List<BElement> holder) {
+        return BFactory.DEFAULT.newArrayWithHolder(holder);
+    }
+
     static BArray ofEmpty() {
         return BFactory.DEFAULT.newArray();
     }
@@ -257,7 +265,7 @@ public interface BArray extends BContainer, List<BElement> {
     default <T> T deepClone() {
         BArray result = ofEmpty();
         for (BElement entry : this) {
-            result.addAny(entry);
+            result.addAny(entry.deepClone());
         }
         return (T) result;
     }
