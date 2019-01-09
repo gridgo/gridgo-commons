@@ -102,6 +102,8 @@ public interface BArray extends BContainer, List<BElement> {
                 list.add(((BObject) entry).toMap());
             } else if (entry instanceof BArray) {
                 list.add(((BArray) entry).toList());
+            } else if (entry instanceof BReference) {
+                list.add(((BReference) entry).getReference());
             } else {
                 throw new InvalidTypeException("Found unexpected BElement implementation: " + entry.getClass());
             }
