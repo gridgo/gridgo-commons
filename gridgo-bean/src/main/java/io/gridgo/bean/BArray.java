@@ -263,7 +263,7 @@ public interface BArray extends BContainer, List<BElement> {
     default <T> T deepClone() {
         BArray result = ofEmpty();
         for (BElement entry : this) {
-            result.addAny(entry);
+            result.addAny(entry.deepClone());
         }
         return (T) result;
     }
