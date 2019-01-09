@@ -2,22 +2,18 @@ package io.gridgo.bean.impl;
 
 import io.gridgo.bean.BValue;
 import io.gridgo.bean.exceptions.InvalidTypeException;
-import io.gridgo.bean.serialize.BSerializer;
 import io.gridgo.utils.PrimitiveUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-public class MutableBValue implements BValue {
+public class MutableBValue extends AbstractBElement implements BValue {
 
     @Setter
     @Getter
     private Object data;
 
-    @Setter
-    @Getter
-    private transient BSerializer serializer;
 
     public MutableBValue(Object data) {
         if (data != null && !(data instanceof byte[]) && !PrimitiveUtils.isPrimitive(data.getClass())) {
