@@ -74,4 +74,10 @@ public interface WrappedBObject extends BObject {
             action.accept(entry.getKey().toString(), BElement.wrapAny(entry.getValue()));
         });
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    default Map<String, Object> toMap() {
+        return (Map<String, Object>) this.getSource();
+    }
 }

@@ -136,4 +136,10 @@ public interface WrappedBArray extends BArray {
             }
         };
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    default List<Object> toList() {
+        return (List<Object>) this.getSource();
+    }
 }
