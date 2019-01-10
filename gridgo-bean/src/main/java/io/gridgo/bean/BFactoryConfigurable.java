@@ -1,5 +1,6 @@
 package io.gridgo.bean;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -14,7 +15,11 @@ public interface BFactoryConfigurable {
 
     BFactoryConfigurable setObjectSupplier(Function<Map<String, BElement>, BObject> objectSupplier);
 
+    BFactoryConfigurable setWrappedObjectSupplier(Function<Map<?, ?>, BObject> wrappedObjectSupplier);
+
     BFactoryConfigurable setArraySupplier(Function<List<BElement>, BArray> arraySupplier);
+
+    BFactoryConfigurable setWrappedArraySupplier(Function<Collection<?>, BArray> wrappedArraySupplier);
 
     BFactoryConfigurable setReferenceSupplier(Supplier<BReference> referenceSupplier);
 

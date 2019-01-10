@@ -81,6 +81,17 @@ public class DefaultBFactory implements BFactory, BFactoryConfigurable {
         return this;
     }
 
+    public BFactoryConfigurable setWrappedArraySupplier(Function<Collection<?>, BArray> wrappedArraySupplier) {
+        this.wrappedArraySupplier = wrappedArraySupplier;
+        return this;
+    }
+
+    @Override
+    public BFactoryConfigurable setWrappedObjectSupplier(Function<Map<?, ?>, BObject> wrappedObjectSupplier) {
+        this.wrappedObjectSupplier = wrappedObjectSupplier;
+        return null;
+    }
+
     @Override
     public BFactoryConfigurable asConfigurable() {
         return this;
