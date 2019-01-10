@@ -21,31 +21,41 @@ public interface BValue extends BElement {
 
     @Override
     default BType getType() {
-        if (!this.isNull()) {
-            if (this.getData() instanceof Boolean) {
-                return BType.BOOLEAN;
-            } else if (this.getData() instanceof Character) {
-                return BType.CHAR;
-            } else if (this.getData() instanceof Byte) {
-                return BType.BYTE;
-            } else if (this.getData() instanceof Short) {
-                return BType.SHORT;
-            } else if (this.getData() instanceof Integer) {
-                return BType.INTEGER;
-            } else if (this.getData() instanceof Float) {
-                return BType.FLOAT;
-            } else if (this.getData() instanceof Long) {
-                return BType.LONG;
-            } else if (this.getData() instanceof Double) {
-                return BType.DOUBLE;
-            } else if (this.getData() instanceof String) {
-                return BType.STRING;
-            } else if (this.getData() instanceof byte[]) {
-                return BType.RAW;
-            }
-            throw new InvalidTypeException("Cannot recognize data type: " + this.getData().getClass());
+        if (this.isNull()) {
+            return BType.NULL;
         }
-        return BType.NULL;
+
+        if (this.getData() instanceof Boolean) {
+            return BType.BOOLEAN;
+        }
+        if (this.getData() instanceof Character) {
+            return BType.CHAR;
+        }
+        if (this.getData() instanceof Byte) {
+            return BType.BYTE;
+        }
+        if (this.getData() instanceof Short) {
+            return BType.SHORT;
+        }
+        if (this.getData() instanceof Integer) {
+            return BType.INTEGER;
+        }
+        if (this.getData() instanceof Float) {
+            return BType.FLOAT;
+        }
+        if (this.getData() instanceof Long) {
+            return BType.LONG;
+        }
+        if (this.getData() instanceof Double) {
+            return BType.DOUBLE;
+        }
+        if (this.getData() instanceof String) {
+            return BType.STRING;
+        }
+        if (this.getData() instanceof byte[]) {
+            return BType.RAW;
+        }
+        throw new InvalidTypeException("Cannot recognize data type: " + this.getData().getClass());
     }
 
     void setData(Object data);
