@@ -1,4 +1,4 @@
-package io.gridgo.framework;
+package io.gridgo.framework.impl;
 
 import io.gridgo.framework.support.MessageConstants;
 
