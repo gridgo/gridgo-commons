@@ -395,10 +395,10 @@ public final class ObjectUtils {
             return (Map<String, Object>) obj;
         }
 
-        Map<String, Object> map = new HashMap<String, Object>();
-        Map<String, Getter> getters = classGetters.containsKey(obj.getClass()) ? classGetters.get(obj.getClass())
+        var map = new HashMap<String, Object>();
+        var getters = classGetters.containsKey(obj.getClass()) ? classGetters.get(obj.getClass())
                 : initClassGetters(obj.getClass());
-        for (Entry<String, Getter> entry : getters.entrySet()) {
+        for (var entry : getters.entrySet()) {
             map.put(entry.getKey(), entry.getValue().get(obj));
         }
         return map;
@@ -498,14 +498,18 @@ public final class ObjectUtils {
         for (String attr : parameters.keySet()) {
             if (!fieldMap.containsKey(attr))
                 continue;
-            Object value = convertValue(parameters.get(attr), fieldMap.get(attr));
-            String setter = "set" + attr.substring(0, 1).toUpperCase() + attr.substring(1);
-            var stmt = new Statement(config, setter, new Object[] { value });
-            try {
-                stmt.execute();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            var value = convertValue(parameters.get(attr), fieldMap.get(attr));
+            setValue(config, attr, value);
+        }
+    }
+
+    public static void setValue(Object config, String attr, Object value) {
+        var setter = "set" + attr.substring(0, 1).toUpperCase() + attr.substring(1);
+        var stmt = new Statement(config, setter, new Object[] { value });
+        try {
+            stmt.execute();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
