@@ -1,0 +1,31 @@
+package io.gridgo.bean.impl;
+
+import io.gridgo.bean.BArray;
+import io.gridgo.utils.ArrayUtils;
+
+@SuppressWarnings("unchecked")
+public abstract class AbstractBArray extends AbstractBContainer implements BArray {
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        this.writeString(null, 0, sb);
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        int size = this.size();
+        if (obj != null //
+                && ArrayUtils.isArrayOrCollection(obj.getClass()) //
+                && ArrayUtils.length(obj) == size) {
+            if (size > 0)
+                for (int i = 0; i < size; i++) {
+                    if (!this.get(i).equals(ArrayUtils.entryAt(obj, i)))
+                        return false;
+                }
+            return true;
+        }
+        return false;
+    }
+}

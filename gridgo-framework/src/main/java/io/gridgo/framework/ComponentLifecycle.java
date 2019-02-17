@@ -4,7 +4,7 @@ package io.gridgo.framework;
  * Represents the lifecycle of a GridGo component. A component can be a
  * connector, a gateway or a configuration.
  */
-public interface ComponentLifecycle {
+public interface ComponentLifecycle extends NamedComponent {
 
     /**
      * Start the component
@@ -19,6 +19,4 @@ public interface ComponentLifecycle {
     public default void stop() {
 
     }
-
-    public String getName();
 }

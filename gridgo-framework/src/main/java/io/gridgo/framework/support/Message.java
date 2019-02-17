@@ -15,6 +15,24 @@ import io.gridgo.utils.wrapper.ByteBufferInputStream;
 
 public interface Message {
 
+    public Payload getPayload();
+
+    public default BElement body() {
+        return getPayload().getBody();
+    }
+
+    public default BObject headers() {
+        return getPayload().getHeaders();
+    }
+
+    public Map<String, Object> getMisc();
+    
+    public default Object getMisc(String key) {
+        return getMisc().get(key);
+    }
+
+    public Message addMisc(String key, Object value);
+
     /**
      * routingId use for *-to-1 communication like duplex socket. RoutingId indicate
      * which endpoint will be the target
@@ -23,17 +41,24 @@ public interface Message {
      */
     public Optional<BValue> getRoutingId();
 
-    public Map<String, Object> getMisc();
-
-    public Payload getPayload();
-
-    public Message addMisc(String key, Object value);
-
     public Message setRoutingId(BValue routingId);
 
     public default Message setRoutingIdFromAny(Object routingId) {
         this.setRoutingId(BValue.of(routingId));
         return this;
+    }
+
+    public default Message attachTraceId(String traceId) {
+        headers().setAny(MessageConstants.TRACE_ID, traceId);
+        return this;
+    }
+
+    public default String getTraceId() {
+        return headers().getString(MessageConstants.TRACE_ID);
+    }
+
+    public default Message copyTraceId(Message source) {
+        return attachTraceId(source.getTraceId());
     }
 
     public default Message attachSource(String name) {
@@ -42,7 +67,10 @@ public interface Message {
         return this;
     }
 
-    public Message setPayload(Payload payload);
+    public default String getSource() {
+        var source = getMisc().get(MessageConstants.SOURCE);
+        return source != null ? source.toString() : MessageConstants.NO_NAMED;
+    }
 
     static Message ofEmpty() {
         return of(Payload.ofEmpty());

@@ -1,11 +1,16 @@
 package io.gridgo.bean;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import io.gridgo.bean.exceptions.BeanSerializationException;
@@ -15,6 +20,7 @@ import io.gridgo.bean.serialize.BSerializer;
 import io.gridgo.bean.xml.BXmlParser;
 import io.gridgo.utils.ArrayUtils;
 import io.gridgo.utils.PrimitiveUtils;
+import lombok.NonNull;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 
@@ -45,11 +51,38 @@ public interface BFactory {
 
     Supplier<BReference> getReferenceSupplier();
 
-    Supplier<BObject> getObjectSupplier();
+    Function<Map<String, BElement>, BObject> getObjectSupplier();
 
-    Supplier<BArray> getArraySupplier();
+    Function<Map<?, ?>, BObject> getWrappedObjectSupplier();
+
+    Function<List<BElement>, BArray> getArraySupplier();
+
+    Function<Collection<?>, BArray> getWrappedArraySupplier();
 
     Supplier<BValue> getValueSupplier();
+
+    @SuppressWarnings("rawtypes")
+    default <T extends BElement> T wrap(@NonNull Object data) {
+        Class<?> clazz = data.getClass();
+
+        if (PrimitiveUtils.isPrimitive(clazz))
+            return (T) newValue(data);
+
+        if (Collection.class.isAssignableFrom(clazz))
+            return (T) this.getWrappedArraySupplier().apply((Collection) data);
+
+        if (clazz.isArray()) {
+            final List<Object> list = new ArrayList<>();
+            ArrayUtils.foreach(data, entry -> list.add(entry));
+            return (T) this.getWrappedArraySupplier().apply(list);
+        }
+
+        if (Map.class.isAssignableFrom(clazz)) {
+            return (T) this.getWrappedObjectSupplier().apply((Map<?, ?>) data);
+        }
+
+        return (T) newReference(data);
+    }
 
     default BReference newReference(Object reference) {
         BReference bReference = newReference();
@@ -62,10 +95,7 @@ public interface BFactory {
     }
 
     default BObject newObject() {
-        BObject result = this.getObjectSupplier().get();
-        result.setFactory(this);
-        result.setSerializer(this.getSerializer());
-        return result;
+        return newObjectWithHolder(new HashMap<>());
     }
 
     default BObject newObject(Object mapData) {
@@ -93,6 +123,13 @@ public interface BFactory {
         return result;
     }
 
+    default BObject newObjectWithHolder(Map<String, BElement> holder) {
+        BObject result = this.getObjectSupplier().apply(holder);
+        result.setFactory(this);
+        result.setSerializer(this.getSerializer());
+        return result;
+    }
+
     default BObject newObjectFromSequence(Object... elements) {
         if (elements != null && elements.length % 2 != 0) {
             throw new IllegalArgumentException("Sequence's length must be even");
@@ -105,10 +142,7 @@ public interface BFactory {
     }
 
     default BArray newArray() {
-        BArray result = this.getArraySupplier().get();
-        result.setFactory(this);
-        result.setSerializer(this.getSerializer());
-        return result;
+        return newArrayWithHolder(new ArrayList<>());
     }
 
     default BArray newArray(Object src) {
@@ -129,6 +163,13 @@ public interface BFactory {
     default BArray newArrayFromSequence(Object... elements) {
         BArray result = this.newArray();
         result.addAnySequence(elements);
+        return result;
+    }
+
+    default BArray newArrayWithHolder(List<BElement> holder) {
+        BArray result = this.getArraySupplier().apply(holder);
+        result.setFactory(this);
+        result.setSerializer(this.getSerializer());
         return result;
     }
 
@@ -165,26 +206,32 @@ public interface BFactory {
         return (T) newReference(obj);
     }
 
-    default <T extends BElement> T fromJson(InputStream inputStream) {
-        if (inputStream != null) {
-            try {
-                return fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(inputStream));
-            } catch (UnsupportedEncodingException | ParseException e) {
-                throw new BeanSerializationException("Cannot parse json from input stream", e);
-            }
+    default <T extends BElement> T fromJson(@NonNull Reader reader) {
+        try {
+            return fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(reader));
+        } catch (ParseException e) {
+            throw new BeanSerializationException("Cannot parse json from reader", e);
         }
-        return null;
+    }
+
+    default <T extends BElement> T fromJson(InputStream inputStream) {
+        if (inputStream == null)
+            return null;
+        try {
+            return fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(inputStream));
+        } catch (UnsupportedEncodingException | ParseException e) {
+            throw new BeanSerializationException("Cannot parse json from input stream", e);
+        }
     }
 
     default <T extends BElement> T fromJson(String json) {
-        if (json != null) {
-            try {
-                return fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(json));
-            } catch (ParseException e) {
-                return fromAny(json);
-            }
+        if (json == null)
+            return null;
+        try {
+            return fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(json));
+        } catch (ParseException e) {
+            return fromAny(json);
         }
-        return null;
     }
 
     default <T extends BElement> T fromXml(String xml) {

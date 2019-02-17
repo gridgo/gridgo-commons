@@ -20,11 +20,11 @@ public class MessageUnitTest {
     public void testMessage() {
         var msg1 = Message.of(Payload.of(BObject.ofEmpty().setAny("key", 1), BValue.of(1)));
         msg1.getPayload().addHeaderIfAbsent("key", 2);
-        Assert.assertEquals(1, msg1.getPayload().getHeaders().getInteger("key").intValue());
+        Assert.assertEquals(1, msg1.headers().getInteger("key").intValue());
         msg1.getPayload().addHeaderIfAbsent("test", 2);
-        Assert.assertEquals(2, msg1.getPayload().getHeaders().getInteger("test").intValue());
+        Assert.assertEquals(2, msg1.headers().getInteger("test").intValue());
         msg1.getPayload().addHeader("test", 1);
-        Assert.assertEquals(1, msg1.getPayload().getHeaders().getInteger("test").intValue());
+        Assert.assertEquals(1, msg1.headers().getInteger("test").intValue());
         msg1.attachSource("test");
         Assert.assertEquals("test", msg1.getMisc().get(MessageConstants.SOURCE));
         msg1.setRoutingIdFromAny(1);
@@ -35,8 +35,8 @@ public class MessageUnitTest {
         Assert.assertEquals(1, msg3.getMisc().get("test"));
         var msg4 = Message.parse(BArray.ofEmpty().addAny(1).addAny(BObject.ofEmpty().setAny("test", 1)).addAny(1));
         Assert.assertEquals(Integer.valueOf(1), msg4.getPayload().getId().get().getInteger());
-        Assert.assertEquals(Integer.valueOf(1), msg4.getPayload().getHeaders().getInteger("test"));
-        Assert.assertEquals(Integer.valueOf(1), msg4.getPayload().getBody().asValue().getInteger());
+        Assert.assertEquals(Integer.valueOf(1), msg4.headers().getInteger("test"));
+        Assert.assertEquals(Integer.valueOf(1), msg4.body().asValue().getInteger());
     }
 
     @Test
@@ -50,16 +50,16 @@ public class MessageUnitTest {
     }
 
     private void assertMessage(MultipartMessage msg) {
-        Assert.assertEquals(true, msg.getPayload().getHeaders().getBoolean(MessageConstants.IS_MULTIPART));
-        Assert.assertEquals(2, msg.getPayload().getHeaders().getInteger(MessageConstants.SIZE).intValue());
-        Assert.assertTrue(msg.getPayload().getBody().isArray());
-        Assert.assertEquals(2, msg.getPayload().getBody().asArray().size());
+        Assert.assertEquals(true, msg.headers().getBoolean(MessageConstants.IS_MULTIPART));
+        Assert.assertEquals(2, msg.headers().getInteger(MessageConstants.SIZE).intValue());
+        Assert.assertTrue(msg.body().isArray());
+        Assert.assertEquals(2, msg.body().asArray().size());
         Assert.assertEquals(1,
-                msg.getPayload().getBody().asArray().getArray(0).getObject(1).getInteger("key").intValue());
+                msg.body().asArray().getArray(0).getObject(1).getInteger("key").intValue());
         Assert.assertEquals(2,
-                msg.getPayload().getBody().asArray().getArray(1).getObject(1).getInteger("key").intValue());
-        Assert.assertEquals(1, msg.getPayload().getBody().asArray().getArray(0).getInteger(2).intValue());
-        Assert.assertEquals(2, msg.getPayload().getBody().asArray().getArray(1).getInteger(2).intValue());
+                msg.body().asArray().getArray(1).getObject(1).getInteger("key").intValue());
+        Assert.assertEquals(1, msg.body().asArray().getArray(0).getInteger(2).intValue());
+        Assert.assertEquals(2, msg.body().asArray().getArray(1).getInteger(2).intValue());
     }
 
     @Test

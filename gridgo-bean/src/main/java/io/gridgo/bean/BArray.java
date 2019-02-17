@@ -13,6 +13,14 @@ import net.minidev.json.JSONArray;
 
 public interface BArray extends BContainer, List<BElement> {
 
+    static BArray wrap(Collection<?> source) {
+        return BFactory.DEFAULT.wrap(source);
+    }
+
+    static BArray withHolder(List<BElement> holder) {
+        return BFactory.DEFAULT.newArrayWithHolder(holder);
+    }
+
     static BArray ofEmpty() {
         return BFactory.DEFAULT.newArray();
     }
@@ -102,6 +110,8 @@ public interface BArray extends BContainer, List<BElement> {
                 list.add(((BObject) entry).toMap());
             } else if (entry instanceof BArray) {
                 list.add(((BArray) entry).toList());
+            } else if (entry instanceof BReference) {
+                list.add(((BReference) entry).getReference());
             } else {
                 throw new InvalidTypeException("Found unexpected BElement implementation: " + entry.getClass());
             }
@@ -110,19 +120,32 @@ public interface BArray extends BContainer, List<BElement> {
     }
 
     default BValue getValue(int index) {
-        return this.get(index).asValue();
+        BElement element = this.get(index);
+        if (!element.isValue()) {
+            throw new InvalidTypeException("BArray contains element at " + index + " of type " + element.getType() + ", which cannot convert to BValue");
+        }
+        return element.asValue();
     }
 
     default BArray getArray(int index) {
-        return this.get(index).asArray();
+        BElement element = this.get(index);
+        if (element.isNullValue())
+            return null;
+        return element.asArray();
     }
 
     default BObject getObject(int index) {
-        return this.get(index).asObject();
+        BElement element = this.get(index);
+        if (element.isNullValue())
+            return null;
+        return element.asObject();
     }
 
     default BReference getReference(int index) {
-        return this.get(index).asReference();
+        BElement element = this.get(index);
+        if (element.isNullValue())
+            return null;
+        return element.asReference();
     }
 
     default Boolean getBoolean(int index) {
@@ -242,8 +265,18 @@ public interface BArray extends BContainer, List<BElement> {
     default <T> T deepClone() {
         BArray result = ofEmpty();
         for (BElement entry : this) {
-            result.addAny(entry);
+            result.addAny(entry.deepClone());
         }
         return (T) result;
+    }
+
+    default BArrayOptional asOptional() {
+        return new BArrayOptional() {
+
+            @Override
+            public BArray getBArray() {
+                return BArray.this;
+            }
+        };
     }
 }

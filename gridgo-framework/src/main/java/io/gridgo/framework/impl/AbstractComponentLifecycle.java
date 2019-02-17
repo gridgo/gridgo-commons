@@ -1,7 +1,10 @@
-package io.gridgo.framework;
+package io.gridgo.framework.impl;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.slf4j.Logger;
+
+import io.gridgo.framework.ComponentLifecycle;
 import io.gridgo.utils.ThreadUtils;
 import io.gridgo.utils.helper.Loggable;
 import io.gridgo.utils.helper.Startable;
@@ -12,7 +15,13 @@ public abstract class AbstractComponentLifecycle implements ComponentLifecycle, 
 
     private volatile boolean running = false;
 
+    private Logger logger;
+
     private String name;
+
+    public AbstractComponentLifecycle() {
+        this.logger = getLogger();
+    }
 
     @Override
     public final boolean isStarted() {
@@ -25,7 +34,8 @@ public abstract class AbstractComponentLifecycle implements ComponentLifecycle, 
     @Override
     public final void start() {
         if (!this.isStarted() && started.compareAndSet(false, true)) {
-            getLogger().trace("Component starting {}", getName());
+            if (logger.isTraceEnabled())
+                logger.trace("Component starting {}", getName());
             try {
                 this.onStart();
                 this.running = true;
@@ -34,23 +44,31 @@ public abstract class AbstractComponentLifecycle implements ComponentLifecycle, 
                 this.running = false;
                 throw ex;
             }
-            getLogger().trace("Component started {}", getName());
+            if (logger.isTraceEnabled())
+                logger.trace("Component started {}", getName());
         }
     }
 
     @Override
     public final void stop() {
         if (this.isStarted() && started.compareAndSet(true, false)) {
+            if (logger.isTraceEnabled())
+                logger.trace("Component stopping {}", getName());
             try {
-                getLogger().trace("Component stopping {}", getName());
                 this.onStop();
                 this.running = false;
-                getLogger().trace("Component stopped {}", getName());
             } catch (Exception e) {
                 this.running = false;
                 throw e;
             }
+            if (logger.isTraceEnabled())
+                logger.trace("Component stopped {}", getName());
         }
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 
     @Override
@@ -60,14 +78,9 @@ public abstract class AbstractComponentLifecycle implements ComponentLifecycle, 
         return name;
     }
 
-    @Override
-    public String toString() {
-        return getName();
-    }
-
-    protected abstract String generateName();
-
     protected abstract void onStart();
 
     protected abstract void onStop();
+
+    protected abstract String generateName();
 }

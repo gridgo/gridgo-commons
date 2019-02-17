@@ -7,7 +7,7 @@ import java.util.Objects;
 import io.gridgo.framework.support.Registry;
 import lombok.NonNull;
 
-public class MultiSourceRegistry implements Registry {
+public class MultiSourceRegistry extends SimpleRegistry {
 
     private Registry[] registries;
 
@@ -21,6 +21,9 @@ public class MultiSourceRegistry implements Registry {
 
     @Override
     public Object lookup(String name) {
+        var answer = super.lookup(name);
+        if (answer != null)
+            return answer;
         return Arrays.stream(registries) //
                      .map(registry -> registry.lookup(name)) //
                      .filter(Objects::nonNull) //
@@ -28,16 +31,10 @@ public class MultiSourceRegistry implements Registry {
     }
 
     @Override
-    public Registry register(String name, Object answer) {
-        Arrays.stream(registries).forEach(registry -> tryRegister(registry, name, answer));
-        return this;
-    }
-
-    private void tryRegister(Registry registry, String name, Object answer) {
-        try {
-            registry.register(name, answer);
-        } catch (UnsupportedOperationException ex) {
-            // do nothing
-        }
+    public Object lookupByType(Class<?> type) {
+        return Arrays.stream(registries) //
+                     .map(registry -> registry.lookupByType(type)) //
+                     .filter(Objects::nonNull) //
+                     .findAny().orElse(null);
     }
 }

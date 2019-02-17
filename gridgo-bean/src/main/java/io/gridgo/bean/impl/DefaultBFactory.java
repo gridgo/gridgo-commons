@@ -1,8 +1,13 @@
 package io.gridgo.bean.impl;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import io.gridgo.bean.BArray;
+import io.gridgo.bean.BElement;
 import io.gridgo.bean.BFactory;
 import io.gridgo.bean.BFactoryAware;
 import io.gridgo.bean.BFactoryConfigurable;
@@ -17,10 +22,14 @@ import lombok.Getter;
 @Getter
 public class DefaultBFactory implements BFactory, BFactoryConfigurable {
 
-    private Supplier<BArray> arraySupplier = DefaultBArray::new;
-    private Supplier<BObject> objectSupplier = DefaultBObject::new;
-    private Supplier<BValue> valueSupplier = DefaultBValue::new;
-    private Supplier<BReference> referenceSupplier = DefaultBReference::new;
+    private Supplier<BValue> valueSupplier = MutableBValue::new;
+    private Supplier<BReference> referenceSupplier = MutableBReference::new;
+
+    private Function<List<BElement>, BArray> arraySupplier = MutableBArray::new;
+    private Function<Collection<?>, BArray> wrappedArraySupplier = WrappedImmutableBArray::new;
+
+    private Function<Map<String, BElement>, BObject> objectSupplier = MutableBObject::new;
+    private Function<Map<?, ?>, BObject> wrappedObjectSupplier = WrappedImmutableBObject::new;
 
     private BXmlParser xmlParser;
     private BSerializer serializer;
@@ -55,13 +64,13 @@ public class DefaultBFactory implements BFactory, BFactoryConfigurable {
     }
 
     @Override
-    public BFactoryConfigurable setObjectSupplier(Supplier<BObject> objectSupplier) {
+    public BFactoryConfigurable setObjectSupplier(Function<Map<String, BElement>, BObject> objectSupplier) {
         this.objectSupplier = objectSupplier;
         return this;
     }
 
     @Override
-    public BFactoryConfigurable setArraySupplier(Supplier<BArray> arraySupplier) {
+    public BFactoryConfigurable setArraySupplier(Function<List<BElement>, BArray> arraySupplier) {
         this.arraySupplier = arraySupplier;
         return this;
     }

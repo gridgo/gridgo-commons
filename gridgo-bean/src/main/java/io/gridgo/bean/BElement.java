@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -35,6 +36,10 @@ public interface BElement extends BSerializerAware {
 
     <T> T deepClone();
 
+    static <T extends BElement> T wrapAny(Object data) {
+        return BFactory.DEFAULT.wrap(data);
+    }
+
     static <T extends BElement> T ofAny(Object data) {
         return BFactory.DEFAULT.fromAny(data);
     }
@@ -45,6 +50,10 @@ public interface BElement extends BSerializerAware {
 
     static <T extends BElement> T ofJson(String json) {
         return BFactory.DEFAULT.fromJson(json);
+    }
+
+    static <T extends BElement> T ofJson(Reader reader) {
+        return BFactory.DEFAULT.fromJson(reader);
     }
 
     static <T extends BElement> T ofJson(InputStream inputStream) {
@@ -87,6 +96,10 @@ public interface BElement extends BSerializerAware {
 
     default boolean isContainer() {
         return this instanceof BContainer;
+    }
+
+    default boolean isNullValue() {
+        return this.isValue() && this.asValue().isNull();
     }
 
     default boolean isArray() {

@@ -38,7 +38,7 @@ public class ArrayUtilsUnitTest {
         var list2 = Arrays.asList(new Integer[] { 1, 2, 3, 4 });
         Assert.assertEquals(4, ArrayUtils.length(list2));
         var map = Collections.singletonMap("k", 1);
-        Assert.assertEquals(0, ArrayUtils.length(map));
+        Assert.assertEquals(-1, ArrayUtils.length(map));
     }
 
     @Test

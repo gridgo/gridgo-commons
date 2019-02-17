@@ -8,10 +8,10 @@ import java.util.TreeMap;
 import java.util.function.Supplier;
 
 import io.gridgo.bean.exceptions.BeanSerializationException;
-import io.gridgo.bean.exceptions.FieldNotFoundException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.utils.ObjectUtils;
 import io.gridgo.utils.StringUtils;
+import lombok.NonNull;
 import net.minidev.json.JSONObject;
 
 public interface BObject extends BContainer, Map<String, BElement> {
@@ -19,10 +19,18 @@ public interface BObject extends BContainer, Map<String, BElement> {
     default <T> T toPojo(Class<T> clazz) {
         try {
             return ObjectUtils.fromMap(clazz, this.toMap());
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-                | NoSuchMethodException | SecurityException e) {
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+                | SecurityException e) {
             throw new BeanSerializationException("Exception caught while converting BObject to POJO", e);
         }
+    }
+
+    static BObject wrap(Map<?, ?> source) {
+        return BFactory.DEFAULT.wrap(source);
+    }
+
+    static BObject withHolder(Map<String, BElement> holder) {
+        return BFactory.DEFAULT.newObjectWithHolder(holder);
     }
 
     static BObject ofEmpty() {
@@ -66,294 +74,188 @@ public interface BObject extends BContainer, Map<String, BElement> {
     }
 
     default Boolean getBoolean(String field) {
-        if (this.containsKey(field)) {
-            BElement element = this.get(field);
-            if (element instanceof BValue) {
-                return ((BValue) element).getBoolean();
-            }
-            throw new InvalidTypeException(
-                    "BObject contains element with type " + element.getType() + " which cannot get as boolean");
-        }
-        throw new FieldNotFoundException("Field not found: " + field);
+        var value = this.getValue(field);
+        return value == null ? null : value.getBoolean();
     }
 
     default Boolean getBoolean(String field, Boolean defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getBoolean(field);
-        }
-        return defaultValue;
-    }
-
-    default Boolean getBoolean(String field, boolean defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getBoolean(field);
-        }
-        return defaultValue;
+        var value = this.getBoolean(field);
+        return value == null ? defaultValue : value;
     }
 
     default Character getChar(String field) {
-        if (this.containsKey(field)) {
-            BElement element = this.get(field);
-            if (element instanceof BValue) {
-                return ((BValue) element).getChar();
-            }
-            throw new InvalidTypeException(
-                    "BObject contains element with type " + element.getType() + " which cannot get as char");
-        }
-        throw new FieldNotFoundException("Field not found: " + field);
+        var value = this.getValue(field);
+        return value == null ? null : value.getChar();
     }
 
     default Character getChar(String field, Character defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getChar(field);
-        }
-        return defaultValue;
-    }
-
-    default Character getChar(String field, char defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getChar(field);
-        }
-        return defaultValue;
+        var value = this.getChar(field);
+        return value == null ? defaultValue : value;
     }
 
     default Byte getByte(String field) {
-        if (this.containsKey(field)) {
-            BElement element = this.get(field);
-            if (element instanceof BValue) {
-                return ((BValue) element).getByte();
-            }
-            throw new InvalidTypeException(
-                    "BObject contains element with type " + element.getType() + " which cannot get as char");
-        }
-        throw new FieldNotFoundException("Field not found: " + field);
+        var value = this.getValue(field);
+        return value == null ? null : value.getByte();
     }
 
-    default Byte getByte(String field, Byte defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getByte(field);
-        }
-        return defaultValue;
-    }
-
-    default Byte getByte(String field, byte defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getByte(field);
-        }
-        return defaultValue;
+    default Byte getByte(String field, Number defaultValue) {
+        var value = this.getByte(field);
+        return value == null ? (defaultValue == null ? null : defaultValue.byteValue()) : value;
     }
 
     default Short getShort(String field) {
-        if (this.containsKey(field)) {
-            BElement element = this.get(field);
-            if (element instanceof BValue) {
-                return ((BValue) element).getShort();
-            }
-            throw new InvalidTypeException(
-                    "BObject contains element with type " + element.getType() + " which cannot get as short");
-        }
-        throw new FieldNotFoundException("Field not found: " + field);
+        var value = this.getValue(field);
+        return value == null ? null : value.getShort();
     }
 
-    default Short getShort(String field, Short defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getShort(field);
-        }
-        return defaultValue;
-    }
-
-    default Short getShort(String field, short defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getShort(field);
-        }
-        return defaultValue;
+    default Short getShort(String field, Number defaultValue) {
+        var value = this.getShort(field);
+        return value == null ? (defaultValue == null ? null : defaultValue.shortValue()) : value;
     }
 
     default Integer getInteger(String field) {
-        if (this.containsKey(field)) {
-            BElement element = this.get(field);
-            if (element instanceof BValue) {
-                return ((BValue) element).getInteger();
-            }
-            throw new InvalidTypeException(
-                    "BObject contains element with type " + element.getType() + " which cannot get as integer");
-        }
-        throw new FieldNotFoundException("Field not found: " + field);
+        var value = this.getValue(field);
+        return value == null ? null : value.getInteger();
     }
 
-    default Integer getInteger(String field, Integer defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getInteger(field);
-        }
-        return defaultValue;
-    }
-
-    default Integer getInteger(String field, int defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getInteger(field);
-        }
-        return defaultValue;
+    default Integer getInteger(String field, Number defaultValue) {
+        var value = this.getInteger(field);
+        return value == null ? (defaultValue == null ? null : defaultValue.intValue()) : value;
     }
 
     default Float getFloat(String field) {
-        if (this.containsKey(field)) {
-            BElement element = this.get(field);
-            if (element instanceof BValue) {
-                return ((BValue) element).getFloat();
-            }
-            throw new InvalidTypeException(
-                    "BObject contains element with type " + element.getType() + " which cannot get as float");
-        }
-        throw new FieldNotFoundException("Field not found: " + field);
+        var value = this.getValue(field);
+        return value == null ? null : value.getFloat();
     }
 
-    default Float getFloat(String field, Float defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getFloat(field);
-        }
-        return defaultValue;
-    }
-
-    default Float getFloat(String field, float defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getFloat(field);
-        }
-        return defaultValue;
+    default Float getFloat(String field, Number defaultValue) {
+        var value = this.getFloat(field);
+        return value == null ? (defaultValue == null ? null : defaultValue.floatValue()) : value;
     }
 
     default Long getLong(String field) {
-        if (this.containsKey(field)) {
-            BElement element = this.get(field);
-            if (element instanceof BValue) {
-                return ((BValue) element).getLong();
-            }
-            throw new InvalidTypeException(
-                    "BObject contains element with type " + element.getType() + " which cannot get as long");
-        }
-        throw new FieldNotFoundException("Field not found: " + field);
+        var value = this.getValue(field);
+        return value == null ? null : value.getLong();
     }
 
-    default Long getLong(String field, Long defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getLong(field);
-        }
-        return defaultValue;
-    }
-
-    default Long getLong(String field, long defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getLong(field);
-        }
-        return defaultValue;
+    default Long getLong(String field, Number defaultValue) {
+        var value = this.getLong(field);
+        return value == null ? (defaultValue == null ? null : defaultValue.longValue()) : value;
     }
 
     default Double getDouble(String field) {
-        if (this.containsKey(field)) {
-            BElement element = this.get(field);
-            if (element instanceof BValue) {
-                return ((BValue) element).getDouble();
-            }
-            throw new InvalidTypeException(
-                    "BObject contains element with type " + element.getType() + " which cannot get as double");
-        }
-        throw new FieldNotFoundException("Field not found: " + field);
+        var value = this.getValue(field);
+        return value == null ? null : value.getDouble();
     }
 
-    default Double getDouble(String field, Double defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getDouble(field);
-        }
-        return defaultValue;
-    }
-
-    default Double getDouble(String field, double defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getDouble(field);
-        }
-        return defaultValue;
+    default Double getDouble(String field, Number defaultValue) {
+        var value = this.getDouble(field);
+        return value == null ? (defaultValue == null ? null : defaultValue.doubleValue()) : value;
     }
 
     default String getString(String field) {
-        if (this.containsKey(field)) {
-            BElement element = this.get(field);
-            if (element instanceof BValue) {
-                return ((BValue) element).getString();
-            }
-            throw new InvalidTypeException(
-                    "BObject contains element with type " + element.getType() + " which cannot get as string");
-        }
-        throw new FieldNotFoundException("Field not found: " + field);
+        var value = this.getValue(field);
+        return value == null ? null : value.getString();
     }
 
     default String getString(String field, String defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getString(field);
-        }
-        return defaultValue;
+        var value = this.getString(field);
+        return value == null ? defaultValue : value;
     }
 
     default byte[] getRaw(String field) {
-        if (this.containsKey(field)) {
-            BElement element = this.get(field);
-            if (element instanceof BValue) {
-                return ((BValue) element).getRaw();
-            }
-            throw new InvalidTypeException(
-                    "BObject contains element with type " + element.getType() + " which cannot get as byte[]");
+        var value = this.getValue(field);
+        return value == null ? null : value.getRaw();
+    }
+
+    default byte[] getRaw(String field, byte[] defaultValue) {
+        var value = this.getRaw(field);
+        return value == null ? defaultValue : value;
+    }
+
+    default BReference getReference(String field) {
+        BElement element = this.get(field);
+        if (element != null) {
+            if (element.isReference())
+                return element.asReference();
+            if (!element.isNullValue())
+                throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as BReference");
         }
         return null;
     }
 
-    default byte[] getRaw(String field, byte[] defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getRaw(field);
-        }
-        return defaultValue;
-    }
-
-    default BReference getReference(String field) {
-        BType type = this.typeOf(field);
-        if (type == BType.REFERENCE) {
-            return (BReference) this.get(field);
-        }
-        throw new InvalidTypeException("Cannot get reference from field '" + field + "' which has type: " + type);
-    }
-
     default BReference getReference(String field, BReference defaultValue) {
-        if (this.containsKey(field)) {
-            return getReference(field);
-        }
-        return defaultValue;
+        var value = this.getReference(field);
+        return value == null ? defaultValue : value;
+    }
+
+    default BValue getValue(String field) {
+        BElement element = this.get(field);
+        if (element == null)
+            return null;
+        if (element.isValue())
+            return element.asValue();
+        throw new InvalidTypeException("BObject contains field " + field + " in type of " + element.getType() + " which cannot convert to BValue");
+    }
+
+    default BValue getValue(String field, BValue defaultValue) {
+        var value = this.getValue(field);
+        return value == null ? defaultValue : value;
+    }
+
+    default BValue getValueOrNew(String field, @NonNull Supplier<BValue> bValueSupplier) {
+        var value = this.getValue(field);
+        return value == null ? bValueSupplier.get() : value;
+    }
+
+    default BValue getValueOrEmpty(String field) {
+        return getValueOrNew(field, getFactory().getValueSupplier());
     }
 
     default BObject getObject(String field) {
-        BType type = this.typeOf(field);
-        if (type == BType.OBJECT) {
-            return (BObject) this.get(field);
-        }
-        throw new InvalidTypeException("Cannot get object from field '" + field + "' which has type: " + type);
+        BElement element = this.get(field);
+        if (element == null || element.isNullValue())
+            return null;
+        if (element.isObject())
+            return element.asObject();
+        throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as BObject");
     }
 
     default BObject getObject(String field, BObject defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getObject(field);
-        }
-        return defaultValue;
+        var value = this.getObject(field);
+        return value == null ? defaultValue : value;
+    }
+
+    default BObject getObjectOrNew(String field, @NonNull Supplier<BObject> bObjectSupplier) {
+        var value = this.getObject(field);
+        return value == null ? bObjectSupplier.get() : value;
+    }
+
+    default BObject getObjectOrEmpty(String field) {
+        return getObjectOrNew(field, getFactory()::newObject);
     }
 
     default BArray getArray(String field) {
-        BType type = this.typeOf(field);
-        if (type == BType.ARRAY) {
-            return (BArray) this.get(field);
-        }
-        throw new InvalidTypeException("Cannot get array from field '" + field + "' which has type: " + type);
+        BElement element = this.get(field);
+        if (element == null || element.isNullValue())
+            return null;
+        if (element.isArray())
+            return element.asArray();
+        throw new InvalidTypeException("BObject contains element with type " + element.getType() + " which cannot get as BArray");
     }
 
     default BArray getArray(String field, BArray defaultValue) {
-        if (this.containsKey(field)) {
-            return this.getArray(field);
-        }
-        return defaultValue;
+        var value = this.getArray(field);
+        return value == null ? defaultValue : value;
+    }
+
+    default BArray getArrayOrNew(String field, @NonNull Supplier<BArray> bArraySupplier) {
+        var value = this.getArray(field);
+        return value == null ? bArraySupplier.get() : value;
+    }
+
+    default BArray getArrayOrEmpty(String field) {
+        return getArrayOrNew(field, getFactory()::newArray);
     }
 
     @Override
@@ -411,8 +313,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
             } else {
                 if (entry.getValue() == null)
                     continue;
-                throw new InvalidTypeException(
-                        "Found unrecognized MElement implementation: " + entry.getValue().getClass());
+                throw new InvalidTypeException("Found unrecognized BElement implementation: " + entry.getValue().getClass());
             }
         }
         return result;
@@ -474,11 +375,6 @@ public interface BObject extends BContainer, Map<String, BElement> {
         return supplierForNonPresent.get();
     }
 
-    default BValue getValue(String field) {
-        BElement element = this.get(field);
-        return element != null ? element.asValue() : null;
-    }
-
     @Override
     default void writeString(String name, int numTab, StringBuilder writer) {
         StringUtils.tabs(numTab, writer);
@@ -533,7 +429,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
         return this;
     }
 
-    default BObject set(String name, BElement value) {
+    default BObject set(String name, @NonNull BElement value) {
         this.put(name, value);
         return this;
     }
@@ -546,5 +442,15 @@ public interface BObject extends BContainer, Map<String, BElement> {
             result.put(entry.getKey(), entry.getValue().deepClone());
         }
         return (T) result;
+    }
+
+    default BObjectOptional asOptional() {
+        return new BObjectOptional() {
+
+            @Override
+            public BObject getBObject() {
+                return BObject.this;
+            }
+        };
     }
 }

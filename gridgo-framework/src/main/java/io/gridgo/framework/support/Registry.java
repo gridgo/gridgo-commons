@@ -1,8 +1,10 @@
 package io.gridgo.framework.support;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.gridgo.framework.support.exceptions.BeanNotFoundException;
+import io.gridgo.utils.PrimitiveUtils;
 
 /**
  * Acts as a dictionary for Gridgo application. It can be used to store and
@@ -34,7 +36,9 @@ public interface Registry {
         if (answer == null)
             return null;
         if (type == String.class)
-            return (T) answer.toString();
+            return (T) substituteRegistriesRecursive(answer.toString());
+        if (PrimitiveUtils.isPrimitive(type))
+            return PrimitiveUtils.getValueFrom(type, answer);
         return type.cast(answer);
     }
 
@@ -57,7 +61,7 @@ public interface Registry {
     public default Object lookupMandatory(String name) {
         var answer = lookup(name);
         if (answer == null)
-            throw new BeanNotFoundException("Bean " + name + " cannot be found using" + this.getClass().getName());
+            throw new BeanNotFoundException("Bean " + name + " cannot be found using " + this.getClass().getName());
         return answer;
     }
 
@@ -93,7 +97,7 @@ public interface Registry {
             return text;
         return matcher.replaceAll(result -> {
             var obj = lookup(result.group(1));
-            return obj != null ? obj.toString() : "";
+            return obj != null ? Matcher.quoteReplacement(obj.toString()) : "";
         });
     }
 
@@ -114,8 +118,12 @@ public interface Registry {
                 return text;
             text = matcher.replaceAll(result -> {
                 var obj = lookup(result.group(1));
-                return obj != null ? obj.toString() : "";
+                return obj != null ? Matcher.quoteReplacement(obj.toString()) : "";
             });
         }
+    }
+
+    public default Object lookupByType(Class<?> type) {
+        return null;
     }
 }
