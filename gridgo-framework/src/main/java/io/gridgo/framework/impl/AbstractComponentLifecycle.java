@@ -1,9 +1,10 @@
-package io.gridgo.framework;
+package io.gridgo.framework.impl;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 
+import io.gridgo.framework.ComponentLifecycle;
 import io.gridgo.utils.ThreadUtils;
 import io.gridgo.utils.helper.Loggable;
 import io.gridgo.utils.helper.Startable;

@@ -9,6 +9,7 @@ import com.lmax.disruptor.dsl.ProducerType;
 
 import io.gridgo.framework.execution.ExecutionStrategy;
 import io.gridgo.framework.execution.impl.ExecutionContextEvent;
+import io.gridgo.framework.support.Message;
 import io.gridgo.framework.support.context.ExecutionContext;
 import io.gridgo.framework.support.context.impl.DefaultExecutionContext;
 
@@ -44,7 +45,7 @@ public class MultiProducerDisruptorExecutionStrategy<T, H> implements ExecutionS
     }
 
     @Override
-    public void execute(Runnable runnable) {
+    public void execute(Runnable runnable, Message request) {
         ExecutionContext<T, H> context = new DefaultExecutionContext<>(t -> runnable.run());
         execute(context);
     }
