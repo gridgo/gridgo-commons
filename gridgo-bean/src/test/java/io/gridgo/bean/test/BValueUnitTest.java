@@ -27,4 +27,11 @@ public class BValueUnitTest {
         val = BElement.ofXml(val.toXml()).asValue();
         Assert.assertArrayEquals(new byte[] { 1, 2, 4, 8, 16, 32, 64 }, (byte[]) val.getData());
     }
+
+    @Test
+    public void testSerialization() {
+        var val = BValue.of(0);
+        var after = BElement.ofBytes(new String(val.toBytes()).getBytes());
+        System.out.println(after);
+    }
 }

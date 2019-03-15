@@ -1,6 +1,6 @@
 package io.gridgo.framework.test.support;
 
-import io.gridgo.framework.AbstractComponentLifecycle;
+import io.gridgo.framework.impl.AbstractComponentLifecycle;
 import lombok.Getter;
 
 public class TestComponent extends AbstractComponentLifecycle {
