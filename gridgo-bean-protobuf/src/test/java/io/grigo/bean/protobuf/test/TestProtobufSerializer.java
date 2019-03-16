@@ -13,7 +13,7 @@ import io.gridgo.bean.factory.BFactory;
 import io.gridgo.bean.serialization.binary.protobuf.ProtobufSerializer;
 import io.grigo.bean.protobuf.test.message.PersonOuterClass.Person;
 
-public class TestBeanSerializerProtobuf {
+public class TestProtobufSerializer {
 
     @Test
     public void testProtobufSerializer() throws IOException {

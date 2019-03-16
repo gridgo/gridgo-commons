@@ -43,6 +43,10 @@ public final class BSerializerRegistry {
         this.scan(this.getClass().getPackageName());
     }
 
+    public Set<String> availableSerializers() {
+        return this.registry.keySet();
+    }
+
     public String getDefaultSerializerName() {
         return this.defaultSerializerName.get();
     }
