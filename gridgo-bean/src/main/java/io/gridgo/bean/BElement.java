@@ -10,7 +10,9 @@ import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.factory.BFactory;
+import io.gridgo.bean.serialization.binary.BSerializer;
 import io.gridgo.bean.serialization.binary.BSerializerRegistryAware;
 import lombok.NonNull;
 
@@ -86,12 +88,38 @@ public interface BElement extends BSerializerRegistryAware {
         return ofBytes(bytes, null);
     }
 
+    default BSerializer lookupOrDefaultSerializer(String serializerName) {
+        var serializer = this.getSerializerRegistry().lookupOrDefault(serializerName);
+        if (serializer == null) {
+            throw new BeanSerializationException("Serializer doesn't available for name: " + serializerName);
+        }
+        return serializer;
+    }
+
+    default void writeBytes(@NonNull ByteBuffer buffer, String serializerName) {
+        lookupOrDefaultSerializer(serializerName).serialize(this, buffer);
+    }
+
+    default void writeBytes(@NonNull OutputStream out, String serializerName) {
+        lookupOrDefaultSerializer(serializerName).serialize(this, out);
+    }
+
+    default byte[] toBytes(int initCapacity, String serializerName) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream(initCapacity);
+        this.writeBytes(out, serializerName);
+        return out.toByteArray();
+    }
+
+    default byte[] toBytes(String serializerName) {
+        return this.toBytes(1024, serializerName);
+    }
+
     default void writeBytes(ByteBuffer buffer) {
-        this.getSerializer().serialize(this, buffer);
+        writeBytes(buffer, null);
     }
 
     default void writeBytes(OutputStream out) {
-        this.getSerializer().serialize(this, out);
+        writeBytes(out, null);
     }
 
     default byte[] toBytes(int initCapacity) {

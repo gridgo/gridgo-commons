@@ -1,19 +1,30 @@
 package io.grigo.bean.protobuf.test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.junit.Test;
+
+import io.gridgo.bean.BElement;
+import io.gridgo.bean.factory.BFactory;
+import io.gridgo.bean.serialization.binary.protobuf.ProtobufSerializer;
 import io.grigo.bean.protobuf.test.message.PersonOuterClass.Person;
 
 public class TestBeanSerializerProtobuf {
 
-    public static void main(String[] args) throws IOException {
+    @Test
+    public void testProtobufSerializer() throws IOException {
+        ProtobufSerializer protobufSerializer = BFactory.DEFAULT.getSerializerRegistry().lookup("protobuf");
+        protobufSerializer.registerSchema(Person.class, 1);
         Person p = Person.newBuilder().setName("Bach Hoang Nguyen").setAge(30).build();
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        p.writeTo(output);
-        System.out.println(Arrays.toString(output.toByteArray()));
-        Person.parseFrom(output.toByteArray());
-        System.out.println(Person.parseFrom(output.toByteArray()));
+        BElement ele = BElement.ofAny(p);
+        byte[] bytes = ele.toBytes("protobuf");
+        BElement unpackedEle = BElement.ofBytes(bytes, "protobuf");
+        Person p2 = unpackedEle.asReference().getReference();
+
+        assertEquals(p, p2);
     }
 }

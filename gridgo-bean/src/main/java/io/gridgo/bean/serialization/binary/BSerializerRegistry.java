@@ -16,6 +16,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@SuppressWarnings("unchecked")
 public final class BSerializerRegistry {
 
     private final BFactory factory;
@@ -60,7 +61,7 @@ public final class BSerializerRegistry {
         }
     }
 
-    public BSerializer getDefault() {
+    public <T extends BSerializer> T getDefault() {
         if (this.cachedDefaultSerializer == null) {
             synchronized (defaultSerializerName) {
                 if (this.cachedDefaultSerializer == null) {
@@ -74,18 +75,18 @@ public final class BSerializerRegistry {
                 }
             }
         }
-        return this.cachedDefaultSerializer;
+        return (T) this.cachedDefaultSerializer;
     }
 
-    public BSerializer lookupOrDefault(String name) {
+    public <T extends BSerializer> T lookupOrDefault(String name) {
         if (name == null) {
             return this.getDefault();
         }
         return lookup(name);
     }
 
-    public BSerializer lookup(@NonNull String name) {
-        return this.registry.get(name);
+    public <T extends BSerializer> T lookup(@NonNull String name) {
+        return (T) this.registry.get(name);
     }
 
     public BSerializer deregister(@NonNull String name) {

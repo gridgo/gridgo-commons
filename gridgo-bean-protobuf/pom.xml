@@ -13,31 +13,12 @@
 
 	<properties>
 		<protobuf.version>3.7.0</protobuf.version>
+		<junit.version>4.12</junit.version>
 	</properties>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.xolstice.maven.plugins</groupId>
-				<artifactId>protobuf-maven-plugin</artifactId>
-				<version>0.6.1</version>
-				<configuration>
-					<protocExecutable>/usr/local/bin/protoc</protocExecutable>
-					<clearOutputDirectory>false</clearOutputDirectory>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-compile</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/src/test/java</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+	<!-- <build> <plugins> <plugin> <groupId>org.xolstice.maven.plugins</groupId> <artifactId>protobuf-maven-plugin</artifactId> <version>0.6.1</version> <configuration> 
+		<protocExecutable>/usr/local/bin/protoc</protocExecutable> <clearOutputDirectory>false</clearOutputDirectory> </configuration> <executions> <execution> <goals> <goal>test-compile</goal> 
+		</goals> <configuration> <outputDirectory>${basedir}/src/test/java</outputDirectory> </configuration> </execution> </executions> </plugin> </plugins> </build> -->
 
 	<dependencies>
 		<dependency>
@@ -49,6 +30,12 @@
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
 			<version>${protobuf.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

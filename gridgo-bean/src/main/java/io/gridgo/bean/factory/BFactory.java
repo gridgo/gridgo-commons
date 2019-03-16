@@ -92,6 +92,7 @@ public interface BFactory {
     default BReference newReference(Object reference) {
         BReference bReference = newReference();
         bReference.setReference(reference);
+        bReference.setSerializerRegistry(getSerializerRegistry());
         return bReference;
     }
 
