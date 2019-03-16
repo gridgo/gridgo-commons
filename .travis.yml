@@ -2,6 +2,10 @@ language: java
 jdk:
 - oraclejdk11
 
+install:
+  - tar -xzf protobuf-3.7.0.tar.gz
+  - pushd protobuf-3.7.0 && ./configure --prefix=/usr && make && sudo make install && popd
+
 notifications:
   slack: gridgo:dSkxVIs1DZFv6k6UtTIPoDJr
 
