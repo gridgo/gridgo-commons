@@ -118,7 +118,7 @@ public final class BSerializerRegistry {
                 throw new SerializationPluginException("Invalid serialization plugin, class must implement BSerializer");
             }
             BSerializationPlugin annotation = clazz.getAnnotation(BSerializationPlugin.class);
-            String name = annotation.name();
+            String name = annotation.value();
             if (name == null || name.isBlank() || name.isEmpty()) {
                 throw new SerializationPluginException("serialization plugin's name must not be blank");
             }

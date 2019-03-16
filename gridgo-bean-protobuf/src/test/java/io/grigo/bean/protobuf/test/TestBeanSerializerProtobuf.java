@@ -17,12 +17,12 @@ public class TestBeanSerializerProtobuf {
 
     @Test
     public void testProtobufSerializer() throws IOException {
-        ProtobufSerializer protobufSerializer = BFactory.DEFAULT.getSerializerRegistry().lookup("protobuf");
+        ProtobufSerializer protobufSerializer = BFactory.DEFAULT.getSerializerRegistry().lookup(ProtobufSerializer.NAME);
         protobufSerializer.registerSchema(Person.class, 1);
         Person p = Person.newBuilder().setName("Bach Hoang Nguyen").setAge(30).build();
         BElement ele = BElement.ofAny(p);
-        byte[] bytes = ele.toBytes("protobuf");
-        BElement unpackedEle = BElement.ofBytes(bytes, "protobuf");
+        byte[] bytes = ele.toBytes(ProtobufSerializer.NAME);
+        BElement unpackedEle = BElement.ofBytes(bytes, ProtobufSerializer.NAME);
         Person p2 = unpackedEle.asReference().getReference();
 
         assertEquals(p, p2);

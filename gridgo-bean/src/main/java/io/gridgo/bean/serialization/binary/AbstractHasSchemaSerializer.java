@@ -8,15 +8,15 @@ import lombok.NonNull;
 
 public abstract class AbstractHasSchemaSerializer extends AbstractBSerializer implements HasSchemaSerializer {
 
-    private final Map<Class<?>, Integer> classToId = new HashMap<>();
-    private final Map<Integer, Class<?>> idToClass = new HashMap<>();
+    private final Map<Class<?>, Integer> schemaToId = new HashMap<>();
+    private final Map<Integer, Class<?>> idToSchema = new HashMap<>();
 
     private final Object registerLock = new Object();
 
-    private final Class<?> checkedClass;
+    private final Class<?> abstractSchema;
 
     protected AbstractHasSchemaSerializer(Class<?> checkedClass) {
-        this.checkedClass = checkedClass;
+        this.abstractSchema = checkedClass;
     }
 
     protected AbstractHasSchemaSerializer() {
@@ -24,27 +24,29 @@ public abstract class AbstractHasSchemaSerializer extends AbstractBSerializer im
     }
 
     @Override
-    public void registerSchema(@NonNull Class<?> clazz, int id) {
-        if (this.checkedClass != null && !this.checkedClass.isAssignableFrom(clazz)) {
-            throw new SchemaInvalidException("Cannot register schema of class " + clazz);
+    public void registerSchema(@NonNull Class<?> schema, int id) {
+        if (this.abstractSchema != null && !this.abstractSchema.isAssignableFrom(schema)) {
+            throw new SchemaInvalidException("Cannot register schema of class " + schema);
         }
         synchronized (registerLock) {
-            if (!classToId.containsKey(clazz) && !idToClass.containsKey(id)) {
-                classToId.put(clazz, id);
-                idToClass.put(id, clazz);
+            if (!schemaToId.containsKey(schema) && !idToSchema.containsKey(id)) {
+                schemaToId.put(schema, id);
+                idToSchema.put(id, schema);
+                onRegisterSchema(schema, id);
                 return;
             }
         }
-        throw new SchemaInvalidException("Schema or id already registered: class=" + clazz + ", id=" + id);
+        throw new SchemaInvalidException("Schema or id already registered: class=" + schema + ", id=" + id);
     }
 
     @Override
-    public void deregisterSchema(@NonNull Class<?> clazz) {
-        if (classToId.containsKey(clazz)) {
+    public void deregisterSchema(@NonNull Class<?> schema) {
+        if (schemaToId.containsKey(schema)) {
             synchronized (registerLock) {
-                if (classToId.containsKey(clazz)) {
-                    var id = classToId.remove(clazz);
-                    idToClass.remove(id);
+                if (schemaToId.containsKey(schema)) {
+                    var id = schemaToId.remove(schema);
+                    idToSchema.remove(id);
+                    this.onDeregisterSchema(schema, id);
                 }
             }
         }
@@ -52,23 +54,32 @@ public abstract class AbstractHasSchemaSerializer extends AbstractBSerializer im
 
     @Override
     public void deregisterSchema(int id) {
-        if (idToClass.containsKey(id)) {
+        if (idToSchema.containsKey(id)) {
             synchronized (registerLock) {
-                if (idToClass.containsKey(id)) {
-                    var clazz = idToClass.remove(id);
-                    classToId.remove(clazz);
+                if (idToSchema.containsKey(id)) {
+                    var schema = idToSchema.remove(id);
+                    schemaToId.remove(schema);
+                    this.onDeregisterSchema(schema, id);
                 }
             }
         }
     }
 
     @Override
-    public Integer lookupId(Class<?> clazz) {
-        return this.classToId.get(clazz);
+    public Integer lookupId(Class<?> schema) {
+        return this.schemaToId.get(schema);
     }
 
     @Override
     public Class<?> lookupSchema(int id) {
-        return this.idToClass.get(id);
+        return this.idToSchema.get(id);
+    }
+
+    protected void onRegisterSchema(Class<?> schema, int id) {
+        // do nothing
+    }
+
+    protected void onDeregisterSchema(Class<?> schema, int id) {
+        // do nothing
     }
 }
