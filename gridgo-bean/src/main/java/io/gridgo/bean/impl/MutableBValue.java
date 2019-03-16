@@ -14,7 +14,6 @@ public class MutableBValue extends AbstractBElement implements BValue {
     @Getter
     private Object data;
 
-
     public MutableBValue(Object data) {
         if (data != null && !(data instanceof byte[]) && !PrimitiveUtils.isPrimitive(data.getClass())) {
             throw new InvalidTypeException("Cannot create DefaultBValue from: " + data.getClass() + " instance");

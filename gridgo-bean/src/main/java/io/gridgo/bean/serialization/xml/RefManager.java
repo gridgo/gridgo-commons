@@ -69,8 +69,8 @@ class RefItem {
 
     void resolve(Map<String, RefItem> refs) {
         if (this.isVisited()) {
-            throw new UnresolvableXmlRefException("Circular reference found in expression: " + this.getContent()
-                    + (this.getName() == null ? "" : ", refName: " + this.getName()));
+            throw new UnresolvableXmlRefException(
+                    "Circular reference found in expression: " + this.getContent() + (this.getName() == null ? "" : ", refName: " + this.getName()));
         }
         this.setVisited(true);
 
