@@ -15,16 +15,16 @@ public abstract class AbstractBArray extends AbstractBContainer implements BArra
 
     @Override
     public boolean equals(Object obj) {
-        int size = this.size();
-        if (obj != null //
-                && ArrayUtils.isArrayOrCollection(obj.getClass()) //
-                && ArrayUtils.length(obj) == size) {
-            if (size > 0)
-                for (int i = 0; i < size; i++) {
-                    if (!this.get(i).equals(ArrayUtils.entryAt(obj, i)))
-                        return false;
-                }
-            return true;
+        if (obj != null && ArrayUtils.isArrayOrCollection(obj.getClass())) {
+            int size = this.size();
+            if (ArrayUtils.length(obj) == size) {
+                if (size > 0)
+                    for (int i = 0; i < size; i++) {
+                        if (!this.get(i).equals(ArrayUtils.entryAt(obj, i)))
+                            return false;
+                    }
+                return true;
+            }
         }
         return false;
     }

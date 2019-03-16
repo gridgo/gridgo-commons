@@ -1,4 +1,4 @@
-package io.gridgo.bean.xml;
+package io.gridgo.bean.serialization.xml;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -15,34 +15,26 @@ import org.xml.sax.SAXException;
 
 import io.gridgo.bean.BArray;
 import io.gridgo.bean.BElement;
-import io.gridgo.bean.BFactory;
-import io.gridgo.bean.BFactoryAware;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BType;
 import io.gridgo.bean.BValue;
 import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.exceptions.NameAttributeNotFoundException;
-import io.gridgo.bean.xml.RefItem.RefItemBuilder;
+import io.gridgo.bean.factory.BFactory;
 import io.gridgo.utils.ByteArrayUtils;
 import io.gridgo.utils.PrimitiveUtils;
-import lombok.Setter;
 
-public class BXmlParser implements BFactoryAware {
+public class BXmlParser {
 
     private static final String REF_NAME = "refName";
 
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
-    @Setter
-    private BFactory factory;
+    private final BFactory factory;
 
     public BXmlParser(BFactory factory) {
         this.factory = factory;
-    }
-
-    public BXmlParser() {
-        this(BFactory.DEFAULT);
     }
 
     public BElement parse(String xml) {
@@ -98,14 +90,13 @@ public class BXmlParser implements BFactoryAware {
             BValue value = this.factory.newValue();
 
             Node refNameAttr = node.getAttributes().getNamedItem(REF_NAME);
-            RefItemBuilder builder = RefItem.builder();
+            var builder = RefItem.builder();
             builder.type(type).content(stringValue).target(value);
             RefItem refItem = builder.build();
             if (refNameAttr != null) {
                 refItem.setName(refNameAttr.getNodeValue());
                 refManager.addRef(refItem);
             }
-
             try {
                 switch (type) {
                 case BOOLEAN:
@@ -158,8 +149,7 @@ public class BXmlParser implements BFactoryAware {
         BArray result = this.factory.newArray();
         Node refNameAttr = node.getAttributes().getNamedItem(REF_NAME);
         if (refNameAttr != null) {
-            refManager.addRef(
-                    RefItem.builder().type(BType.ARRAY).name(refNameAttr.getNodeValue()).target(result).build());
+            refManager.addRef(RefItem.builder().type(BType.ARRAY).name(refNameAttr.getNodeValue()).target(result).build());
         }
         Node child = node.getFirstChild();
         while (child != null) {
@@ -175,16 +165,14 @@ public class BXmlParser implements BFactoryAware {
         BObject result = this.factory.newObject();
         Node refNameAttr = node.getAttributes().getNamedItem(REF_NAME);
         if (refNameAttr != null) {
-            refManager.addRef(
-                    RefItem.builder().type(BType.OBJECT).name(refNameAttr.getNodeValue()).target(result).build());
+            refManager.addRef(RefItem.builder().type(BType.OBJECT).name(refNameAttr.getNodeValue()).target(result).build());
         }
         Node child = node.getFirstChild();
         while (child != null) {
             if (child.getNodeType() == Element.ELEMENT_NODE) {
                 Node nameAttr = child.getAttributes().getNamedItem("name");
                 if (nameAttr == null) {
-                    throw new NameAttributeNotFoundException(
-                            "Name attribute (which is required for any item in BObject's xml) cannot be found");
+                    throw new NameAttributeNotFoundException("Name attribute (which is required for any item in BObject's xml) cannot be found");
                 }
                 result.put(nameAttr.getNodeValue(), parse(child, refManager));
             }

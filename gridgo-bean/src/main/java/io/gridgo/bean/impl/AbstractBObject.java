@@ -19,7 +19,6 @@ public abstract class AbstractBObject extends AbstractBContainer implements BObj
     public boolean equals(Object obj) {
         if (obj instanceof Map) {
             final Map<?, ?> map = (Map<?, ?>) obj;
-
             if (this.size() == map.size())
                 for (Entry<String, BElement> entry : this.entrySet()) {
                     BElement myValue = entry.getValue();
@@ -27,7 +26,6 @@ public abstract class AbstractBObject extends AbstractBContainer implements BObj
                     if (!myValue.equals(otherValue))
                         return false;
                 }
-
             return true;
         }
         return false;

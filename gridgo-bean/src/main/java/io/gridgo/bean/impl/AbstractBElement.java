@@ -1,7 +1,7 @@
 package io.gridgo.bean.impl;
 
 import io.gridgo.bean.BElement;
-import io.gridgo.bean.serialize.BSerializer;
+import io.gridgo.bean.serialization.binary.BSerializerRegistry;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,5 +9,5 @@ public abstract class AbstractBElement implements BElement {
 
     @Setter
     @Getter
-    private BSerializer serializer;
+    private BSerializerRegistry serializerRegistry;
 }

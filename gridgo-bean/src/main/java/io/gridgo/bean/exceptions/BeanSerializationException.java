@@ -7,4 +7,8 @@ public class BeanSerializationException extends RuntimeException {
     public BeanSerializationException(String msg, Throwable e) {
         super(msg, e);
     }
+
+    public BeanSerializationException(String msg) {
+        super(msg);
+    }
 }

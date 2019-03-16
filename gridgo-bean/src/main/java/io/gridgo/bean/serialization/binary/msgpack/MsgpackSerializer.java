@@ -1,4 +1,4 @@
-package io.gridgo.bean.serialize.msgpack;
+package io.gridgo.bean.serialization.binary.msgpack;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,22 +13,20 @@ import org.msgpack.core.MessageUnpacker;
 
 import io.gridgo.bean.BArray;
 import io.gridgo.bean.BElement;
-import io.gridgo.bean.BFactory;
-import io.gridgo.bean.BFactoryAware;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
-import io.gridgo.bean.serialize.BSerializer;
+import io.gridgo.bean.serialization.binary.AbstractBSerializer;
+import io.gridgo.bean.serialization.binary.BSerializationPlugin;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class MsgpackSerializer implements BSerializer, BFactoryAware {
+@BSerializationPlugin(name = MsgpackSerializer.NAME)
+public class MsgpackSerializer extends AbstractBSerializer {
 
-    @Setter
-    private BFactory factory;
+    public static final String NAME = "msgpack";
 
     private void packAny(BElement element, MessagePacker packer) throws IOException {
         if (element instanceof BValue) {

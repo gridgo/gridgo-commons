@@ -1,4 +1,4 @@
-package io.gridgo.bean.serialize;
+package io.gridgo.bean.serialization.binary;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

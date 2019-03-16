@@ -22,7 +22,7 @@ public class MutableBArray extends AbstractBArray {
 
     private final List<BElement> holder;
 
-    protected MutableBArray(@NonNull List<BElement> holder) {
+    public MutableBArray(@NonNull List<BElement> holder) {
         this.holder = holder;
     }
 

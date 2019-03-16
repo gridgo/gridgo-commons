@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 
 import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
+import io.gridgo.bean.factory.BFactory;
 import io.gridgo.utils.ObjectUtils;
 import io.gridgo.utils.StringUtils;
 import lombok.NonNull;

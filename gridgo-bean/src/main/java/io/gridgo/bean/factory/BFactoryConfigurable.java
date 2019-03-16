@@ -1,4 +1,4 @@
-package io.gridgo.bean;
+package io.gridgo.bean.factory;
 
 import java.util.Collection;
 import java.util.List;
@@ -6,8 +6,11 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import io.gridgo.bean.serialize.BSerializer;
-import io.gridgo.bean.xml.BXmlParser;
+import io.gridgo.bean.BArray;
+import io.gridgo.bean.BElement;
+import io.gridgo.bean.BObject;
+import io.gridgo.bean.BReference;
+import io.gridgo.bean.BValue;
 
 public interface BFactoryConfigurable {
 
@@ -22,8 +25,4 @@ public interface BFactoryConfigurable {
     BFactoryConfigurable setWrappedArraySupplier(Function<Collection<?>, BArray> wrappedArraySupplier);
 
     BFactoryConfigurable setReferenceSupplier(Supplier<BReference> referenceSupplier);
-
-    BFactoryConfigurable setXmlParser(BXmlParser parser);
-
-    BFactoryConfigurable setSerializer(BSerializer serializer);
 }

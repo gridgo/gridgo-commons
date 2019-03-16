@@ -1,4 +1,4 @@
-package io.gridgo.bean.xml;
+package io.gridgo.bean.serialization.xml;
 
 import java.math.BigDecimal;
 import java.util.HashMap;

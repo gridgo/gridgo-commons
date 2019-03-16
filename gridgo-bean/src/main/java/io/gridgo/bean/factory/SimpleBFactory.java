@@ -1,4 +1,4 @@
-package io.gridgo.bean.impl;
+package io.gridgo.bean.factory;
 
 import java.util.Collection;
 import java.util.List;
@@ -8,19 +8,21 @@ import java.util.function.Supplier;
 
 import io.gridgo.bean.BArray;
 import io.gridgo.bean.BElement;
-import io.gridgo.bean.BFactory;
-import io.gridgo.bean.BFactoryAware;
-import io.gridgo.bean.BFactoryConfigurable;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BReference;
 import io.gridgo.bean.BValue;
-import io.gridgo.bean.serialize.BSerializer;
-import io.gridgo.bean.serialize.msgpack.MsgpackSerializer;
-import io.gridgo.bean.xml.BXmlParser;
+import io.gridgo.bean.impl.MutableBArray;
+import io.gridgo.bean.impl.MutableBObject;
+import io.gridgo.bean.impl.MutableBReference;
+import io.gridgo.bean.impl.MutableBValue;
+import io.gridgo.bean.impl.WrappedImmutableBArray;
+import io.gridgo.bean.impl.WrappedImmutableBObject;
+import io.gridgo.bean.serialization.binary.BSerializerRegistry;
+import io.gridgo.bean.serialization.xml.BXmlParser;
 import lombok.Getter;
 
 @Getter
-public class DefaultBFactory implements BFactory, BFactoryConfigurable {
+class SimpleBFactory implements BFactory, BFactoryConfigurable {
 
     private Supplier<BValue> valueSupplier = MutableBValue::new;
     private Supplier<BReference> referenceSupplier = MutableBReference::new;
@@ -31,31 +33,8 @@ public class DefaultBFactory implements BFactory, BFactoryConfigurable {
     private Function<Map<String, BElement>, BObject> objectSupplier = MutableBObject::new;
     private Function<Map<?, ?>, BObject> wrappedObjectSupplier = WrappedImmutableBObject::new;
 
-    private BXmlParser xmlParser;
-    private BSerializer serializer;
-
-    public DefaultBFactory() {
-        this.setSerializer(new MsgpackSerializer());
-        this.setXmlParser(new BXmlParser());
-    }
-
-    @Override
-    public BFactoryConfigurable setXmlParser(BXmlParser xmlParser) {
-        this.xmlParser = xmlParser;
-        if (this.xmlParser instanceof BFactoryAware) {
-            this.xmlParser.setFactory(this);
-        }
-        return this;
-    }
-
-    @Override
-    public BFactoryConfigurable setSerializer(BSerializer serializer) {
-        this.serializer = serializer;
-        if (this.serializer instanceof BFactoryAware) {
-            ((BFactoryAware) this.serializer).setFactory(this);
-        }
-        return this;
-    }
+    private BXmlParser xmlParser = new BXmlParser(this);
+    private BSerializerRegistry serializerRegistry = new BSerializerRegistry(this);
 
     @Override
     public BFactoryConfigurable setValueSupplier(Supplier<BValue> valueSupplier) {

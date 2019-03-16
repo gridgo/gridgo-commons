@@ -5,6 +5,7 @@ import java.util.Base64;
 
 import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
+import io.gridgo.bean.factory.BFactory;
 import io.gridgo.utils.ByteArrayUtils;
 import io.gridgo.utils.PrimitiveUtils;
 import io.gridgo.utils.StringUtils;

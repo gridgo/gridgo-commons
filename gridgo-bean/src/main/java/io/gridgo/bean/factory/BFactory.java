@@ -1,4 +1,4 @@
-package io.gridgo.bean;
+package io.gridgo.bean.factory;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -13,11 +13,16 @@ import java.util.Properties;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import io.gridgo.bean.BArray;
+import io.gridgo.bean.BElement;
+import io.gridgo.bean.BObject;
+import io.gridgo.bean.BReference;
+import io.gridgo.bean.BValue;
 import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
-import io.gridgo.bean.impl.DefaultBFactory;
-import io.gridgo.bean.serialize.BSerializer;
-import io.gridgo.bean.xml.BXmlParser;
+import io.gridgo.bean.serialization.binary.BSerializer;
+import io.gridgo.bean.serialization.binary.BSerializerRegistry;
+import io.gridgo.bean.serialization.xml.BXmlParser;
 import io.gridgo.utils.ArrayUtils;
 import io.gridgo.utils.PrimitiveUtils;
 import lombok.NonNull;
@@ -27,10 +32,10 @@ import net.minidev.json.parser.ParseException;
 @SuppressWarnings("unchecked")
 public interface BFactory {
 
-    static final BFactory DEFAULT = new DefaultBFactory();
+    static final BFactory DEFAULT = new SimpleBFactory();
 
     static BFactory newInstance() {
-        return new DefaultBFactory();
+        return new SimpleBFactory();
     }
 
     static BObject newDefaultObject() {
@@ -47,7 +52,7 @@ public interface BFactory {
 
     BXmlParser getXmlParser();
 
-    BSerializer getSerializer();
+    BSerializerRegistry getSerializerRegistry();
 
     Supplier<BReference> getReferenceSupplier();
 
@@ -126,7 +131,7 @@ public interface BFactory {
     default BObject newObjectWithHolder(Map<String, BElement> holder) {
         BObject result = this.getObjectSupplier().apply(holder);
         result.setFactory(this);
-        result.setSerializer(this.getSerializer());
+        result.setSerializerRegistry(this.getSerializerRegistry());
         return result;
     }
 
@@ -169,13 +174,13 @@ public interface BFactory {
     default BArray newArrayWithHolder(List<BElement> holder) {
         BArray result = this.getArraySupplier().apply(holder);
         result.setFactory(this);
-        result.setSerializer(this.getSerializer());
+        result.setSerializerRegistry(this.getSerializerRegistry());
         return result;
     }
 
     default BValue newValue() {
         BValue result = this.getValueSupplier().get();
-        result.setSerializer(this.getSerializer());
+        result.setSerializerRegistry(this.getSerializerRegistry());
         return result;
     }
 
@@ -238,16 +243,36 @@ public interface BFactory {
         return (T) this.getXmlParser().parse(xml);
     }
 
-    default <T extends BElement> T fromBytes(InputStream in) {
-        return (T) this.getSerializer().deserialize(in);
+    default BSerializer lookupOrDefaultSerializer(String serializerName) {
+        var serializer = this.getSerializerRegistry().lookupOrDefault(serializerName);
+        if (serializer == null) {
+            throw new NullPointerException("Cannot found serializer name " + serializerName);
+        }
+        return serializer;
     }
 
-    default <T extends BElement> T fromBytes(ByteBuffer buffer) {
-        return (T) this.getSerializer().deserialize(buffer);
+    default <T extends BElement> T fromBytes(@NonNull InputStream in, String serializerName) {
+        return (T) this.lookupOrDefaultSerializer(serializerName).deserialize(in);
     }
 
-    default <T extends BElement> T fromBytes(byte[] bytes) {
-        return (T) this.getSerializer().deserialize(bytes);
+    default <T extends BElement> T fromBytes(@NonNull ByteBuffer buffer, String serializerName) {
+        return (T) this.lookupOrDefaultSerializer(serializerName).deserialize(buffer);
+    }
+
+    default <T extends BElement> T fromBytes(@NonNull byte[] bytes, String serializerName) {
+        return (T) this.lookupOrDefaultSerializer(serializerName).deserialize(bytes);
+    }
+
+    default <T extends BElement> T fromBytes(@NonNull InputStream in) {
+        return (T) this.fromBytes(in, null);
+    }
+
+    default <T extends BElement> T fromBytes(@NonNull ByteBuffer buffer) {
+        return (T) this.fromBytes(buffer, null);
+    }
+
+    default <T extends BElement> T fromBytes(@NonNull byte[] bytes) {
+        return (T) this.fromBytes(bytes, null);
     }
 
     default BFactoryConfigurable asConfigurable() {

@@ -10,9 +10,11 @@ import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import io.gridgo.bean.serialize.BSerializerAware;
+import io.gridgo.bean.factory.BFactory;
+import io.gridgo.bean.serialization.binary.BSerializerRegistryAware;
+import lombok.NonNull;
 
-public interface BElement extends BSerializerAware {
+public interface BElement extends BSerializerRegistryAware {
 
     void writeString(String name, int numTab, StringBuilder writer);
 
@@ -60,16 +62,28 @@ public interface BElement extends BSerializerAware {
         return BFactory.DEFAULT.fromJson(inputStream);
     }
 
-    static <T extends BElement> T ofBytes(InputStream in) {
-        return BFactory.DEFAULT.fromBytes(in);
+    static <T extends BElement> T ofBytes(@NonNull InputStream in, String serializerName) {
+        return BFactory.DEFAULT.fromBytes(in, serializerName);
     }
 
-    static <T extends BElement> T ofBytes(ByteBuffer buffer) {
-        return BFactory.DEFAULT.fromBytes(buffer);
+    static <T extends BElement> T ofBytes(@NonNull ByteBuffer buffer, String serializerName) {
+        return BFactory.DEFAULT.fromBytes(buffer, serializerName);
     }
 
-    static <T extends BElement> T ofBytes(byte[] bytes) {
-        return BFactory.DEFAULT.fromBytes(bytes);
+    static <T extends BElement> T ofBytes(@NonNull byte[] bytes, String serializerName) {
+        return BFactory.DEFAULT.fromBytes(bytes, serializerName);
+    }
+
+    static <T extends BElement> T ofBytes(@NonNull InputStream in) {
+        return ofBytes(in, null);
+    }
+
+    static <T extends BElement> T ofBytes(@NonNull ByteBuffer buffer) {
+        return ofBytes(buffer, null);
+    }
+
+    static <T extends BElement> T ofBytes(@NonNull byte[] bytes) {
+        return ofBytes(bytes, null);
     }
 
     default void writeBytes(ByteBuffer buffer) {

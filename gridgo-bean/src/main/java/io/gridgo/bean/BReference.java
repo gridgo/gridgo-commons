@@ -3,6 +3,7 @@ package io.gridgo.bean;
 import java.io.IOException;
 
 import io.gridgo.bean.exceptions.BeanSerializationException;
+import io.gridgo.bean.factory.BFactory;
 import io.gridgo.utils.StringUtils;
 
 public interface BReference extends BElement {
