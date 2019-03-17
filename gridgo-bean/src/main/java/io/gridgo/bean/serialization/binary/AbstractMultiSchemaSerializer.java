@@ -1,5 +1,6 @@
 package io.gridgo.bean.serialization.binary;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ import io.gridgo.utils.PrimitiveUtils;
 import lombok.Getter;
 import lombok.NonNull;
 
-public abstract class AbstractHasSchemaSerializer<S> extends AbstractBSerializer implements HasSchemaSerializer<S> {
+public abstract class AbstractMultiSchemaSerializer<S> extends AbstractBSerializer implements MultiSchemaSerializer<S> {
 
     private final Map<Class<? extends S>, Integer> schemaToId = new HashMap<>();
     private final Map<Integer, Class<? extends S>> idToSchema = new HashMap<>();
@@ -24,7 +25,7 @@ public abstract class AbstractHasSchemaSerializer<S> extends AbstractBSerializer
     @Getter
     private final Class<? extends S> superSchema;
 
-    protected AbstractHasSchemaSerializer(@NonNull Class<S> superSchema) {
+    protected AbstractMultiSchemaSerializer(@NonNull Class<S> superSchema) {
         this.superSchema = superSchema;
     }
 
@@ -88,34 +89,44 @@ public abstract class AbstractHasSchemaSerializer<S> extends AbstractBSerializer
         // do nothing
     }
 
+    protected Integer appendSchemaId(@NonNull S msgObj, @NonNull OutputStream out) throws IOException {
+        Integer id = this.lookupId(msgObj.getClass());
+        if (id == null) {
+            throw new SchemaInvalidException("Schema " + msgObj.getClass() + " wasn't registered");
+        }
+        out.write(ByteArrayUtils.primitiveToBytes(id));
+        return id;
+    }
+
     @Override
     public final void serialize(BElement element, OutputStream out) {
         if (!(element instanceof BReference)) {
-            throw new BeanSerializationException("Protobuf serializer support only BReference");
+            throw new BeanSerializationException("HasSchema serializer support only BReference");
         }
         Object ref = element.asReference().getReference();
         if (ref == null || !superSchema.isAssignableFrom(ref.getClass())) {
             throw new BeanSerializationException("Reference object must be instanceof " + superSchema.getName());
         }
         S msgObj = element.asReference().getReference();
-        Integer id = this.lookupId(msgObj.getClass());
-        if (id == null) {
-            throw new SchemaInvalidException("Schema " + msgObj.getClass() + " wasn't registered");
-        }
         try {
-            out.write(ByteArrayUtils.primitiveToBytes(id));
+            Integer id = appendSchemaId(msgObj, out);
             doSerialize(id, msgObj, out);
         } catch (Exception e) {
-            throw new BeanSerializationException("Cannot write protobuf message to output stream", e);
+            throw new BeanSerializationException("Cannot write message to output stream", e);
         }
+    }
+
+    protected Integer extractSchemaId(InputStream in) throws IOException {
+        byte[] idBytes = new byte[4];
+        in.read(idBytes);
+        var id = PrimitiveUtils.getIntegerValueFrom(idBytes);
+        return id;
     }
 
     @Override
     public final BElement deserialize(InputStream in) {
         try {
-            byte[] idBytes = new byte[4];
-            in.read(idBytes);
-            var id = PrimitiveUtils.getIntegerValueFrom(idBytes);
+            var id = extractSchemaId(in);
             var obj = doDeserialize(in, id);
             return this.getFactory().fromAny(obj);
         } catch (Exception e) {
@@ -123,7 +134,7 @@ public abstract class AbstractHasSchemaSerializer<S> extends AbstractBSerializer
         }
     }
 
-    protected abstract void doSerialize(int id, S msgObj, OutputStream out) throws Exception;
+    protected abstract void doSerialize(Integer id, S msgObj, OutputStream out) throws Exception;
 
-    protected abstract Object doDeserialize(InputStream in, int id) throws Exception;
+    protected abstract Object doDeserialize(InputStream in, Integer id) throws Exception;
 }

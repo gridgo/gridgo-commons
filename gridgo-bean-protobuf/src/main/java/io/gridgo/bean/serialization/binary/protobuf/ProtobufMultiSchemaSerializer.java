@@ -9,18 +9,17 @@ import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import com.google.protobuf.MessageLite;
 
-import io.gridgo.bean.exceptions.SchemaInvalidException;
-import io.gridgo.bean.serialization.binary.AbstractHasSchemaSerializer;
+import io.gridgo.bean.serialization.binary.AbstractMultiSchemaSerializer;
 import io.gridgo.bean.serialization.binary.BSerializationPlugin;
 
-@BSerializationPlugin(ProtobufSerializer.NAME)
-public class ProtobufSerializer extends AbstractHasSchemaSerializer<MessageLite> {
+@BSerializationPlugin(ProtobufMultiSchemaSerializer.NAME)
+public class ProtobufMultiSchemaSerializer extends AbstractMultiSchemaSerializer<MessageLite> implements ProtobufSerializer {
 
-    public static final String NAME = "protobuf";
+    public static final String NAME = "protobufMultiSchema";
 
     private final Map<Integer, Method> parseFromMethodCache = new NonBlockingHashMap<>();
 
-    public ProtobufSerializer() {
+    public ProtobufMultiSchemaSerializer() {
         super(MessageLite.class);
     }
 
@@ -38,21 +37,13 @@ public class ProtobufSerializer extends AbstractHasSchemaSerializer<MessageLite>
         return parseFromMethodCache.get(id);
     }
 
-    private Method extractParseFromMethod(Class<? extends MessageLite> schema) {
-        try {
-            return schema.getMethod("parseFrom", InputStream.class);
-        } catch (NoSuchMethodException | SecurityException e) {
-            throw new SchemaInvalidException("Schema doesn't contain 'parseFrom' method or method isn't accessible");
-        }
-    }
-
     @Override
-    public void doSerialize(int id, MessageLite msgObj, OutputStream out) throws Exception {
+    public void doSerialize(Integer id, MessageLite msgObj, OutputStream out) throws Exception {
         msgObj.writeTo(out);
     }
 
     @Override
-    public Object doDeserialize(InputStream in, int id) throws Exception {
+    public Object doDeserialize(InputStream in, Integer id) throws Exception {
         return getParseFromMethodOf(id).invoke(null, in);
     }
 }

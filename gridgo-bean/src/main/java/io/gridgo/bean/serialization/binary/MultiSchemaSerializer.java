@@ -1,6 +1,6 @@
 package io.gridgo.bean.serialization.binary;
 
-public interface HasSchemaSerializer<S> {
+public interface MultiSchemaSerializer<S> extends HasSchemaSerializer {
 
     public void registerSchema(Class<? extends S> clazz, int id);
 
@@ -11,4 +11,9 @@ public interface HasSchemaSerializer<S> {
     public Class<? extends S> lookupSchema(int id);
 
     public Integer lookupId(Class<?> clazz);
+
+    @Override
+    default boolean isMulti() {
+        return true;
+    }
 }
