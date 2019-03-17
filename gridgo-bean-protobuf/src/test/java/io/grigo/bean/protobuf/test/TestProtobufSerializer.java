@@ -39,4 +39,16 @@ public class TestProtobufSerializer {
 
         assertEquals(p, p2);
     }
+
+    @Test
+    public void testCustomSingleSchemaProtobufSerializer() throws IOException {
+        BFactory.DEFAULT.getSerializerRegistry().scan(CustomProtobufSingleSchemaSerializer.class.getPackageName());
+
+        Person p = Person.newBuilder().setName("Bach Hoang Nguyen").setAge(30).build();
+        BElement ele = BElement.ofAny(p);
+        byte[] bytes = ele.toBytes(CustomProtobufSingleSchemaSerializer.NAME);
+        BElement unpackedEle = BElement.ofBytes(bytes, CustomProtobufSingleSchemaSerializer.NAME);
+        Person p2 = unpackedEle.asReference().getReference();
+        assertEquals(p, p2);
+    }
 }

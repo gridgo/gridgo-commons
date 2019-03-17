@@ -48,4 +48,20 @@ public class TestAvroSerializer {
 
         System.out.println(p2);
     }
+
+    @Test
+    public void testCustomSingleSchemaAvroSerializer() {
+        BFactory.DEFAULT.getSerializerRegistry().scan(CustomAvroSingleSchemaSerializer.class.getPackageName());
+
+        Person p = Person.newBuilder().setName("Bach Hoang Nguyen").setAge(30).build();
+        byte[] bytes = BElement.ofAny(p).toBytes(CustomAvroSingleSchemaSerializer.NAME);
+        System.out.println(ByteArrayUtils.toHex(bytes, "0x"));
+
+        BElement unpackedEle = BElement.ofBytes(bytes, CustomAvroSingleSchemaSerializer.NAME);
+        Person p2 = unpackedEle.asReference().getReference();
+
+        assertEquals(p, p2);
+
+        System.out.println(p2);
+    }
 }
