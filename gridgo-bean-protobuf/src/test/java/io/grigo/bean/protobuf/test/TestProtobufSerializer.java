@@ -33,8 +33,8 @@ public class TestProtobufSerializer {
         protobufSerializer.setSchema(Person.class);
         Person p = Person.newBuilder().setName("Bach Hoang Nguyen").setAge(30).build();
         BElement ele = BElement.ofAny(p);
-        byte[] bytes = ele.toBytes(ProtobufMultiSchemaSerializer.NAME);
-        BElement unpackedEle = BElement.ofBytes(bytes, ProtobufMultiSchemaSerializer.NAME);
+        byte[] bytes = ele.toBytes(ProtobufSingleSchemaSerializer.NAME);
+        BElement unpackedEle = BElement.ofBytes(bytes, ProtobufSingleSchemaSerializer.NAME);
         Person p2 = unpackedEle.asReference().getReference();
 
         assertEquals(p, p2);
