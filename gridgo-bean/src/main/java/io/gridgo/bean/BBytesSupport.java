@@ -4,21 +4,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
-import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
-import io.gridgo.bean.serialization.BSerializer;
 import io.gridgo.bean.serialization.BSerializerRegistryAware;
 import lombok.NonNull;
 
 public interface BBytesSupport extends BSerializerRegistryAware {
 
-    default BSerializer lookupOrDefaultSerializer(String serializerName) {
-        var serializer = this.getSerializerRegistry().lookupOrDefault(serializerName);
-        if (serializer == null) {
-            throw new BeanSerializationException("Serializer doesn't available for name: " + serializerName);
-        }
-        return serializer;
-    }
+    public static final int DEFAULT_OUTPUT_CAPACITY = 1024;
 
     default void writeBytes(@NonNull ByteBuffer buffer, String serializerName) {
         if (this instanceof BElement)
@@ -41,7 +33,7 @@ public interface BBytesSupport extends BSerializerRegistryAware {
     }
 
     default byte[] toBytes(String serializerName) {
-        return this.toBytes(this.getSerializer().getMinimumOutputCapactity(), serializerName);
+        return this.toBytes(DEFAULT_OUTPUT_CAPACITY, serializerName);
     }
 
     default void writeBytes(ByteBuffer buffer) {
@@ -59,7 +51,7 @@ public interface BBytesSupport extends BSerializerRegistryAware {
     }
 
     default byte[] toBytes() {
-        return this.toBytes(this.getSerializer().getMinimumOutputCapactity());
+        return this.toBytes(DEFAULT_OUTPUT_CAPACITY);
     }
 
 }

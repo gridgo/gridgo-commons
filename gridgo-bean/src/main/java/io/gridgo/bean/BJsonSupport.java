@@ -12,7 +12,7 @@ public interface BJsonSupport extends BSerializerRegistryAware {
 
     default void writeJson(OutputStream out) {
         if (this instanceof BElement)
-            getSerializerRegistry().lookup("json").serialize((BElement) this, out);
+            lookupSerializer("json").serialize((BElement) this, out);
         else
             throw new InvalidTypeException("writeJson by default only support BElement");
     }

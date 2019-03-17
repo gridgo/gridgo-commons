@@ -8,7 +8,7 @@ import io.gridgo.bean.serialization.BSerializerRegistryAware;
 public interface BXmlSupport extends BSerializerRegistryAware {
 
     default void writeXml(OutputStream out) {
-        this.getSerializerRegistry().lookup("xml").serialize((BElement) this, out);
+        lookupSerializer("xml").serialize((BElement) this, out);
     }
 
     default String toXml() {
