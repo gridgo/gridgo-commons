@@ -322,7 +322,7 @@ public interface BValue extends BElement {
 
     @Override
     @SuppressWarnings("unchecked")
-    default <T> T deepClone() {
+    default <T extends BElement> T deepClone() {
         return (T) of(this.getData());
     }
 }

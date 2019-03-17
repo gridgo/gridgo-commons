@@ -86,7 +86,7 @@ public interface BReference extends BElement {
     }
 
     @SuppressWarnings("unchecked")
-    public default <T> T deepClone() {
+    public default <T extends BElement> T deepClone() {
         return (T) of(this.getReference());
     }
 }

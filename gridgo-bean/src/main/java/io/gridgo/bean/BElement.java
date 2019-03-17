@@ -10,7 +10,7 @@ import io.gridgo.bean.factory.BFactory;
 import io.gridgo.bean.serialization.BSerializerRegistryAware;
 import lombok.NonNull;
 
-public interface BElement extends BSerializerRegistryAware, BJsonSupport, BXmlSupport, BBytesSupport {
+public interface BElement extends BSerializerRegistryAware, BJsonSupport, BXmlSupport, BBytesSupport, BBeautifulString {
 
     static <T extends BElement> T wrapAny(Object data) {
         return BFactory.DEFAULT.wrap(data);
@@ -159,9 +159,7 @@ public interface BElement extends BSerializerRegistryAware, BJsonSupport, BXmlSu
         return (BReference) this;
     }
 
-    void writeString(String name, int numTab, StringBuilder writer);
-
     BType getType();
 
-    <T> T deepClone();
+    <T extends BElement> T deepClone();
 }

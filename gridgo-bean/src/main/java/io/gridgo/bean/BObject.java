@@ -447,7 +447,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 
     @Override
     @SuppressWarnings("unchecked")
-    default <T> T deepClone() {
+    default <T extends BElement> T deepClone() {
         BObject result = ofEmpty();
         for (Entry<String, BElement> entry : this.entrySet()) {
             result.put(entry.getKey(), entry.getValue().deepClone());
