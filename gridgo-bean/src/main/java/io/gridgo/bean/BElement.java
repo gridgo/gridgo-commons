@@ -1,54 +1,16 @@
 package io.gridgo.bean;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.factory.BFactory;
-import io.gridgo.bean.serialization.BSerializer;
 import io.gridgo.bean.serialization.BSerializerRegistryAware;
 import lombok.NonNull;
 
-public interface BElement extends BSerializerRegistryAware {
-
-    void writeString(String name, int numTab, StringBuilder writer);
-
-    BType getType();
-
-    String toJson();
-
-    void writeJson(Appendable out);
-
-    default void writeJson(OutputStream out) {
-        try (var outWriter = new OutputStreamWriter(out)) {
-            this.writeJson(outWriter);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot close output writer after write json", e);
-        }
-    }
-
-    <T> T toJsonElement();
-
-    String toXml(String name);
-
-    void writeXml(Appendable out, String name);
-
-    default void writeXml(OutputStream out, String name) {
-        try (var outWriter = new OutputStreamWriter(out)) {
-            this.writeXml(outWriter, name);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot close output writer after write xml", e);
-        }
-    }
-
-    <T> T deepClone();
+public interface BElement extends BSerializerRegistryAware, BJsonSupport, BXmlSupport, BBytesSupport {
 
     static <T extends BElement> T wrapAny(Object data) {
         return BFactory.DEFAULT.wrap(data);
@@ -58,14 +20,7 @@ public interface BElement extends BSerializerRegistryAware {
         return BFactory.DEFAULT.fromAny(data);
     }
 
-    static <T extends BElement> T ofXml(String xml) {
-        return BFactory.DEFAULT.fromXml(xml);
-    }
-
-    static <T extends BElement> T ofXml(InputStream in) {
-        return BFactory.DEFAULT.fromXml(in);
-    }
-
+    ////////////////// JSON Support//////////////////
     static <T extends BElement> T ofJson(String json) {
         return BFactory.DEFAULT.fromJson(json);
     }
@@ -78,6 +33,16 @@ public interface BElement extends BSerializerRegistryAware {
         return BFactory.DEFAULT.fromJson(inputStream);
     }
 
+    ///////////////// XML Support////////////////////
+    static <T extends BElement> T ofXml(String xml) {
+        return BFactory.DEFAULT.fromXml(xml);
+    }
+
+    static <T extends BElement> T ofXml(InputStream in) {
+        return BFactory.DEFAULT.fromXml(in);
+    }
+
+    ///////////////// Bytes Support////////////////////
     static <T extends BElement> T ofBytes(@NonNull InputStream in, String serializerName) {
         return BFactory.DEFAULT.fromBytes(in, serializerName);
     }
@@ -100,54 +65,6 @@ public interface BElement extends BSerializerRegistryAware {
 
     static <T extends BElement> T ofBytes(@NonNull byte[] bytes) {
         return ofBytes(bytes, null);
-    }
-
-    default BSerializer lookupOrDefaultSerializer(String serializerName) {
-        var serializer = this.getSerializerRegistry().lookupOrDefault(serializerName);
-        if (serializer == null) {
-            throw new BeanSerializationException("Serializer doesn't available for name: " + serializerName);
-        }
-        return serializer;
-    }
-
-    default void writeBytes(@NonNull ByteBuffer buffer, String serializerName) {
-        lookupOrDefaultSerializer(serializerName).serialize(this, buffer);
-    }
-
-    default void writeBytes(@NonNull OutputStream out, String serializerName) {
-        lookupOrDefaultSerializer(serializerName).serialize(this, out);
-    }
-
-    default byte[] toBytes(int initCapacity, String serializerName) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream(initCapacity);
-        this.writeBytes(out, serializerName);
-        return out.toByteArray();
-    }
-
-    default byte[] toBytes(String serializerName) {
-        return this.toBytes(1024, serializerName);
-    }
-
-    default void writeBytes(ByteBuffer buffer) {
-        writeBytes(buffer, null);
-    }
-
-    default void writeBytes(OutputStream out) {
-        writeBytes(out, null);
-    }
-
-    default byte[] toBytes(int initCapacity) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream(initCapacity);
-        this.writeBytes(out);
-        return out.toByteArray();
-    }
-
-    default byte[] toBytes() {
-        return this.toBytes(this.getSerializer().getMinimumOutputCapactity());
-    }
-
-    default String toXml() {
-        return this.toXml(null);
     }
 
     default boolean isContainer() {
@@ -241,4 +158,10 @@ public interface BElement extends BSerializerRegistryAware {
     default BReference asReference() {
         return (BReference) this;
     }
+
+    void writeString(String name, int numTab, StringBuilder writer);
+
+    BType getType();
+
+    <T> T deepClone();
 }

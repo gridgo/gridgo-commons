@@ -27,7 +27,6 @@ public class TextXmlSerializer {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         obj.writeBytes(out, "xml");
         byte[] bytes = out.toByteArray();
-        System.out.println(new String(bytes));
 
         BElement unpackedEle = BElement.ofBytes(new ByteArrayInputStream(bytes), "xml");
         assertEquals(obj, unpackedEle);

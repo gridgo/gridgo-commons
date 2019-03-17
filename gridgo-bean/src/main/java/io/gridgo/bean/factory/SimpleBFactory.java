@@ -18,7 +18,6 @@ import io.gridgo.bean.impl.MutableBValue;
 import io.gridgo.bean.impl.WrappedImmutableBArray;
 import io.gridgo.bean.impl.WrappedImmutableBObject;
 import io.gridgo.bean.serialization.BSerializerRegistry;
-import io.gridgo.bean.serialization.text.BXmlParser;
 import lombok.Getter;
 
 @Getter
@@ -33,7 +32,6 @@ class SimpleBFactory implements BFactory, BFactoryConfigurable {
     private Function<Map<String, BElement>, BObject> objectSupplier = MutableBObject::new;
     private Function<Map<?, ?>, BObject> wrappedObjectSupplier = WrappedImmutableBObject::new;
 
-    private BXmlParser xmlParser = new BXmlParser(this);
     private BSerializerRegistry serializerRegistry = new BSerializerRegistry(this);
 
     @Override
