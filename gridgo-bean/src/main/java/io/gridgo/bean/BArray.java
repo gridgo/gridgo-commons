@@ -273,7 +273,7 @@ public interface BArray extends BContainer, List<BElement> {
 
     @Override
     @SuppressWarnings("unchecked")
-    default <T> T deepClone() {
+    default <T extends BElement> T deepClone() {
         BArray result = ofEmpty();
         for (BElement entry : this) {
             result.addAny(entry.deepClone());
