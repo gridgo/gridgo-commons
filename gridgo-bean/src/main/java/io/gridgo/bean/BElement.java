@@ -38,6 +38,16 @@ public interface BElement extends BSerializerRegistryAware {
 
     String toXml(String name);
 
+    void writeXml(Appendable out, String name);
+
+    default void writeXml(OutputStream out, String name) {
+        try (var outWriter = new OutputStreamWriter(out)) {
+            this.writeXml(outWriter, name);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot close output writer after write xml", e);
+        }
+    }
+
     <T> T deepClone();
 
     static <T extends BElement> T wrapAny(Object data) {
@@ -50,6 +60,10 @@ public interface BElement extends BSerializerRegistryAware {
 
     static <T extends BElement> T ofXml(String xml) {
         return BFactory.DEFAULT.fromXml(xml);
+    }
+
+    static <T extends BElement> T ofXml(InputStream in) {
+        return BFactory.DEFAULT.fromXml(in);
     }
 
     static <T extends BElement> T ofJson(String json) {

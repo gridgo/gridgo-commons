@@ -28,14 +28,30 @@ public class MutableBValue extends AbstractBElement implements BValue {
 
     @Override
     public boolean equals(Object obj) {
+        var otherData = obj;
         if (obj instanceof BValue) {
-            return this.getData() == null //
-                    ? (((BValue) obj).getData() == null) //
-                    : this.getData().equals(((BValue) obj).getData());
+            otherData = ((BValue) obj).getData();
         }
-        return this.getData() == null //
-                ? obj == null //
-                : this.getData().equals(obj);
+
+        if (data == null)
+            return otherData == null;
+
+        if (otherData == null)
+            return false;
+
+        if (data == otherData || data.equals(otherData))
+            return true;
+
+        if (data instanceof Number && otherData instanceof Number)
+            return ((Number) data).doubleValue() == ((Number) otherData).doubleValue();
+
+        if (data instanceof String && otherData instanceof Character)
+            return data.equals(String.valueOf((Character) otherData));
+
+        if (data instanceof Character && otherData instanceof String)
+            return otherData.equals(String.valueOf((Character) data));
+
+        return false;
     }
 
     @Override

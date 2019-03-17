@@ -5,6 +5,7 @@ import java.io.IOException;
 import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.factory.BFactory;
 import io.gridgo.utils.StringUtils;
+import io.gridgo.utils.exception.RuntimeIOException;
 
 public interface BReference extends BElement {
 
@@ -57,11 +58,31 @@ public interface BReference extends BElement {
         return null;
     }
 
-    public default String toXml(String name) {
+    @Override
+    public default void writeXml(Appendable out, String name) {
         var ref = getReference();
-        if (ref instanceof SerializableReference)
-            return ((SerializableReference) ref).toXml();
-        return null;
+        try {
+            if (name == null)
+                out.append("<reference>");
+            else
+                out.append("<reference name=\"").append(name).append("\"/>");
+
+            if (ref instanceof SerializableReference) {
+                out.append(((SerializableReference) ref).toXml());
+            } else {
+                out.append("instanceOf:").append(ref == null ? "null" : ref.getClass().getName());
+            }
+
+            out.append("</reference>");
+        } catch (IOException e) {
+            throw new RuntimeIOException("Error while write out xml", e);
+        }
+    }
+
+    public default String toXml(String name) {
+        StringBuilder builder = new StringBuilder();
+        this.writeXml(builder, name);
+        return builder.toString();
     }
 
     @SuppressWarnings("unchecked")
