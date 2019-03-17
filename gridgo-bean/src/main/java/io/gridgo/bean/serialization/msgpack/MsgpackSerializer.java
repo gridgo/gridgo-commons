@@ -23,7 +23,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@BSerializationPlugin(MsgpackSerializer.NAME)
+@BSerializationPlugin({ MsgpackSerializer.NAME, "raw" })
 public class MsgpackSerializer extends AbstractBSerializer {
 
     public static final String NAME = "msgpack";
