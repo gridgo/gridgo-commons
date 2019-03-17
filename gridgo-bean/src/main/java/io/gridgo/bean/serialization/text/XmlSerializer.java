@@ -13,17 +13,17 @@ public class XmlSerializer extends AbstractBSerializer {
 
     public static final String NAME = "xml";
 
-    private BXmlParser xmlParser = null;
+    private BXmlReader xmlParser = null;
 
     @Override
     public void setFactory(BFactory factory) {
         super.setFactory(factory);
-        xmlParser = new BXmlParser(factory);
+        xmlParser = new BXmlReader(factory);
     }
 
     @Override
     public void serialize(BElement element, OutputStream out) {
-        element.writeXml(out, null);
+        BXmlWriter.write(out, element);
     }
 
     @Override

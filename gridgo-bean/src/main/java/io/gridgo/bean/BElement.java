@@ -1,7 +1,6 @@
 package io.gridgo.bean;
 
 import java.io.InputStream;
-import java.io.Reader;
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -23,10 +22,6 @@ public interface BElement extends BSerializerRegistryAware, BJsonSupport, BXmlSu
     ////////////////// JSON Support//////////////////
     static <T extends BElement> T ofJson(String json) {
         return BFactory.DEFAULT.fromJson(json);
-    }
-
-    static <T extends BElement> T ofJson(Reader reader) {
-        return BFactory.DEFAULT.fromJson(reader);
     }
 
     static <T extends BElement> T ofJson(InputStream inputStream) {

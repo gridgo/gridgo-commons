@@ -1,9 +1,7 @@
 package io.gridgo.bean;
 
-import java.io.IOException;
 import java.util.Base64;
 
-import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.factory.BFactory;
 import io.gridgo.utils.ByteArrayUtils;
@@ -137,82 +135,6 @@ public interface BValue extends BElement {
         return null;
     }
 
-    @Override
-    default String toJson() {
-        if (!this.isNull()) {
-            if (this.getData() instanceof byte[]) {
-                return ByteArrayUtils.toHex(this.getRaw(), "0x");
-            }
-            return this.getString();
-        }
-        return null;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    default Object toJsonElement() {
-        if (!this.isNull()) {
-            if (this.getData() instanceof byte[]) {
-                return ByteArrayUtils.toHex(this.getRaw(), "0x");
-            } else if (this.getData() instanceof Character) {
-                return new String(new char[] { this.getChar() });
-            }
-            return this.getData();
-        }
-        return null;
-    }
-
-    @Override
-    default void writeJson(Appendable out) {
-        try {
-            out.append(this.toJsonElement().toString());
-        } catch (IOException e) {
-            throw new BeanSerializationException("Error while writing json", e);
-        }
-    }
-
-    @Override
-    default void writeXml(Appendable out, String name) {
-        try {
-            if (!isNull()) {
-                String type = this.getType().name().toLowerCase();
-                out.append("<").append(type);
-                if (name != null) {
-                    out.append(" name=\"").append(name).append("\"");
-                }
-                String content = this.getData() instanceof byte[] ? ByteArrayUtils.toHex(this.getRaw()) : this.getString();
-                if (content.contains("<")) {
-                    out.append(">") //
-                       .append("<![CDATA[")//
-                       .append(content) //
-                       .append("]]>") //
-                       .append("</").append(type).append(">");
-                } else if (content.contains("\"")) {
-                    out.append(">") //
-                       .append(content) //
-                       .append("</").append(type).append(">");
-                } else {
-                    out.append(" value=\"").append(content.replaceAll("\"", "\\\"")).append("\"/>");
-                }
-            } else {
-                if (name == null) {
-                    out.append("<null />");
-                } else {
-                    out.append("<null name=\"").append(name).append("\" />");
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    default String toXml(String name) {
-        StringBuilder builder = new StringBuilder();
-        this.writeXml(builder, name);
-        return builder.toString();
-    }
-
     default BValue encodeHex() {
         if (!(this.getData() instanceof byte[])) {
             throw new InvalidTypeException("Cannot encode hex from data which is not in raw (byte[]) format");
@@ -324,5 +246,16 @@ public interface BValue extends BElement {
     @SuppressWarnings("unchecked")
     default <T extends BElement> T deepClone() {
         return (T) of(this.getData());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    default <T> T toJsonElement() {
+        if (this.getType() == BType.RAW) {
+            return (T) ByteArrayUtils.toHex(this.getRaw(), "0x");
+        } else if (this.getType() == BType.CHAR) {
+            return (T) String.valueOf(this.getChar());
+        }
+        return (T) this.getData();
     }
 }

@@ -5,6 +5,4 @@ public interface SerializableReference {
     String toXml();
 
     String toJson();
-
-    Object toJsonElement();
 }

@@ -2,8 +2,6 @@ package io.gridgo.bean.factory;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -20,15 +18,12 @@ import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BReference;
 import io.gridgo.bean.BValue;
-import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.serialization.BSerializer;
 import io.gridgo.bean.serialization.BSerializerRegistry;
 import io.gridgo.utils.ArrayUtils;
 import io.gridgo.utils.PrimitiveUtils;
 import lombok.NonNull;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 
 @SuppressWarnings("unchecked")
 public interface BFactory {
@@ -211,32 +206,16 @@ public interface BFactory {
         return (T) newReference(obj);
     }
 
-    default <T extends BElement> T fromJson(@NonNull Reader reader) {
-        try {
-            return fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(reader));
-        } catch (ParseException e) {
-            throw new BeanSerializationException("Cannot parse json from reader", e);
-        }
-    }
-
     default <T extends BElement> T fromJson(InputStream inputStream) {
         if (inputStream == null)
             return null;
-        try {
-            return fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(inputStream));
-        } catch (UnsupportedEncodingException | ParseException e) {
-            throw new BeanSerializationException("Cannot parse json from input stream", e);
-        }
+        return this.fromAny(this.lookupDeserializer("json").deserialize(inputStream));
     }
 
     default <T extends BElement> T fromJson(String json) {
         if (json == null)
             return null;
-        try {
-            return fromAny(new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE).parse(json));
-        } catch (ParseException e) {
-            return fromAny(json);
-        }
+        return fromJson(new ByteArrayInputStream(json.getBytes(Charset.forName("UTF-8"))));
     }
 
     default <T extends BElement> T fromXml(String xml) {
@@ -245,6 +224,14 @@ public interface BFactory {
 
     default <T extends BElement> T fromXml(InputStream input) {
         return (T) this.getSerializerRegistry().lookup("xml").deserialize(input);
+    }
+
+    default BSerializer lookupDeserializer(String serializerName) {
+        var serializer = this.getSerializerRegistry().lookup(serializerName);
+        if (serializer == null) {
+            throw new NullPointerException("Cannot found serializer name " + serializerName);
+        }
+        return serializer;
     }
 
     default BSerializer lookupOrDefaultSerializer(String serializerName) {

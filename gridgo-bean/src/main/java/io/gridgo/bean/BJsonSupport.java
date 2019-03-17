@@ -1,23 +1,25 @@
 package io.gridgo.bean;
 
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
-public interface BJsonSupport {
+import io.gridgo.bean.exceptions.InvalidTypeException;
+import io.gridgo.bean.serialization.BSerializerRegistryAware;
 
-    String toJson();
-
-    void writeJson(Appendable out);
-
-    default void writeJson(OutputStream out) {
-        try (var outWriter = new OutputStreamWriter(out)) {
-            this.writeJson(outWriter);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot close output writer after write json", e);
-        }
-    }
+public interface BJsonSupport extends BSerializerRegistryAware {
 
     <T> T toJsonElement();
 
+    default void writeJson(OutputStream out) {
+        if (this instanceof BElement)
+            getSerializerRegistry().lookup("json").serialize((BElement) this, out);
+        else
+            throw new InvalidTypeException("writeJson by default only support BElement");
+    }
+
+    default String toJson() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        writeJson(out);
+        return new String(out.toByteArray());
+    }
 }

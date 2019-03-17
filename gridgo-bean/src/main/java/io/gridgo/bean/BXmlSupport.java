@@ -1,24 +1,19 @@
 package io.gridgo.bean;
 
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
-public interface BXmlSupport {
+import io.gridgo.bean.serialization.BSerializerRegistryAware;
 
-    String toXml(String name);
+public interface BXmlSupport extends BSerializerRegistryAware {
 
-    void writeXml(Appendable out, String name);
-
-    default void writeXml(OutputStream out, String name) {
-        try (var outWriter = new OutputStreamWriter(out)) {
-            this.writeXml(outWriter, name);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot close output writer after write xml", e);
-        }
+    default void writeXml(OutputStream out) {
+        this.getSerializerRegistry().lookup("xml").serialize((BElement) this, out);
     }
 
     default String toXml() {
-        return this.toXml(null);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        this.writeXml(out);
+        return new String(out.toByteArray());
     }
 }

@@ -8,6 +8,7 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@SuppressWarnings("unchecked")
 public class MutableBReference extends AbstractBElement implements BReference {
 
     @Setter

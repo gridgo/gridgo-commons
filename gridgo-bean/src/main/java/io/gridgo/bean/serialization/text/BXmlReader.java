@@ -38,7 +38,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
-class BXmlParser {
+class BXmlReader {
 
     private static final String REF_NAME = "refName";
 
@@ -46,7 +46,7 @@ class BXmlParser {
 
     private final BFactory factory;
 
-    public BXmlParser(BFactory factory) {
+    public BXmlReader(BFactory factory) {
         this.factory = factory;
     }
 

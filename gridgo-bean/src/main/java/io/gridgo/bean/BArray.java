@@ -1,17 +1,12 @@
 package io.gridgo.bean;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.factory.BFactory;
 import io.gridgo.utils.StringUtils;
-import io.gridgo.utils.exception.RuntimeIOException;
-import net.minidev.json.JSONArray;
 
 public interface BArray extends BContainer, List<BElement> {
 
@@ -61,73 +56,6 @@ public interface BArray extends BContainer, List<BElement> {
             this.addAny(object);
         }
         return this;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    default List<Object> toJsonElement() {
-        List<Object> list = new JSONArray();
-        for (BElement entry : this) {
-            list.add(entry.toJsonElement());
-        }
-        return list;
-    }
-
-    @Override
-    default void writeJson(Appendable out) {
-        try {
-            JSONArray.writeJSONString(this.toJsonElement(), out);
-        } catch (IOException e) {
-            throw new BeanSerializationException("Error while write json to output appendable", e);
-        }
-    }
-
-    default String toJson() {
-        StringWriter sw = new StringWriter();
-        this.writeJson(sw);
-        return sw.toString();
-    }
-
-    @Override
-    default void writeXml(Appendable out, String name) {
-        try {
-            if (name != null) {
-                out.append("<array name=\"").append(name).append("\">");
-            } else {
-                out.append("<array>");
-            }
-            for (BElement element : this) {
-                element.writeXml(out, null);
-            }
-            out.append("</array>");
-        } catch (IOException e) {
-            throw new RuntimeIOException("Error while write out xml", e);
-        }
-    }
-
-    @Override
-    default String toXml(String name) {
-        final StringBuilder builder = new StringBuilder();
-        this.writeXml(builder, name);
-        return builder.toString();
-    }
-
-    default List<Object> toList() {
-        List<Object> list = new LinkedList<>();
-        for (BElement entry : this) {
-            if (entry instanceof BValue) {
-                list.add(((BValue) entry).getData());
-            } else if (entry instanceof BObject) {
-                list.add(((BObject) entry).toMap());
-            } else if (entry instanceof BArray) {
-                list.add(((BArray) entry).toList());
-            } else if (entry instanceof BReference) {
-                list.add(((BReference) entry).getReference());
-            } else {
-                throw new InvalidTypeException("Found unexpected BElement implementation: " + entry.getClass());
-            }
-        }
-        return list;
     }
 
     default BValue getValue(int index) {
@@ -289,5 +217,33 @@ public interface BArray extends BContainer, List<BElement> {
                 return BArray.this;
             }
         };
+    }
+
+    default List<Object> toList() {
+        List<Object> list = new LinkedList<>();
+        for (BElement entry : this) {
+            if (entry instanceof BValue) {
+                list.add(((BValue) entry).getData());
+            } else if (entry instanceof BObject) {
+                list.add(((BObject) entry).toMap());
+            } else if (entry instanceof BArray) {
+                list.add(((BArray) entry).toList());
+            } else if (entry instanceof BReference) {
+                list.add(((BReference) entry).getReference());
+            } else {
+                throw new InvalidTypeException("Found unexpected BElement implementation: " + entry.getClass());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    default List<?> toJsonElement() {
+        List<?> list = new LinkedList<>();
+        for (BElement element : this) {
+            list.add(element.toJsonElement());
+        }
+        return list;
     }
 }

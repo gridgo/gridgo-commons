@@ -1,5 +1,7 @@
 package io.gridgo.bean.impl;
 
+import java.util.Arrays;
+
 import io.gridgo.bean.BValue;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.utils.PrimitiveUtils;
@@ -50,6 +52,9 @@ public class MutableBValue extends AbstractBElement implements BValue {
 
         if (data instanceof Character && otherData instanceof String)
             return otherData.equals(String.valueOf((Character) data));
+
+        if (data instanceof byte[] && otherData instanceof byte[])
+            return Arrays.equals((byte[]) data, (byte[]) otherData);
 
         return false;
     }
