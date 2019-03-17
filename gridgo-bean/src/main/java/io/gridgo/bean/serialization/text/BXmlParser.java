@@ -1,4 +1,4 @@
-package io.gridgo.bean.serialization.xml;
+package io.gridgo.bean.serialization.text;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,18 +38,29 @@ public class BXmlParser {
     }
 
     public BElement parse(String xml) {
-        if (xml != null) {
-            try (InputStream in = new ByteArrayInputStream(xml.getBytes(Charset.forName("utf-8")))) {
-                Document document = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder().parse(in);
-                RefManager refManager = new RefManager();
-                BElement result = parse(document, refManager);
-                refManager.resolve();
-                return result;
-            } catch (SAXException | IOException | ParserConfigurationException e) {
-                throw new BeanSerializationException("Cannot parse xml", e);
-            }
+        if (xml == null)
+            return null;
+
+        try (InputStream in = new ByteArrayInputStream(xml.getBytes(Charset.forName("utf-8")))) {
+            return parse(in);
+        } catch (IOException e) {
+            throw new BeanSerializationException("Cannot parse xml", e);
         }
-        return null;
+    }
+
+    public BElement parse(InputStream in) {
+        if (in == null)
+            return null;
+
+        try {
+            Document document = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder().parse(in);
+            RefManager refManager = new RefManager();
+            BElement result = parse(document, refManager);
+            refManager.resolve();
+            return result;
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            throw new BeanSerializationException("Cannot parse xml", e);
+        }
     }
 
     public BElement parse(Node node, RefManager refManager) {

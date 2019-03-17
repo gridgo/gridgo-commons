@@ -9,4 +9,9 @@ public class RuntimeIOException extends RuntimeException {
     public RuntimeIOException(IOException e) {
         super(e);
     }
+
+    public RuntimeIOException(String message, IOException e) {
+        super(message, e);
+    }
+
 }

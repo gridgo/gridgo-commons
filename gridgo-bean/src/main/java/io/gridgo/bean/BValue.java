@@ -172,31 +172,45 @@ public interface BValue extends BElement {
     }
 
     @Override
-    default String toXml(String name) {
-        if (!this.isNull()) {
-            String type = this.getType().name().toLowerCase();
-            StringBuilder sb = new StringBuilder();
-            sb.append("<").append(type);
-            if (name != null) {
-                sb.append(" name=\"").append(name).append("\"");
-            }
-            String content = this.getData() instanceof byte[] ? ByteArrayUtils.toHex(this.getRaw()) : this.getString();
-            if (content.contains("<")) {
-                sb.append(">") //
-                  .append("<![CDATA[")//
-                  .append(content) //
-                  .append("]]>") //
-                  .append("</").append(type).append(">");
-            } else if (content.contains("\"")) {
-                sb.append(">") //
-                  .append(content) //
-                  .append("</").append(type).append(">");
+    default void writeXml(Appendable out, String name) {
+        try {
+            if (!isNull()) {
+                String type = this.getType().name().toLowerCase();
+                out.append("<").append(type);
+                if (name != null) {
+                    out.append(" name=\"").append(name).append("\"");
+                }
+                String content = this.getData() instanceof byte[] ? ByteArrayUtils.toHex(this.getRaw()) : this.getString();
+                if (content.contains("<")) {
+                    out.append(">") //
+                       .append("<![CDATA[")//
+                       .append(content) //
+                       .append("]]>") //
+                       .append("</").append(type).append(">");
+                } else if (content.contains("\"")) {
+                    out.append(">") //
+                       .append(content) //
+                       .append("</").append(type).append(">");
+                } else {
+                    out.append(" value=\"").append(content.replaceAll("\"", "\\\"")).append("\"/>");
+                }
             } else {
-                sb.append(" value=\"").append(content.replaceAll("\"", "\\\"")).append("\"/>");
+                if (name == null) {
+                    out.append("<null />");
+                } else {
+                    out.append("<null name=\"").append(name).append("\" />");
+                }
             }
-            return sb.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return name == null ? "<null />" : ("<null name=\"" + name + "\"/>");
+    }
+
+    @Override
+    default String toXml(String name) {
+        StringBuilder builder = new StringBuilder();
+        this.writeXml(builder, name);
+        return builder.toString();
     }
 
     default BValue encodeHex() {

@@ -12,6 +12,7 @@ import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.factory.BFactory;
 import io.gridgo.utils.ObjectUtils;
 import io.gridgo.utils.StringUtils;
+import io.gridgo.utils.exception.RuntimeIOException;
 import lombok.NonNull;
 import net.minidev.json.JSONObject;
 
@@ -285,18 +286,27 @@ public interface BObject extends BContainer, Map<String, BElement> {
         return out.toString();
     }
 
+    default void writeXml(Appendable out, String name) {
+        try {
+            if (name == null)
+                out.append("<object>");
+            else
+                out.append("<object name=\"").append(name).append("\">");
+
+            for (Entry<String, BElement> entry : this.entrySet()) {
+                entry.getValue().writeXml(out, entry.getKey());
+            }
+
+            out.append("</object>");
+        } catch (IOException e) {
+            throw new RuntimeIOException("Error while write out xml", e);
+        }
+    }
+
     @Override
     default String toXml(String name) {
         StringBuilder builder = new StringBuilder();
-        if (name == null) {
-            builder.append("<object>");
-        } else {
-            builder.append("<object name=\"").append(name).append("\">");
-        }
-        for (Entry<String, BElement> entry : this.entrySet()) {
-            builder.append(entry.getValue().toXml(entry.getKey()));
-        }
-        builder.append("</object>");
+        this.writeXml(builder, name);
         return builder.toString();
     }
 

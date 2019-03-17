@@ -6,7 +6,7 @@ import java.io.OutputStream;
 
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.BValue;
-import io.gridgo.bean.exceptions.SchemaInvalidException;
+import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.serialization.BSerializationPlugin;
 import io.gridgo.bean.serialization.BSerializer;
 import io.gridgo.utils.exception.RuntimeIOException;
@@ -19,8 +19,7 @@ public class StringSerializer implements BSerializer {
     @Override
     public void serialize(BElement element, OutputStream out) {
         if (!element.isValue())
-            throw new SchemaInvalidException(
-                    String.format("Bean of type [%s] cannot be serialized as String", element.getType()));
+            throw new BeanSerializationException(String.format("Bean of type [%s] cannot be serialized as String", element.getType()));
         try {
             out.write(element.asValue().getRaw());
         } catch (IOException e) {

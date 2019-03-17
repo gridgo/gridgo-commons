@@ -22,7 +22,7 @@ import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.serialization.BSerializer;
 import io.gridgo.bean.serialization.BSerializerRegistry;
-import io.gridgo.bean.serialization.xml.BXmlParser;
+import io.gridgo.bean.serialization.text.BXmlParser;
 import io.gridgo.utils.ArrayUtils;
 import io.gridgo.utils.PrimitiveUtils;
 import lombok.NonNull;
@@ -242,6 +242,10 @@ public interface BFactory {
 
     default <T extends BElement> T fromXml(String xml) {
         return (T) this.getXmlParser().parse(xml);
+    }
+
+    default <T extends BElement> T fromXml(InputStream input) {
+        return (T) this.getXmlParser().parse(input);
     }
 
     default BSerializer lookupOrDefaultSerializer(String serializerName) {

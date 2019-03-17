@@ -10,6 +10,7 @@ import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.factory.BFactory;
 import io.gridgo.utils.StringUtils;
+import io.gridgo.utils.exception.RuntimeIOException;
 import net.minidev.json.JSONArray;
 
 public interface BArray extends BContainer, List<BElement> {
@@ -88,17 +89,26 @@ public interface BArray extends BContainer, List<BElement> {
     }
 
     @Override
+    default void writeXml(Appendable out, String name) {
+        try {
+            if (name != null) {
+                out.append("<array name=\"").append(name).append("\">");
+            } else {
+                out.append("<array>");
+            }
+            for (BElement element : this) {
+                element.writeXml(out, null);
+            }
+            out.append("</array>");
+        } catch (IOException e) {
+            throw new RuntimeIOException("Error while write out xml", e);
+        }
+    }
+
+    @Override
     default String toXml(String name) {
-        StringBuilder builder = new StringBuilder();
-        if (name != null) {
-            builder.append("<array name=\"").append(name).append("\">");
-        } else {
-            builder.append("<array>");
-        }
-        for (BElement element : this) {
-            builder.append(element.toXml());
-        }
-        builder.append("</array>");
+        final StringBuilder builder = new StringBuilder();
+        this.writeXml(builder, name);
         return builder.toString();
     }
 
