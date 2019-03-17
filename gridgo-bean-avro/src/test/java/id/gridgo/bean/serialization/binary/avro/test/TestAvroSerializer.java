@@ -9,8 +9,8 @@ import org.junit.Test;
 import id.gridgo.bean.serialization.binary.avro.test.support.Person;
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.factory.BFactory;
-import io.gridgo.bean.serialization.binary.avro.AvroMultiSchemaSerializer;
-import io.gridgo.bean.serialization.binary.avro.AvroSingleSchemaSerializer;
+import io.gridgo.bean.serialization.avro.AvroMultiSchemaSerializer;
+import io.gridgo.bean.serialization.avro.AvroSingleSchemaSerializer;
 import io.gridgo.utils.ByteArrayUtils;
 
 public class TestAvroSerializer {

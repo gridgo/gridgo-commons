@@ -1,4 +1,4 @@
-package io.gridgo.bean.serialization.binary.protobuf;
+package io.gridgo.bean.serialization.protobuf;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import com.google.protobuf.MessageLite;
 
 import io.gridgo.bean.exceptions.SchemaInvalidException;
-import io.gridgo.bean.serialization.binary.BSerializer;
+import io.gridgo.bean.serialization.BSerializer;
 
 public interface ProtobufSerializer extends BSerializer {
 

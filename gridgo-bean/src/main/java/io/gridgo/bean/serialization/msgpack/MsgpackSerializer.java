@@ -1,4 +1,4 @@
-package io.gridgo.bean.serialization.binary.msgpack;
+package io.gridgo.bean.serialization.msgpack;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,8 +17,8 @@ import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
-import io.gridgo.bean.serialization.binary.AbstractBSerializer;
-import io.gridgo.bean.serialization.binary.BSerializationPlugin;
+import io.gridgo.bean.serialization.AbstractBSerializer;
+import io.gridgo.bean.serialization.BSerializationPlugin;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 

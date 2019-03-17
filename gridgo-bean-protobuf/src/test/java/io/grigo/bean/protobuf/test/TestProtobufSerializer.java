@@ -8,8 +8,8 @@ import org.junit.Test;
 
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.factory.BFactory;
-import io.gridgo.bean.serialization.binary.protobuf.ProtobufMultiSchemaSerializer;
-import io.gridgo.bean.serialization.binary.protobuf.ProtobufSingleSchemaSerializer;
+import io.gridgo.bean.serialization.protobuf.ProtobufMultiSchemaSerializer;
+import io.gridgo.bean.serialization.protobuf.ProtobufSingleSchemaSerializer;
 import io.grigo.bean.protobuf.test.message.PersonOuterClass.Person;
 
 public class TestProtobufSerializer {

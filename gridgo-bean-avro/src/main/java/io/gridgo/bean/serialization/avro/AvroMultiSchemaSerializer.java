@@ -1,4 +1,4 @@
-package io.gridgo.bean.serialization.binary.avro;
+package io.gridgo.bean.serialization.avro;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -9,8 +9,8 @@ import org.apache.avro.message.BinaryMessageDecoder;
 import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.specific.SpecificRecord;
 
-import io.gridgo.bean.serialization.binary.AbstractMultiSchemaSerializer;
-import io.gridgo.bean.serialization.binary.BSerializationPlugin;
+import io.gridgo.bean.serialization.AbstractMultiSchemaSerializer;
+import io.gridgo.bean.serialization.BSerializationPlugin;
 import lombok.NonNull;
 
 @BSerializationPlugin(AvroMultiSchemaSerializer.NAME)

@@ -1,4 +1,4 @@
-package io.gridgo.bean.serialization.binary;
+package io.gridgo.bean.serialization;
 
 import io.gridgo.bean.factory.BFactory;
 import io.gridgo.bean.factory.BFactoryAware;

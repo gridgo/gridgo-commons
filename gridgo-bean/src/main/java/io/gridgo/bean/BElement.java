@@ -12,8 +12,8 @@ import java.util.function.Function;
 
 import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.factory.BFactory;
-import io.gridgo.bean.serialization.binary.BSerializer;
-import io.gridgo.bean.serialization.binary.BSerializerRegistryAware;
+import io.gridgo.bean.serialization.BSerializer;
+import io.gridgo.bean.serialization.BSerializerRegistryAware;
 import lombok.NonNull;
 
 public interface BElement extends BSerializerRegistryAware {

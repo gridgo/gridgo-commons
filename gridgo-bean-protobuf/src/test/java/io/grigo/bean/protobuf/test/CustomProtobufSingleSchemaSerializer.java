@@ -1,7 +1,7 @@
 package io.grigo.bean.protobuf.test;
 
-import io.gridgo.bean.serialization.binary.BSerializationPlugin;
-import io.gridgo.bean.serialization.binary.protobuf.ProtobufSingleSchemaSerializer;
+import io.gridgo.bean.serialization.BSerializationPlugin;
+import io.gridgo.bean.serialization.protobuf.ProtobufSingleSchemaSerializer;
 import io.grigo.bean.protobuf.test.message.PersonOuterClass.Person;
 
 @BSerializationPlugin(CustomProtobufSingleSchemaSerializer.NAME)

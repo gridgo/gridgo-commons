@@ -1,4 +1,4 @@
-package io.gridgo.bean.serialization.binary;
+package io.gridgo.bean.serialization;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -11,7 +11,7 @@ import org.reflections.Reflections;
 import io.gridgo.bean.exceptions.SerializationPluginException;
 import io.gridgo.bean.factory.BFactory;
 import io.gridgo.bean.factory.BFactoryAware;
-import io.gridgo.bean.serialization.binary.msgpack.MsgpackSerializer;
+import io.gridgo.bean.serialization.msgpack.MsgpackSerializer;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -122,12 +122,15 @@ public final class BSerializerRegistry {
                 throw new SerializationPluginException("Invalid serialization plugin, class must implement BSerializer");
             }
             BSerializationPlugin annotation = clazz.getAnnotation(BSerializationPlugin.class);
-            String name = annotation.value();
-            if (name == null || name.isBlank() || name.isEmpty()) {
-                throw new SerializationPluginException("serialization plugin's name must not be blank");
+            String[] names = annotation.value();
+            if (names == null || names.length == 0) {
+                throw new SerializationPluginException("serialization plugin's name(s) must not be empty");
             }
             try {
-                this.register(name, (BSerializer) clazz.getConstructor().newInstance());
+                BSerializer serializer = (BSerializer) clazz.getConstructor().newInstance();
+                for (String name : names) {
+                    this.register(name, serializer);
+                }
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
                     | SecurityException e) {
                 throw new SerializationPluginException("Cannot create instance for class " + clazz + ", require non-args constructor");

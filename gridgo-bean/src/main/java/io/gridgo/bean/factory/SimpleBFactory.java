@@ -17,7 +17,7 @@ import io.gridgo.bean.impl.MutableBReference;
 import io.gridgo.bean.impl.MutableBValue;
 import io.gridgo.bean.impl.WrappedImmutableBArray;
 import io.gridgo.bean.impl.WrappedImmutableBObject;
-import io.gridgo.bean.serialization.binary.BSerializerRegistry;
+import io.gridgo.bean.serialization.BSerializerRegistry;
 import io.gridgo.bean.serialization.xml.BXmlParser;
 import lombok.Getter;
 

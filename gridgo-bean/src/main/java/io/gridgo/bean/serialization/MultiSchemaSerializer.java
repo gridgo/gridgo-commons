@@ -1,4 +1,4 @@
-package io.gridgo.bean.serialization.binary;
+package io.gridgo.bean.serialization;
 
 public interface MultiSchemaSerializer<S> extends HasSchemaSerializer {
 

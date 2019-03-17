@@ -1,4 +1,4 @@
-package io.gridgo.bean.serialization.binary.avro;
+package io.gridgo.bean.serialization.avro;
 
 import java.lang.reflect.Field;
 
@@ -7,7 +7,7 @@ import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.specific.SpecificRecord;
 
 import io.gridgo.bean.exceptions.SchemaInvalidException;
-import io.gridgo.bean.serialization.binary.BSerializer;
+import io.gridgo.bean.serialization.BSerializer;
 import lombok.NonNull;
 
 public interface AvroSerializer extends BSerializer {

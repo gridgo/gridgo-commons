@@ -1,4 +1,4 @@
-package io.gridgo.bean.serialization.binary.avro;
+package io.gridgo.bean.serialization.avro;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,8 +7,8 @@ import org.apache.avro.message.BinaryMessageDecoder;
 import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.specific.SpecificRecord;
 
-import io.gridgo.bean.serialization.binary.AbstractSingleSchemaSerializer;
-import io.gridgo.bean.serialization.binary.BSerializationPlugin;
+import io.gridgo.bean.serialization.AbstractSingleSchemaSerializer;
+import io.gridgo.bean.serialization.BSerializationPlugin;
 
 @BSerializationPlugin(AvroSingleSchemaSerializer.NAME)
 public class AvroSingleSchemaSerializer extends AbstractSingleSchemaSerializer<SpecificRecord> implements AvroSerializer {

@@ -1,4 +1,4 @@
-package io.gridgo.bean.serialization.binary.protobuf;
+package io.gridgo.bean.serialization.protobuf;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -6,8 +6,8 @@ import java.lang.reflect.Method;
 
 import com.google.protobuf.MessageLite;
 
-import io.gridgo.bean.serialization.binary.AbstractSingleSchemaSerializer;
-import io.gridgo.bean.serialization.binary.BSerializationPlugin;
+import io.gridgo.bean.serialization.AbstractSingleSchemaSerializer;
+import io.gridgo.bean.serialization.BSerializationPlugin;
 
 @BSerializationPlugin(ProtobufSingleSchemaSerializer.NAME)
 public class ProtobufSingleSchemaSerializer extends AbstractSingleSchemaSerializer<MessageLite> implements ProtobufSerializer {

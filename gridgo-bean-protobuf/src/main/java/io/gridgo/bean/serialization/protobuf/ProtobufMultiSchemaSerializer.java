@@ -1,4 +1,4 @@
-package io.gridgo.bean.serialization.binary.protobuf;
+package io.gridgo.bean.serialization.protobuf;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -9,8 +9,8 @@ import org.cliffc.high_scale_lib.NonBlockingHashMap;
 
 import com.google.protobuf.MessageLite;
 
-import io.gridgo.bean.serialization.binary.AbstractMultiSchemaSerializer;
-import io.gridgo.bean.serialization.binary.BSerializationPlugin;
+import io.gridgo.bean.serialization.AbstractMultiSchemaSerializer;
+import io.gridgo.bean.serialization.BSerializationPlugin;
 
 @BSerializationPlugin(ProtobufMultiSchemaSerializer.NAME)
 public class ProtobufMultiSchemaSerializer extends AbstractMultiSchemaSerializer<MessageLite> implements ProtobufSerializer {
