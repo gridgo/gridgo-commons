@@ -67,7 +67,6 @@
 		<module>gridgo-bean</module>
 		<module>gridgo-formatting</module>
 		<module>gridgo-framework</module>
-		<module>gridgo-offheap-storage</module>
 		<module>gridgo-bean-protobuf</module>
 		<module>gridgo-bean-avro</module>
 	</modules>
