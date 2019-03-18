@@ -2,9 +2,9 @@ package io.gridgo.bean.impl;
 
 import java.util.Arrays;
 
-import io.gridgo.bean.BType;
 import io.gridgo.bean.BValue;
 import io.gridgo.bean.exceptions.InvalidTypeException;
+import io.gridgo.bean.serialization.text.BPrinter;
 import io.gridgo.utils.PrimitiveUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,10 +26,9 @@ public class MutableBValue extends AbstractBElement implements BValue {
 
     @Override
     public String toString() {
-        if (this.getType() == BType.RAW) {
-            return Arrays.toString(this.getRaw());
-        }
-        return this.getString();
+        StringBuilder writer = new StringBuilder();
+        BPrinter.print(writer, this);
+        return writer.toString();
     }
 
     @Override

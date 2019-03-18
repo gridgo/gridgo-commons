@@ -4,6 +4,7 @@ import java.util.Map;
 
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
+import io.gridgo.bean.serialization.text.BPrinter;
 
 @SuppressWarnings("unchecked")
 public abstract class AbstractBObject extends AbstractBContainer implements BObject {
@@ -11,7 +12,7 @@ public abstract class AbstractBObject extends AbstractBContainer implements BObj
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        this.writeString(null, 0, sb);
+        BPrinter.print(sb, this);
         return sb.toString();
     }
 
