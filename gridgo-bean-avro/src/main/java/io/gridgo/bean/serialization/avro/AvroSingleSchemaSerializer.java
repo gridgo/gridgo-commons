@@ -11,7 +11,7 @@ import io.gridgo.bean.serialization.AbstractSingleSchemaSerializer;
 import io.gridgo.bean.serialization.BSerializationPlugin;
 
 @BSerializationPlugin(AvroSingleSchemaSerializer.NAME)
-public class AvroSingleSchemaSerializer extends AbstractSingleSchemaSerializer<SpecificRecord> implements AvroSerializer {
+public class AvroSingleSchemaSerializer extends AbstractSingleSchemaSerializer<SpecificRecord> implements AvroSchemaSerializer {
 
     public static final String NAME = "avroSingleSchema";
 
