@@ -113,8 +113,7 @@ public final class BPrinter {
         if (name == null) {
             writer.append("(").append(type.name()).append(" = ").append(content).append(")");
         } else {
-            writer.append(name).append(": ").append(type.name());
-            writer.append(" = ").append(content);
+            writer.append(name).append(": ").append(type.name()).append(" = ").append(content);
         }
     }
 }
