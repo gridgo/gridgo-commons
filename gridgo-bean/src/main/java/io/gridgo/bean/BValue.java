@@ -53,6 +53,9 @@ public interface BValue extends BElement {
         if (this.getData() instanceof byte[]) {
             return BType.RAW;
         }
+        if (this.getData() instanceof Number) {
+            return BType.GENERIC_NUMBER;
+        }
         throw new InvalidTypeException("Cannot recognize data type: " + this.getData().getClass());
     }
 

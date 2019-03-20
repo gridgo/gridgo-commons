@@ -17,8 +17,10 @@ import io.gridgo.utils.exception.RuntimeIOException;
 class BXmlWriter {
 
     public static void write(OutputStream out, BElement element) {
-        try (var output = new OutputStreamWriter(out)) {
+        final var output = new OutputStreamWriter(out);
+        try {
             write(output, element);
+            output.flush();
         } catch (IOException e) {
             throw new RuntimeIOException("Error while write out xml", e);
         }

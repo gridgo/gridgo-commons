@@ -69,6 +69,7 @@
 		<module>gridgo-framework</module>
 		<module>gridgo-bean-protobuf</module>
 		<module>gridgo-bean-avro</module>
+		<module>gridgo-bean-gson</module>
 	</modules>
 
 	<build>

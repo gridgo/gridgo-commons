@@ -1,10 +1,9 @@
-package io.gridgo.bean.test;
+package io.gridgo.bean.serialization.gson.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import org.junit.Test;
@@ -13,8 +12,8 @@ import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 
-public class TextJsonSerializer {
-    
+public class TestGsonSerializer {
+
     @Test
     public void testJsonSerializer() {
         var obj = BObject.ofEmpty() //
@@ -33,10 +32,10 @@ public class TextJsonSerializer {
         // System.out.println("origin object: " + obj);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        obj.writeBytes(out, "json");
+        obj.writeBytes(out, "gson");
         byte[] bytes = out.toByteArray();
 
-        BElement unpackedEle = BElement.ofBytes(new ByteArrayInputStream(bytes), "json");
+        BElement unpackedEle = BElement.ofBytes(bytes, "gson");
         assertNotNull(unpackedEle);
         assertTrue(unpackedEle.isObject());
         unpackedEle.asObject().getValue("raw").decodeHex();

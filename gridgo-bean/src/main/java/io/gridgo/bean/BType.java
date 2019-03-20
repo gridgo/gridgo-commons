@@ -2,7 +2,7 @@ package io.gridgo.bean;
 
 public enum BType {
 
-    NULL, BOOLEAN, CHAR, BYTE, SHORT, INTEGER, FLOAT, LONG, DOUBLE, STRING, RAW, OBJECT, ARRAY, REFERENCE;
+    NULL, BOOLEAN, CHAR, BYTE, SHORT, INTEGER, FLOAT, LONG, DOUBLE, STRING, RAW, OBJECT, ARRAY, REFERENCE, GENERIC_NUMBER;
 
     public static BType forName(String name) {
         for (BType value : values()) {
@@ -19,6 +19,7 @@ public enum BType {
                 || this == INTEGER //
                 || this == FLOAT //
                 || this == LONG //
-                || this == DOUBLE;
+                || this == DOUBLE //
+                || this == GENERIC_NUMBER;
     }
 }
