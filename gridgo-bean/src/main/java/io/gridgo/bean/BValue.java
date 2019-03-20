@@ -237,9 +237,7 @@ public interface BValue extends BElement {
     default <T> T toJsonElement() {
         if (this.getType() == BType.RAW) {
             return (T) ByteArrayUtils.toHex(this.getRaw(), "0x");
-        } else if (this.getType() == BType.CHAR) {
-            return (T) String.valueOf(this.getChar());
         }
-        return (T) this.getData();
+        return (T) this.getString();
     }
 }
