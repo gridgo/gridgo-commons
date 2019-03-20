@@ -6,7 +6,7 @@ public class SystemEnvRegistry implements Registry {
 
     @Override
     public Object lookup(String name) {
-        return System.getenv(name);
+        return System.getenv(name.replaceAll("\\.", "_"));
     }
 
     @Override
