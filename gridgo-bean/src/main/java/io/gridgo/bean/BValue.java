@@ -235,9 +235,13 @@ public interface BValue extends BElement {
     @Override
     @SuppressWarnings("unchecked")
     default <T> T toJsonElement() {
-        if (this.getType() == BType.RAW) {
+        switch (this.getType()) {
+        case RAW:
             return (T) ByteArrayUtils.toHex(this.getRaw(), "0x");
+        case CHAR:
+            return (T) this.getString();
+        default:
+            return (T) this.getData();
         }
-        return (T) this.getString();
     }
 }

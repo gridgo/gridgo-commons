@@ -14,6 +14,7 @@ import io.gridgo.utils.exception.RuntimeIOException;
 import lombok.NonNull;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import net.minidev.json.JSONValue;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 
@@ -30,7 +31,7 @@ public class JsonSerializer extends AbstractBSerializer {
             } else if (element.isObject()) {
                 JSONObject.writeJSON(element.asObject().toJsonElement(), outWriter);
             } else {
-                outWriter.append(element.toJsonElement());
+                JSONValue.writeJSONString(element.toJsonElement(), outWriter);
             }
         } catch (IOException e) {
             throw new RuntimeIOException("Error while write out json", e);

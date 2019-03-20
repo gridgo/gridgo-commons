@@ -30,6 +30,8 @@ public class TextJsonSerializer {
                          .set("obj", BObject.ofEmpty().setAny("int", 2)) //
         ;
 
+        // System.out.println("origin object: " + obj);
+
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         obj.writeBytes(out, "json");
         byte[] bytes = out.toByteArray();
@@ -39,6 +41,13 @@ public class TextJsonSerializer {
         assertTrue(unpackedEle.isObject());
         unpackedEle.asObject().getValue("raw").decodeHex();
 
+        // System.out.println("unpacked object: " + unpackedEle);
         assertEquals(obj, unpackedEle);
+    }
+
+    @Test
+    public void testJsonValue() {
+        var val = BValue.of(1);
+        assertEquals("1", val.toJson());
     }
 }
