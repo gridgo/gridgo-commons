@@ -9,7 +9,6 @@ import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.factory.BFactory;
 import io.gridgo.utils.ObjectUtils;
-import io.gridgo.utils.StringUtils;
 import lombok.NonNull;
 
 public interface BObject extends BContainer, Map<String, BElement> {
@@ -310,30 +309,6 @@ public interface BObject extends BContainer, Map<String, BElement> {
             return this.get(field);
         }
         return supplierForNonPresent.get();
-    }
-
-    @Override
-    default void writeString(String name, int numTab, StringBuilder writer) {
-        StringUtils.tabs(numTab, writer);
-        if (name != null) {
-            writer.append(name).append(": OBJECT = {");
-        } else {
-            writer.append("{");
-        }
-        writer.append(this.size() > 0 ? "\n" : "");
-        int count = 0;
-        for (Entry<String, BElement> entry : this.entrySet()) {
-            entry.getValue().writeString(entry.getKey(), numTab + 1, writer);
-            if (++count < this.size()) {
-                writer.append(",\n");
-            } else {
-                writer.append("\n");
-            }
-        }
-        if (this.size() > 0) {
-            StringUtils.tabs(numTab, writer);
-        }
-        writer.append("}");
     }
 
     default BObject setAny(String name, Object value) {

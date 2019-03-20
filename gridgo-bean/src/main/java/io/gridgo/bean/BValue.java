@@ -6,7 +6,6 @@ import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.factory.BFactory;
 import io.gridgo.utils.ByteArrayUtils;
 import io.gridgo.utils.PrimitiveUtils;
-import io.gridgo.utils.StringUtils;
 
 public interface BValue extends BElement {
 
@@ -228,21 +227,6 @@ public interface BValue extends BElement {
     }
 
     @Override
-    default void writeString(String name, int numTab, StringBuilder writer) {
-        StringUtils.tabs(numTab, writer);
-        BType type = this.getType();
-        String content = this.getString();
-        if (name == null) {
-            writer.append("(").append(type.name()).append(")");
-        } else {
-            writer.append(name).append(": ").append(type.name());
-        }
-        if (!this.isNull()) {
-            writer.append(" = ").append(content);
-        }
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     default <T extends BElement> T deepClone() {
         return (T) of(this.getData());
@@ -253,9 +237,7 @@ public interface BValue extends BElement {
     default <T> T toJsonElement() {
         if (this.getType() == BType.RAW) {
             return (T) ByteArrayUtils.toHex(this.getRaw(), "0x");
-        } else if (this.getType() == BType.CHAR) {
-            return (T) String.valueOf(this.getChar());
         }
-        return (T) this.getData();
+        return (T) this.getString();
     }
 }

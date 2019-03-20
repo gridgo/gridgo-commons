@@ -6,7 +6,6 @@ import java.util.List;
 
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.factory.BFactory;
-import io.gridgo.utils.StringUtils;
 
 public interface BArray extends BContainer, List<BElement> {
 
@@ -177,26 +176,6 @@ public interface BArray extends BContainer, List<BElement> {
 
     default byte[] removeRaw(int index) {
         return this.removeValue(index).getRaw();
-    }
-
-    @Override
-    default void writeString(String name, int numTab, StringBuilder writer) {
-        StringUtils.tabs(numTab, writer);
-        if (name == null) {
-            writer.append("[\n");
-        } else {
-            writer.append(name).append(": ARRAY = [\n");
-        }
-        for (int i = 0; i < this.size(); i++) {
-            this.get(i).writeString("[" + i + "]", numTab + 1, writer);
-            if (i < this.size() - 1) {
-                writer.append(",\n");
-            } else {
-                writer.append("\n");
-            }
-        }
-        StringUtils.tabs(numTab, writer);
-        writer.append("]");
     }
 
     @Override

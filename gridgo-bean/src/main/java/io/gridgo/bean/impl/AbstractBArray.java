@@ -1,6 +1,7 @@
 package io.gridgo.bean.impl;
 
 import io.gridgo.bean.BArray;
+import io.gridgo.bean.serialization.text.BPrinter;
 import io.gridgo.utils.ArrayUtils;
 
 @SuppressWarnings("unchecked")
@@ -9,7 +10,7 @@ public abstract class AbstractBArray extends AbstractBContainer implements BArra
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        this.writeString(null, 0, sb);
+        BPrinter.print(sb, this);
         return sb.toString();
     }
 
