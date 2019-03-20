@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import io.gridgo.bean.BElement;
@@ -14,6 +15,11 @@ import io.gridgo.bean.BObject;
 import io.gridgo.bean.BValue;
 
 public class TextJsonSerializer {
+    
+    @Test
+    public void testInteger() {
+        Assert.assertEquals("1", new String(BElement.ofAny(1).toBytes("json")));
+    }
 
     @Test
     public void testJsonSerializer() {
