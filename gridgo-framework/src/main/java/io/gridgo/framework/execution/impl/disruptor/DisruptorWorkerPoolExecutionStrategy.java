@@ -32,16 +32,22 @@ public class DisruptorWorkerPoolExecutionStrategy<T, H> implements ExecutionStra
         this(bufferSize, numWorkers, new BlockingWaitStrategy());
     }
 
-    public DisruptorWorkerPoolExecutionStrategy(final int bufferSize, final int numWorkers, final WaitStrategy waitStrategy) {
+    public DisruptorWorkerPoolExecutionStrategy(final int bufferSize, final int numWorkers,
+            final WaitStrategy waitStrategy) {
         this(bufferSize, numWorkers, waitStrategy, (runnable) -> {
             return new Thread(runnable);
         });
     }
 
+    public DisruptorWorkerPoolExecutionStrategy(final int bufferSize, final int numWorkers,
+            final WaitStrategy waitStrategy, final ThreadFactory threadFactory) {
+        this(ProducerType.MULTI, bufferSize, numWorkers, waitStrategy, threadFactory);
+    }
+
     @SuppressWarnings("unchecked")
-    public DisruptorWorkerPoolExecutionStrategy(final int bufferSize, final int numWorkers, final WaitStrategy waitStrategy,
-            final ThreadFactory threadFactory) {
-        this.disruptor = new Disruptor<>(ExecutionContextEvent::new, bufferSize, threadFactory, ProducerType.MULTI, waitStrategy);
+    public DisruptorWorkerPoolExecutionStrategy(ProducerType type, final int bufferSize, final int numWorkers,
+            final WaitStrategy waitStrategy, final ThreadFactory threadFactory) {
+        this.disruptor = new Disruptor<>(ExecutionContextEvent::new, bufferSize, threadFactory, type, waitStrategy);
         WorkHandler<ExecutionContextEvent<T, H>>[] workers = new WorkHandler[numWorkers];
         for (int i = 0; i < numWorkers; i++) {
             workers[i] = event -> {
