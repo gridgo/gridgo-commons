@@ -1,11 +1,14 @@
 package io.gridgo.bean;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 import io.gridgo.bean.exceptions.InvalidTypeException;
 import io.gridgo.bean.serialization.BSerializerRegistryAware;
+import io.gridgo.utils.exception.RuntimeIOException;
+import io.gridgo.utils.wrapper.ByteBufferOutputStream;
 import lombok.NonNull;
 
 public interface BBytesSupport extends BSerializerRegistryAware {
@@ -14,7 +17,11 @@ public interface BBytesSupport extends BSerializerRegistryAware {
 
     default void writeBytes(@NonNull ByteBuffer buffer, String serializerName) {
         if (this instanceof BElement)
-            lookupOrDefaultSerializer(serializerName).serialize((BElement) this, buffer);
+            try (var output = new ByteBufferOutputStream(buffer)) {
+                this.writeBytes(output);
+            } catch (IOException e) {
+                throw new RuntimeIOException(e);
+            }
         else
             throw new InvalidTypeException("Cannot write bytes to output stream from not-a-BElement object");
     }
