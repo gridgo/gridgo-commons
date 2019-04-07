@@ -4,6 +4,7 @@ import java.util.Map;
 
 import io.gridgo.bean.BElement;
 import io.gridgo.bean.BObject;
+import io.gridgo.bean.serialization.text.BPrinter;
 
 @SuppressWarnings("unchecked")
 public abstract class AbstractBObject extends AbstractBContainer implements BObject {
@@ -11,7 +12,7 @@ public abstract class AbstractBObject extends AbstractBContainer implements BObj
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        this.writeString(null, 0, sb);
+        BPrinter.print(sb, this);
         return sb.toString();
     }
 
@@ -19,7 +20,6 @@ public abstract class AbstractBObject extends AbstractBContainer implements BObj
     public boolean equals(Object obj) {
         if (obj instanceof Map) {
             final Map<?, ?> map = (Map<?, ?>) obj;
-
             if (this.size() == map.size())
                 for (Entry<String, BElement> entry : this.entrySet()) {
                     BElement myValue = entry.getValue();
@@ -27,7 +27,6 @@ public abstract class AbstractBObject extends AbstractBContainer implements BObj
                     if (!myValue.equals(otherValue))
                         return false;
                 }
-
             return true;
         }
         return false;

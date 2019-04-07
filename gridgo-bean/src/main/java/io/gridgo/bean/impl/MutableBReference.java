@@ -1,6 +1,7 @@
 package io.gridgo.bean.impl;
 
 import io.gridgo.bean.BReference;
+import io.gridgo.bean.serialization.text.BPrinter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@SuppressWarnings("unchecked")
 public class MutableBReference extends AbstractBElement implements BReference {
 
     @Setter
@@ -16,7 +18,9 @@ public class MutableBReference extends AbstractBElement implements BReference {
 
     @Override
     public String toString() {
-        return "reference-to-instanceOf:" + (reference == null ? null : reference.getClass());
+        StringBuilder writer = new StringBuilder();
+        BPrinter.print(writer, this);
+        return writer.toString();
     }
 
     @Override

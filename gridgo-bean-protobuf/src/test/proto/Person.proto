@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package io.grigo.bean.protobuf.test;
+
+option java_package = "io.grigo.bean.protobuf.test.message";
+message Person {
+	string name = 1;
+	int32 age = 2;
+}

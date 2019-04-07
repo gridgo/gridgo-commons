@@ -1,13 +1,11 @@
 package io.gridgo.bean;
 
-import java.io.IOException;
 import java.util.Base64;
 
-import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
+import io.gridgo.bean.factory.BFactory;
 import io.gridgo.utils.ByteArrayUtils;
 import io.gridgo.utils.PrimitiveUtils;
-import io.gridgo.utils.StringUtils;
 
 public interface BValue extends BElement {
 
@@ -54,6 +52,9 @@ public interface BValue extends BElement {
         }
         if (this.getData() instanceof byte[]) {
             return BType.RAW;
+        }
+        if (this.getData() instanceof Number) {
+            return BType.GENERIC_NUMBER;
         }
         throw new InvalidTypeException("Cannot recognize data type: " + this.getData().getClass());
     }
@@ -134,68 +135,6 @@ public interface BValue extends BElement {
             return ByteArrayUtils.primitiveToBytes(this.getData());
         }
         return null;
-    }
-
-    @Override
-    default String toJson() {
-        if (!this.isNull()) {
-            if (this.getData() instanceof byte[]) {
-                return ByteArrayUtils.toHex(this.getRaw(), "0x");
-            }
-            return this.getString();
-        }
-        return null;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    default Object toJsonElement() {
-        if (!this.isNull()) {
-            if (this.getData() instanceof byte[]) {
-                return ByteArrayUtils.toHex(this.getRaw(), "0x");
-            } else if (this.getData() instanceof Character) {
-                return new String(new char[] { this.getChar() });
-            }
-            return this.getData();
-        }
-        return null;
-    }
-
-    @Override
-    default void writeJson(Appendable out) {
-        try {
-            out.append(this.toJsonElement().toString());
-        } catch (IOException e) {
-            throw new BeanSerializationException("Error while writing json", e);
-        }
-    }
-
-    @Override
-    default String toXml(String name) {
-        if (!this.isNull()) {
-            String type = this.getType().name().toLowerCase();
-            StringBuilder sb = new StringBuilder();
-            sb.append("<").append(type);
-            if (name != null) {
-                sb.append(" name=\"").append(name).append("\"");
-            }
-            String content = this.getData() instanceof byte[] ? ByteArrayUtils.toHex(this.getRaw()) : this.getString();
-            if (content.contains("<")) {
-                sb.append(">") //
-                  .append("<![CDATA[")//
-                  .append(content) //
-                  .append("]]>") //
-                  .append("</").append(type).append(">");
-            } else if (content.contains("\"")) {
-                sb.append(">") //
-                  .append(content) //
-                  .append("</").append(type).append(">");
-            } else {
-                sb.append(" value=\"").append(content.replaceAll("\"", "\\\"")).append("\"/>");
-            }
-            return sb.toString();
-        }
-        return name == null ? "<null />" : ("<null name=\"" + name + "\"/>");
     }
 
     default BValue encodeHex() {
@@ -291,23 +230,21 @@ public interface BValue extends BElement {
     }
 
     @Override
-    default void writeString(String name, int numTab, StringBuilder writer) {
-        StringUtils.tabs(numTab, writer);
-        BType type = this.getType();
-        String content = this.getString();
-        if (name == null) {
-            writer.append("(").append(type.name()).append(")");
-        } else {
-            writer.append(name).append(": ").append(type.name());
-        }
-        if (!this.isNull()) {
-            writer.append(" = ").append(content);
-        }
+    @SuppressWarnings("unchecked")
+    default <T extends BElement> T deepClone() {
+        return (T) of(this.getData());
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    default <T> T deepClone() {
-        return (T) of(this.getData());
+    default <T> T toJsonElement() {
+        switch (this.getType()) {
+        case RAW:
+            return (T) ByteArrayUtils.toHex(this.getRaw(), "0x");
+        case CHAR:
+            return (T) this.getString();
+        default:
+            return (T) this.getData();
+        }
     }
 }

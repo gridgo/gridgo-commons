@@ -1,9 +1,17 @@
 package io.gridgo.bean;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.util.Optional;
+import java.util.function.Consumer;
 
-import io.gridgo.bean.exceptions.BeanSerializationException;
-import io.gridgo.utils.StringUtils;
+import io.gridgo.bean.factory.BFactory;
+import io.gridgo.utils.wrapper.ByteBufferInputStream;
+import lombok.NonNull;
 
 public interface BReference extends BElement {
 
@@ -11,60 +19,85 @@ public interface BReference extends BElement {
         return BFactory.DEFAULT.newReference(reference);
     }
 
+    <T> T getReference();
+
+    void setReference(Object reference);
+
     @Override
     default BType getType() {
         return BType.REFERENCE;
     }
 
-    public <T> T getReference();
+    @SuppressWarnings("unchecked")
+    default <T extends BElement> T deepClone() {
+        return (T) of(this.getReference());
+    }
 
-    public void setReference(Object reference);
-
-    public default void writeString(String name, int numTab, StringBuilder writer) {
-        StringUtils.tabs(numTab, writer);
-        BType type = this.getType();
-        String content = "instanceOf:" + (this.getReference() == null ? "null" : this.getReference().getClass().getName());
-        if (name == null) {
-            writer.append("(").append(type.name()).append(")");
-        } else {
-            writer.append(name).append(": ").append(type.name());
+    default Class<?> getReferenceClass() {
+        if (this.getReference() == null) {
+            return null;
         }
-        writer.append(" = ").append(content);
+        return this.getReference().getClass();
+    }
+
+    default boolean referenceInstanceOf(Class<?> clazz) {
+        var ref = this.getReference();
+        if (clazz == null) {
+            return ref == null;
+        }
+        if (ref != null) {
+            return clazz.isAssignableFrom(ref.getClass());
+        }
+        return false;
+    }
+
+    default <T> void ifReferenceInstanceOf(Class<T> clazz, @NonNull Consumer<T> consumer) {
+        if (referenceInstanceOf(clazz)) {
+            consumer.accept(this.getReference());
+        }
+    }
+
+    default <T> Optional<T> asOptional() {
+        return Optional.ofNullable(this.getReference());
+    }
+
+    /**
+     * Support for I/O operator when reference object is ByteBuffer or InputStream
+     * or File
+     * 
+     * @param output
+     * @return
+     * @throws IOException
+     */
+    default boolean tryWriteNativeBytes(@NonNull OutputStream output) throws IOException {
+        var ref = getReference();
+
+        if (ref instanceof ByteBuffer) {
+            try (var input = new ByteBufferInputStream((ByteBuffer) ref)) {
+                input.transferTo(output);
+                return true;
+            }
+        }
+
+        if (ref instanceof InputStream) {
+            ((InputStream) ref).transferTo(output);
+            return true;
+        }
+
+        if (ref instanceof File) {
+            try (var input = new FileInputStream((File) ref)) {
+                input.transferTo(output);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
-    default void writeJson(Appendable out) {
-        try {
-            out.append(this.toJson());
-        } catch (IOException e) {
-            throw new BeanSerializationException("Error while writing json", e);
-        }
-    }
-
-    public default String toJson() {
-        var ref = getReference();
-        if (ref instanceof SerializableReference)
-            return ((SerializableReference) ref).toJson();
-        return null;
-    }
-
     @SuppressWarnings("unchecked")
-    public default <T> T toJsonElement() {
-        var ref = getReference();
-        if (ref instanceof SerializableReference)
-            return (T) ((SerializableReference) ref).toJsonElement();
-        return null;
-    }
-
-    public default String toXml(String name) {
-        var ref = getReference();
-        if (ref instanceof SerializableReference)
-            return ((SerializableReference) ref).toXml();
-        return null;
-    }
-
-    @SuppressWarnings("unchecked")
-    public default <T> T deepClone() {
-        return (T) of(this.getReference());
+    default String toJsonElement() {
+        var ref = this.getReference();
+        return ref == null ? "null" : ref.getClass().getName();
     }
 }

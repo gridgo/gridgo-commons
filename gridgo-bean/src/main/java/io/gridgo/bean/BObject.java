@@ -1,7 +1,5 @@
 package io.gridgo.bean;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
@@ -9,10 +7,9 @@ import java.util.function.Supplier;
 
 import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
+import io.gridgo.bean.factory.BFactory;
 import io.gridgo.utils.ObjectUtils;
-import io.gridgo.utils.StringUtils;
 import lombok.NonNull;
-import net.minidev.json.JSONObject;
 
 public interface BObject extends BContainer, Map<String, BElement> {
 
@@ -258,67 +255,6 @@ public interface BObject extends BContainer, Map<String, BElement> {
         return getArrayOrNew(field, getFactory()::newArray);
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    default Map<String, Object> toJsonElement() {
-        Map<String, Object> map = new TreeMap<>();
-        for (Entry<String, BElement> entry : this.entrySet()) {
-            map.put(entry.getKey(), entry.getValue().toJsonElement());
-        }
-        return map;
-    }
-
-    @Override
-    default void writeJson(Appendable out) {
-        try {
-            JSONObject.writeJSON(this.toJsonElement(), out);
-        } catch (IOException e) {
-            throw new BeanSerializationException("Writing json error", e);
-        }
-    }
-
-    @Override
-    default String toJson() {
-        StringWriter out = new StringWriter();
-        writeJson(out);
-        return out.toString();
-    }
-
-    @Override
-    default String toXml(String name) {
-        StringBuilder builder = new StringBuilder();
-        if (name == null) {
-            builder.append("<object>");
-        } else {
-            builder.append("<object name=\"").append(name).append("\">");
-        }
-        for (Entry<String, BElement> entry : this.entrySet()) {
-            builder.append(entry.getValue().toXml(entry.getKey()));
-        }
-        builder.append("</object>");
-        return builder.toString();
-    }
-
-    default Map<String, Object> toMap() {
-        Map<String, Object> result = new TreeMap<>();
-        for (Entry<String, BElement> entry : this.entrySet()) {
-            if (entry.getValue() instanceof BValue) {
-                result.put(entry.getKey(), ((BValue) entry.getValue()).getData());
-            } else if (entry.getValue() instanceof BArray) {
-                result.put(entry.getKey(), ((BArray) entry.getValue()).toList());
-            } else if (entry.getValue() instanceof BObject) {
-                result.put(entry.getKey(), ((BObject) entry.getValue()).toMap());
-            } else if (entry.getValue() instanceof BReference) {
-                result.put(entry.getKey(), ((BReference) entry.getValue()).getReference());
-            } else {
-                if (entry.getValue() == null)
-                    continue;
-                throw new InvalidTypeException("Found unrecognized BElement implementation: " + entry.getValue().getClass());
-            }
-        }
-        return result;
-    }
-
     default BElement putAny(String field, Object data) {
         return this.put(field, this.getFactory().fromAny(data));
     }
@@ -375,30 +311,6 @@ public interface BObject extends BContainer, Map<String, BElement> {
         return supplierForNonPresent.get();
     }
 
-    @Override
-    default void writeString(String name, int numTab, StringBuilder writer) {
-        StringUtils.tabs(numTab, writer);
-        if (name != null) {
-            writer.append(name).append(": OBJECT = {");
-        } else {
-            writer.append("{");
-        }
-        writer.append(this.size() > 0 ? "\n" : "");
-        int count = 0;
-        for (Entry<String, BElement> entry : this.entrySet()) {
-            entry.getValue().writeString(entry.getKey(), numTab + 1, writer);
-            if (++count < this.size()) {
-                writer.append(",\n");
-            } else {
-                writer.append("\n");
-            }
-        }
-        if (this.size() > 0) {
-            StringUtils.tabs(numTab, writer);
-        }
-        writer.append("}");
-    }
-
     default BObject setAny(String name, Object value) {
         this.putAny(name, value);
         return this;
@@ -436,7 +348,7 @@ public interface BObject extends BContainer, Map<String, BElement> {
 
     @Override
     @SuppressWarnings("unchecked")
-    default <T> T deepClone() {
+    default <T extends BElement> T deepClone() {
         BObject result = ofEmpty();
         for (Entry<String, BElement> entry : this.entrySet()) {
             result.put(entry.getKey(), entry.getValue().deepClone());
@@ -452,5 +364,35 @@ public interface BObject extends BContainer, Map<String, BElement> {
                 return BObject.this;
             }
         };
+    }
+
+    default Map<String, Object> toMap() {
+        Map<String, Object> result = new TreeMap<>();
+        for (Entry<String, BElement> entry : this.entrySet()) {
+            if (entry.getValue() instanceof BValue) {
+                result.put(entry.getKey(), ((BValue) entry.getValue()).getData());
+            } else if (entry.getValue() instanceof BArray) {
+                result.put(entry.getKey(), ((BArray) entry.getValue()).toList());
+            } else if (entry.getValue() instanceof BObject) {
+                result.put(entry.getKey(), ((BObject) entry.getValue()).toMap());
+            } else if (entry.getValue() instanceof BReference) {
+                result.put(entry.getKey(), ((BReference) entry.getValue()).getReference());
+            } else {
+                if (entry.getValue() == null)
+                    continue;
+                throw new InvalidTypeException("Found unrecognized BElement implementation: " + entry.getValue().getClass());
+            }
+        }
+        return result;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    default Map<String, Object> toJsonElement() {
+        Map<String, Object> map = new TreeMap<>();
+        for (Entry<String, BElement> entry : this.entrySet()) {
+            map.put(entry.getKey(), entry.getValue().toJsonElement());
+        }
+        return map;
     }
 }

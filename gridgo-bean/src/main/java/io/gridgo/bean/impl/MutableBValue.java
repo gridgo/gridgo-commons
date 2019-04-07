@@ -1,7 +1,10 @@
 package io.gridgo.bean.impl;
 
+import java.util.Arrays;
+
 import io.gridgo.bean.BValue;
 import io.gridgo.bean.exceptions.InvalidTypeException;
+import io.gridgo.bean.serialization.text.BPrinter;
 import io.gridgo.utils.PrimitiveUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +17,6 @@ public class MutableBValue extends AbstractBElement implements BValue {
     @Getter
     private Object data;
 
-
     public MutableBValue(Object data) {
         if (data != null && !(data instanceof byte[]) && !PrimitiveUtils.isPrimitive(data.getClass())) {
             throw new InvalidTypeException("Cannot create DefaultBValue from: " + data.getClass() + " instance");
@@ -24,19 +26,40 @@ public class MutableBValue extends AbstractBElement implements BValue {
 
     @Override
     public String toString() {
-        return this.getString();
+        StringBuilder writer = new StringBuilder();
+        BPrinter.print(writer, this);
+        return writer.toString();
     }
 
     @Override
     public boolean equals(Object obj) {
+        var otherData = obj;
         if (obj instanceof BValue) {
-            return this.getData() == null //
-                    ? (((BValue) obj).getData() == null) //
-                    : this.getData().equals(((BValue) obj).getData());
+            otherData = ((BValue) obj).getData();
         }
-        return this.getData() == null //
-                ? obj == null //
-                : this.getData().equals(obj);
+
+        if (data == null)
+            return otherData == null;
+
+        if (otherData == null)
+            return false;
+
+        if (data == otherData || data.equals(otherData))
+            return true;
+
+        if (data instanceof Number && otherData instanceof Number)
+            return ((Number) data).doubleValue() == ((Number) otherData).doubleValue();
+
+        if (data instanceof String && otherData instanceof Character)
+            return data.equals(String.valueOf((Character) otherData));
+
+        if (data instanceof Character && otherData instanceof String)
+            return otherData.equals(String.valueOf((Character) data));
+
+        if (data instanceof byte[] && otherData instanceof byte[])
+            return Arrays.equals((byte[]) data, (byte[]) otherData);
+
+        return false;
     }
 
     @Override

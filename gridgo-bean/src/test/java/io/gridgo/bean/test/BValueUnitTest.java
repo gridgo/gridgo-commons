@@ -9,6 +9,16 @@ import io.gridgo.bean.BValue;
 public class BValueUnitTest {
 
     @Test
+    public void testNull() {
+        Assert.assertNull(BValue.of(null).toJsonElement());
+    }
+
+    @Test
+    public void testInteger() {
+        Assert.assertEquals(1, (int) BValue.of(1).toJsonElement());
+    }
+
+    @Test
     public void testEncodeDecode() {
         var val = BValue.of(new byte[] { 1, 2, 4, 8, 16, 32, 64 });
         val.encodeHex();

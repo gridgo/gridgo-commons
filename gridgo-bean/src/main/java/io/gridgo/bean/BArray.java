@@ -1,15 +1,11 @@
 package io.gridgo.bean;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.gridgo.bean.exceptions.BeanSerializationException;
 import io.gridgo.bean.exceptions.InvalidTypeException;
-import io.gridgo.utils.StringUtils;
-import net.minidev.json.JSONArray;
+import io.gridgo.bean.factory.BFactory;
 
 public interface BArray extends BContainer, List<BElement> {
 
@@ -59,64 +55,6 @@ public interface BArray extends BContainer, List<BElement> {
             this.addAny(object);
         }
         return this;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    default List<Object> toJsonElement() {
-        List<Object> list = new JSONArray();
-        for (BElement entry : this) {
-            list.add(entry.toJsonElement());
-        }
-        return list;
-    }
-
-    @Override
-    default void writeJson(Appendable out) {
-        try {
-            JSONArray.writeJSONString(this.toJsonElement(), out);
-        } catch (IOException e) {
-            throw new BeanSerializationException("Error while write json to output appendable", e);
-        }
-    }
-
-    default String toJson() {
-        StringWriter sw = new StringWriter();
-        this.writeJson(sw);
-        return sw.toString();
-    }
-
-    @Override
-    default String toXml(String name) {
-        StringBuilder builder = new StringBuilder();
-        if (name != null) {
-            builder.append("<array name=\"").append(name).append("\">");
-        } else {
-            builder.append("<array>");
-        }
-        for (BElement element : this) {
-            builder.append(element.toXml());
-        }
-        builder.append("</array>");
-        return builder.toString();
-    }
-
-    default List<Object> toList() {
-        List<Object> list = new LinkedList<>();
-        for (BElement entry : this) {
-            if (entry instanceof BValue) {
-                list.add(((BValue) entry).getData());
-            } else if (entry instanceof BObject) {
-                list.add(((BObject) entry).toMap());
-            } else if (entry instanceof BArray) {
-                list.add(((BArray) entry).toList());
-            } else if (entry instanceof BReference) {
-                list.add(((BReference) entry).getReference());
-            } else {
-                throw new InvalidTypeException("Found unexpected BElement implementation: " + entry.getClass());
-            }
-        }
-        return list;
     }
 
     default BValue getValue(int index) {
@@ -241,28 +179,8 @@ public interface BArray extends BContainer, List<BElement> {
     }
 
     @Override
-    default void writeString(String name, int numTab, StringBuilder writer) {
-        StringUtils.tabs(numTab, writer);
-        if (name == null) {
-            writer.append("[\n");
-        } else {
-            writer.append(name).append(": ARRAY = [\n");
-        }
-        for (int i = 0; i < this.size(); i++) {
-            this.get(i).writeString("[" + i + "]", numTab + 1, writer);
-            if (i < this.size() - 1) {
-                writer.append(",\n");
-            } else {
-                writer.append("\n");
-            }
-        }
-        StringUtils.tabs(numTab, writer);
-        writer.append("]");
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
-    default <T> T deepClone() {
+    default <T extends BElement> T deepClone() {
         BArray result = ofEmpty();
         for (BElement entry : this) {
             result.addAny(entry.deepClone());
@@ -278,5 +196,33 @@ public interface BArray extends BContainer, List<BElement> {
                 return BArray.this;
             }
         };
+    }
+
+    default List<Object> toList() {
+        List<Object> list = new LinkedList<>();
+        for (BElement entry : this) {
+            if (entry instanceof BValue) {
+                list.add(((BValue) entry).getData());
+            } else if (entry instanceof BObject) {
+                list.add(((BObject) entry).toMap());
+            } else if (entry instanceof BArray) {
+                list.add(((BArray) entry).toList());
+            } else if (entry instanceof BReference) {
+                list.add(((BReference) entry).getReference());
+            } else {
+                throw new InvalidTypeException("Found unexpected BElement implementation: " + entry.getClass());
+            }
+        }
+        return list;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    default List<?> toJsonElement() {
+        List<?> list = new LinkedList<>();
+        for (BElement element : this) {
+            list.add(element.toJsonElement());
+        }
+        return list;
     }
 }

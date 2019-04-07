@@ -15,9 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InetAddressUtils {
 
-    public static final Pattern IPV4_PATTERN = Pattern.compile(
-            "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-                    + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
+    public static final Pattern IPV4_PATTERN = Pattern.compile("^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
 
     public static final Pattern IPV6_STD_PATTERN = Pattern.compile("^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$");
 
@@ -55,7 +54,7 @@ public class InetAddressUtils {
             String address = Inet4Address.getByName(domain).getHostAddress();
             return isIPv4(address) ? address : null;
         } catch (UnknownHostException e) {
-            log.info("Exception caught when resolving IPv4 address", e);
+            log.debug("cannot resolve IPv4 address, return null", e);
         }
         return null;
     }
@@ -70,7 +69,7 @@ public class InetAddressUtils {
             String address = Inet6Address.getByName(domain).getHostAddress();
             return isIPv6(address) ? address : null;
         } catch (UnknownHostException e) {
-            log.info("Exception caught when resolving IPv6 address", e);
+            log.debug("cannot resolve IPv6 address, return null", e);
         }
         return null;
     }
@@ -107,7 +106,7 @@ public class InetAddressUtils {
                 }
             }
         } catch (SocketException e) {
-            log.info("Socket exception caught while resolving from interface", e);
+            log.debug("cannot resolve address from interface, return null", e);
         }
         return null;
     }
@@ -149,8 +148,7 @@ public class InetAddressUtils {
     public static String resolve(String input, boolean preferIPv6, boolean preferInterface) {
         if (input == null)
             return null;
-        String ip = preferInterface ? resolveIPFromInterface(input, preferIPv6)
-                : resolveIPFromDomain(input, preferIPv6);
+        String ip = preferInterface ? resolveIPFromInterface(input, preferIPv6) : resolveIPFromDomain(input, preferIPv6);
         if (ip == null) {
             ip = preferInterface ? resolveIPFromDomain(input, preferIPv6) : resolveIPFromInterface(input, preferIPv6);
         }

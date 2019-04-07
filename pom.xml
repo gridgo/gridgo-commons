@@ -4,7 +4,7 @@
 	<artifactId>gridgo-base</artifactId>
 	<packaging>pom</packaging>
 
-	<version>0.4.1-SNAPSHOT</version>
+	<version>0.5.0</version>
 
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -64,8 +64,12 @@
 	<modules>
 		<module>gridgo-utils</module>
 		<module>gridgo-bean</module>
+		<module>gridgo-registry</module>
 		<module>gridgo-formatting</module>
 		<module>gridgo-framework</module>
+		<module>gridgo-bean-protobuf</module>
+		<module>gridgo-bean-avro</module>
+		<module>gridgo-bean-gson</module>
 	</modules>
 
 	<build>

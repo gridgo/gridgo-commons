@@ -1,10 +1,11 @@
 package io.gridgo.bean;
 
+import static io.gridgo.bean.ImmutableBArray.UNSUPPORTED;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import static io.gridgo.bean.ImmutableBArray.UNSUPPORTED;
 
 public interface WrappedBArray extends BArray {
 

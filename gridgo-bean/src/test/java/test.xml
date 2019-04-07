@@ -1,20 +1,18 @@
 <object>
+	<string name="str" value="hello" />
 	<array name="arr">
 		<integer value="1" />
-		<string value="normal string" />
-		<boolean value="true" />
-		<object>
-			<raw name="bin" value="0x010203040506070809" />
-			<string name="fullName">"Nguyễn Hoàng Bách"</string>
-			<integer name="age" value="10" />
-		</object>
+		<integer value="2" />
+		<integer value="3" />
 	</array>
-	<long name="number" value="1990" />
-	<boolean name="bool" value="true" />
+	<boolean name="bool" value="false" />
+	<double name="double" value="1.11" />
+	<byte name="byte" value="1" />
 	<object name="obj">
-		<string name="fullName"><![CDATA[<Nguyễn Hoàng Bách/>]]></string>
-		<integer name="other value" value="-1960" />
+		<integer name="int" value="2" />
 	</object>
 	<char name="char" value="a" />
-	<null name="nullElement" />
+	<raw name="raw" value="010203040506" />
+	<integer name="int" value="1" />
+	<long name="long" value="1" />
 </object>

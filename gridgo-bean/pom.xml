@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>io.gridgo</groupId>
 		<artifactId>gridgo-base</artifactId>
-		<version>0.4.1-SNAPSHOT</version>
+		<version>0.5.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -13,6 +13,7 @@
 		<msgpack.version>0.8.16</msgpack.version>
 		<jsonsmart.version>2.3</jsonsmart.version>
 		<evalex.version>2.0</evalex.version>
+		<reflections.version>0.9.11</reflections.version>
 		<junit.version>4.12</junit.version>
 	</properties>
 
@@ -39,6 +40,12 @@
 			<groupId>com.udojava</groupId>
 			<artifactId>EvalEx</artifactId>
 			<version>${evalex.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>${reflections.version}</version>
 		</dependency>
 
 		<dependency>

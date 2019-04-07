@@ -1,5 +1,6 @@
 package io.gridgo.utils;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.gridgo.utils.exception.RuntimeIOException;
 import lombok.Builder;
 import lombok.Data;
 
@@ -130,8 +132,7 @@ public final class StringUtils {
         return true;
     }
 
-    private static final String[] REGEX_SPECIAL_CHARS = new String[] { "\\", ".", "*", "+", "-", "[", "]", "(", ")",
-            "$", "^", "|", "{", "}", "?" };
+    private static final String[] REGEX_SPECIAL_CHARS = new String[] { "\\", ".", "*", "+", "-", "[", "]", "(", ")", "$", "^", "|", "{", "}", "?" };
 
     public static final String normalizeForRegex(String key) {
         String result = key;
@@ -141,9 +142,13 @@ public final class StringUtils {
         return result;
     }
 
-    public static void tabs(int num, StringBuilder sb) {
-        for (int i = 0; i < num; i++) {
-            sb.append("\t");
+    public static void tabs(int num, Appendable sb) {
+        try {
+            for (int i = 0; i < num; i++) {
+                sb.append("\t");
+            }
+        } catch (IOException e) {
+            throw new RuntimeIOException("Error while append tab(s)", e);
         }
     }
 

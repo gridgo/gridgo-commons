@@ -1,40 +1,15 @@
 package io.gridgo.bean;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import io.gridgo.bean.serialize.BSerializerAware;
+import io.gridgo.bean.factory.BFactory;
+import io.gridgo.bean.serialization.BSerializerRegistryAware;
+import lombok.NonNull;
 
-public interface BElement extends BSerializerAware {
-
-    void writeString(String name, int numTab, StringBuilder writer);
-
-    BType getType();
-
-    String toJson();
-
-    void writeJson(Appendable out);
-
-    default void writeJson(OutputStream out) {
-        try (var outWriter = new OutputStreamWriter(out)) {
-            this.writeJson(outWriter);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot close output writer after write json", e);
-        }
-    }
-
-    <T> T toJsonElement();
-
-    String toXml(String name);
-
-    <T> T deepClone();
+public interface BElement extends BSerializerRegistryAware, BJsonSupport, BXmlSupport, BBytesSupport {
 
     static <T extends BElement> T wrapAny(Object data) {
         return BFactory.DEFAULT.wrap(data);
@@ -44,54 +19,47 @@ public interface BElement extends BSerializerAware {
         return BFactory.DEFAULT.fromAny(data);
     }
 
-    static <T extends BElement> T ofXml(String xml) {
-        return BFactory.DEFAULT.fromXml(xml);
-    }
-
+    ////////////////// JSON Support//////////////////
     static <T extends BElement> T ofJson(String json) {
         return BFactory.DEFAULT.fromJson(json);
-    }
-
-    static <T extends BElement> T ofJson(Reader reader) {
-        return BFactory.DEFAULT.fromJson(reader);
     }
 
     static <T extends BElement> T ofJson(InputStream inputStream) {
         return BFactory.DEFAULT.fromJson(inputStream);
     }
 
-    static <T extends BElement> T ofBytes(InputStream in) {
-        return BFactory.DEFAULT.fromBytes(in);
+    ///////////////// XML Support////////////////////
+    static <T extends BElement> T ofXml(String xml) {
+        return BFactory.DEFAULT.fromXml(xml);
     }
 
-    static <T extends BElement> T ofBytes(ByteBuffer buffer) {
-        return BFactory.DEFAULT.fromBytes(buffer);
+    static <T extends BElement> T ofXml(InputStream in) {
+        return BFactory.DEFAULT.fromXml(in);
     }
 
-    static <T extends BElement> T ofBytes(byte[] bytes) {
-        return BFactory.DEFAULT.fromBytes(bytes);
+    ///////////////// Bytes Support////////////////////
+    static <T extends BElement> T ofBytes(@NonNull InputStream in, String serializerName) {
+        return BFactory.DEFAULT.fromBytes(in, serializerName);
     }
 
-    default void writeBytes(ByteBuffer buffer) {
-        this.getSerializer().serialize(this, buffer);
+    static <T extends BElement> T ofBytes(@NonNull ByteBuffer buffer, String serializerName) {
+        return BFactory.DEFAULT.fromBytes(buffer, serializerName);
     }
 
-    default void writeBytes(OutputStream out) {
-        this.getSerializer().serialize(this, out);
+    static <T extends BElement> T ofBytes(@NonNull byte[] bytes, String serializerName) {
+        return BFactory.DEFAULT.fromBytes(bytes, serializerName);
     }
 
-    default byte[] toBytes(int initCapacity) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream(initCapacity);
-        this.writeBytes(out);
-        return out.toByteArray();
+    static <T extends BElement> T ofBytes(@NonNull InputStream in) {
+        return ofBytes(in, null);
     }
 
-    default byte[] toBytes() {
-        return this.toBytes(this.getSerializer().getMinimumOutputCapactity());
+    static <T extends BElement> T ofBytes(@NonNull ByteBuffer buffer) {
+        return ofBytes(buffer, null);
     }
 
-    default String toXml() {
-        return this.toXml(null);
+    static <T extends BElement> T ofBytes(@NonNull byte[] bytes) {
+        return ofBytes(bytes, null);
     }
 
     default boolean isContainer() {
@@ -185,4 +153,8 @@ public interface BElement extends BSerializerAware {
     default BReference asReference() {
         return (BReference) this;
     }
+
+    BType getType();
+
+    <T extends BElement> T deepClone();
 }
