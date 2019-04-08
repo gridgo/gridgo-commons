@@ -1,5 +1,9 @@
 # gridgo-commons
 
+*DEPRECATED*
+
+*This repo has been merged into the main Gridgo repository and thus become deprecated*
+
 ### release
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.gridgo/gridgo-base.svg?maxAge=86400)](http://mvnrepository.com/artifact/io.gridgo/gridgo-base)
